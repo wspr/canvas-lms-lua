@@ -17,7 +17,6 @@ build = {
 dependencies = {
   "ssl",
   "luasec",
-  "ltn12",
   "luasocket",
   "json-lua",
   "penlight",
