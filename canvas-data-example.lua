@@ -1,8 +1,4 @@
 
-local canvas = canvas or {}
-
-canvas.url           = "<URL>"
-canvas.token         = "<TOKEN>"
-canvas.courseid      = "<CID>"
-
-return canvas
+canvas:set_url        "<URL>/"
+canvas:set_token      "<TOKEN>"
+canvas:set_course_id  "<CID>"

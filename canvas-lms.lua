@@ -8,10 +8,27 @@ local lfs    = require "lfs"
 local tablex = require("pl.tablex")
 local csv    = require("csv")
 
-local canvas = require("canvas-data")
-canvas.course_prefix = "courses/"..canvas.courseid.."/"
-
 lfs.mkdir("cache")
+
+canvas = canvas or {}
+
+
+canvas.set_course_id = function(self,str)
+  self.courseid = str
+  self.course_prefix = "courses/"..str.."/"
+end
+
+canvas.set_url = function(self,str)
+  self.url = str
+end
+
+canvas.set_token = function(self,str)
+  self.token = str
+end
+
+dofile("canvas-data.lua")
+
+
 
 local urlencode = function(str_table)
 

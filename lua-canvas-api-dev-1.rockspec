@@ -10,8 +10,7 @@ description = {
 build = {
    type = "builtin",
    modules = {
-      canvas = "canvas.lua",
-      ["canvas-data"] = "canvas-data.lua"
+      canvas = "canvas-lms.lua",
    }
 }
 dependencies = {
