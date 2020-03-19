@@ -22,8 +22,16 @@ canvas.set_url = function(self,str)
   self.url = str
 end
 
+canvas.set_year = function(self,yr)
+  self.year = yr
+end
+
 canvas.set_token = function(self,str)
   self.token = str
+end
+
+canvas.set_week1 = function(self,date)
+  self.week1 = date
 end
 
 dofile("canvas-data.lua")
