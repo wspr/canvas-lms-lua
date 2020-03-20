@@ -7,7 +7,7 @@ local pretty = require("pl.pretty")
 local lfs    = require "lfs"
 local tablex = require("pl.tablex")
 local csv    = require("csv")
-local Date    = require("pl.Date")
+local Date   = require("pl.Date")
 
 lfs.mkdir("cache")
 
@@ -23,16 +23,19 @@ canvas.set_url = function(self,str)
   self.url = str
 end
 
-canvas.set_year = function(self,yr)
-  self.year = yr
-end
-
 canvas.set_token = function(self,str)
   self.token = str
 end
 
-canvas.set_week1 = function(self,date)
-  self.week1 = date
+canvas.sem_first_monday = {}
+canvas.sem_break_week = {}
+
+canvas.set_first_monday = function(self,arg)
+  self.sem_first_monday[#self.sem_first_monday+1] = arg
+end
+
+canvas.set_break_week = function(self,arg)
+  self.sem_break_week[#self.sem_break_week+1] = arg
 end
 
 dofile("canvas-data.lua")
@@ -788,31 +791,24 @@ canvas.create_assign = function(self,args)
   local lockhr   = args.lockhr   or "17"
   local unlockhr = args.unlockhr or "08"
 
-  self.sem = {}
-  self.sem[1] = {}
-  self.sem[2] = {}
-  self.sem[1].week1 = Date{year=self.year,month=03,day=02}
-  self.sem[1].termwks  = 6
-  self.sem[2].week1 = Date{year=self.year,month=07,day=27}
-  self.sem[2].termwks  = 8
-
   local wkoffset = args.week
-  if wkoffset > self.sem[args.sem].termwks then wkoffset = wkoffset + 2 end
+  if wkoffset > self.sem_break_week[args.sem] then wkoffset = wkoffset + 2 end
 
   local datef = Date.Format 'yyyy-mm-dd'
 
   local today_date = Date{}
-  local todaystr      = datef:tostring(today_date)
+  local todaystr   = datef:tostring(today_date)
 
-  local dd = canvas.sem[args.sem].week1:add{day=argday+7*(wkoffset-1)}
+  local dayoffset = argday+7*(wkoffset-1)
 
-  local duedate     = dd
+  local duedate     = Date(self.sem_first_monday[args.sem]):add{day=dayoffset}
   local duedatestr  = datef:tostring(duedate).."T"..duehr..":00:00"
   local duediff     = today_date.time - duedate.time
 
-  local lockdate    = dd
-  local lockdatestr = datef:tostring(dd).."T"..lockhr..":00:00"
+  local lockdate    = Date(self.sem_first_monday[args.sem]):add{day=dayoffset}
+  local lockdatestr = datef:tostring(lockdate).."T"..lockhr..":00:00"
 
+  local dd = Date(self.sem_first_monday[args.sem]):add{day=dayoffset}
   local unlockdate = dd:add{day=-5}
   local unlockdatestr = datef:tostring(unlockdate).."T"..unlockhr..":00:00"
 
