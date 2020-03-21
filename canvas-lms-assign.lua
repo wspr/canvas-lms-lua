@@ -152,10 +152,13 @@ canvas.create_assign = function(self,args)
     error("Need to specify 'points' this assignment is worth.")
   end
 
-  if args.group_category then
-    local group_proj_id = self.student_group_category[args.student_group_category]
+  local group_proj_id = nil
+  if args.student_group_category then
+    group_proj_id = self.student_group_category[args.student_group_category]
     if not(group_proj_id) then
       error("Student group category not found")
+    else
+      print("Student group category: "..group_proj_id)
     end
   end
 
@@ -219,7 +222,7 @@ canvas.create_assign = function(self,args)
   if args.rubric then
     new_assign.assignment.use_rubric_for_grading = "true"
   end
-  if args.group_category then
+  if group_proj_id then
     new_assign.assignment.group_category_id = group_proj_id
   end
 
