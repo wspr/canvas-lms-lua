@@ -11,6 +11,7 @@ build = {
    type = "builtin",
    modules = {
       ["canvas-lms"] = "canvas-lms.lua",
+      ["canvas-lms-rubrics"] = "canvas-lms-rubrics.lua",
    }
 }
 dependencies = {
