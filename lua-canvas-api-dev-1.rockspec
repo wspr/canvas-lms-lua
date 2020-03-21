@@ -10,8 +10,11 @@ description = {
 build = {
    type = "builtin",
    modules = {
-      ["canvas-lms"] = "canvas-lms.lua",
-      ["canvas-lms-rubrics"] = "canvas-lms-rubrics.lua",
+      ["canvas-lms"]          = "canvas-lms.lua",
+      ["canvas-lms-http"]     = "canvas-lms-http.lua",
+      ["canvas-lms-students"] = "canvas-lms-students.lua",
+      ["canvas-lms-rubrics"]  = "canvas-lms-rubrics.lua",
+      ["canvas-lms-message"]  = "canvas-lms-message.lua",
    }
 }
 dependencies = {
