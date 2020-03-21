@@ -51,3 +51,4 @@ canvas.break_length = canvas.break_length or 2
 
 canvas.cache_dir = canvas.cache_dir or "./cache/"
 lfs.mkdir(canvas.cache_dir)
+
