@@ -43,20 +43,6 @@ dofile("canvas-data.lua")
 require("canvas-lms-rubrics")
 
 
-local urlencode = function(str_table)
-
-  local str_result = ""
-  if type(str_table) == "string" then
-    str_result = str_table
-  end
-
-  for k,v in pairs(str_table) do
-    str_result = str_result..k.."="..v
-  end
-
-  return str_result
-
-end
 
 canvas.getpostput = function(self,param,req,opt_arg)
 
