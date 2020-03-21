@@ -38,7 +38,16 @@ canvas.set_break_week = function(self,arg)
   self.sem_break_week[#self.sem_break_week+1] = arg
 end
 
-dofile("canvas-data.lua")
+do
+  local shared = {
+    canvas_url   = function(x) canvas:set_url(x)          end,
+    course_id    = function(x) canvas:set_course_id(x)    end,
+    token        = function(x) canvas:set_token(x)        end,
+    first_monday = function(x) canvas:set_first_monday(x) end,
+    break_week   = function(x) canvas:set_break_week(x)   end,
+  }
+  loadfile('canvas-data.lua', 't', shared)()
+end
 
 require("canvas-lms-http")
 require("canvas-lms-students")
