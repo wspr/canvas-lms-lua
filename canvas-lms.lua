@@ -1,6 +1,7 @@
 
-local lfs    = require "lfs"
-lfs.mkdir("cache")
+--[================[
+      CANVAS-LMS
+--]================]
 
 canvas = canvas or {}
 

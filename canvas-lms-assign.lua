@@ -92,7 +92,7 @@ end
 canvas.get_assignment_generic = function(self,use_cache_bool,assign_name,assign_opts,cache_name)
 
   local cache_name = cache_name or assign_name
-  local cache_file = "cache/"..cache_name..".lua"
+  local cache_file = canvas.cache_dir..cache_name..".lua"
 
   if use_cache_bool then
 
@@ -143,7 +143,10 @@ canvas.create_assign = function(self,args)
     duehr
     lockhr
     published
+    sem
 --]]
+
+  local sem = args.sem or 1
 
   if not(args.points) then
     error("Need to specify 'points' this assignment is worth.")
@@ -174,7 +177,11 @@ canvas.create_assign = function(self,args)
   local unlockhr = args.unlockhr or "08"
 
   local wkoffset = args.week
-  if wkoffset > self.sem_break_week[args.sem] then wkoffset = wkoffset + 2 end
+  if self.sem_break_week[sem] > 0 and self.sem_break_length[sem] > 0 then
+    if wkoffset > self.sem_break_week[sem] then
+      wkoffset = wkoffset + self.sem_break_length[sem]
+    end
+  end
 
   local datef = date.Format 'yyyy-mm-dd'
 
@@ -183,14 +190,14 @@ canvas.create_assign = function(self,args)
 
   local dayoffset = argday+7*(wkoffset-1)
 
-  local duedate     = date(self.sem_first_monday[args.sem]):add{day=dayoffset}
+  local duedate     = date(self.sem_first_monday[sem]):add{day=dayoffset}
   local duedatestr  = datef:tostring(duedate).."T"..duehr..":00:00"
   local duediff     = today_date.time - duedate.time
 
-  local lockdate    = date(self.sem_first_monday[args.sem]):add{day=dayoffset}
+  local lockdate    = date(self.sem_first_monday[sem]):add{day=dayoffset}
   local lockdatestr = datef:tostring(lockdate).."T"..lockhr..":00:00"
 
-  local dd = date(self.sem_first_monday[args.sem]):add{day=dayoffset}
+  local dd = date(self.sem_first_monday[sem]):add{day=dayoffset}
   local unlockdate = dd:add{day=-5}
   local unlockdatestr = datef:tostring(unlockdate).."T"..unlockhr..":00:00"
 

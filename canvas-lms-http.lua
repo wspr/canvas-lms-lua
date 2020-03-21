@@ -127,7 +127,7 @@ end
 canvas.get_pages = function(self,download_bool,req,opt)
 
   local cache_name = string.gsub(req,"/"," - ")
-  local cache_file = "cache/Pages - "..cache_name..".lua"
+  local cache_file = self.cache_dir.."Pages - "..cache_name..".lua"
 
   if download_bool == "ask" then
     print("Download all pages for requested GET ["..req.."] ?")

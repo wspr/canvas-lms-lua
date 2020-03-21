@@ -1,4 +1,5 @@
 
+local lfs    = require "lfs"
 
 canvas.set_course_id = function(self,str)
   self.courseid = str
@@ -13,6 +14,10 @@ canvas.set_token = function(self,str)
   self.token = str
 end
 
+canvas.set_cache_dir = function(self,str)
+  self.cache_dir = str
+end
+
 canvas.sem_first_monday = {}
 canvas.sem_break_week = {}
 
@@ -24,6 +29,10 @@ canvas.set_break_week = function(self,arg)
   self.sem_break_week[#self.sem_break_week+1] = arg
 end
 
+canvas.set_break_length = function(self,arg)
+  self.sem_break_length[#self.sem_break_week+1] = arg
+end
+
 do
   local shared = {
     canvas_url   = function(x) canvas:set_url(x)          end,
@@ -31,6 +40,14 @@ do
     token        = function(x) canvas:set_token(x)        end,
     first_monday = function(x) canvas:set_first_monday(x) end,
     break_week   = function(x) canvas:set_break_week(x)   end,
+    break_length = function(x) canvas:set_break_length(x)   end,
+    cache_dir    = function(x) canvas:set_cache_dir(x)   end,
   }
   loadfile('canvas-data.lua', 't', shared)()
 end
+
+canvas.break_week   = canvas.break_week   or 0
+canvas.break_length = canvas.break_length or 2
+
+canvas.cache_dir = canvas.cache_dir or "./cache/"
+lfs.mkdir(canvas.cache_dir)

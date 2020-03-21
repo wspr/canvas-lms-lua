@@ -36,7 +36,7 @@ end
 
 canvas.get_groups = function(self,use_cache_bool,group_category_name)
 
-  local cache_path = "cache/Group - "..group_category_name..".lua"
+  local cache_path = self.cache_dir.."Group - "..group_category_name..".lua"
 
   if use_cache_bool then
     local gcats = canvas:get( canvas.course_prefix .. "group_categories" , "" )
