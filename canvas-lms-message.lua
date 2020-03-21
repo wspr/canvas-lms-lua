@@ -16,7 +16,7 @@ canvas.message_group_wfile = function(self,send_check,msg)
   local subject="subject="..msg.subject
   local body="body="..msg.body
 
-  local attachfile = canvas:get("users/self/files","search_term="..msg.filestub)
+  local attachfile = self:get("users/self/files","search_term="..msg.filestub)
   if #attachfile > 0 then
     local fileid = "attachment_ids[]="..attachfile[1].id
     local isgroup = "group_conversation=true"
