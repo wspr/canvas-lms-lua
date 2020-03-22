@@ -28,4 +28,5 @@ dependencies = {
   "binser",
   "csv",
   "luafilesystem",
+  "markdown",
 }
