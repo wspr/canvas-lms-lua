@@ -10,14 +10,14 @@ description = {
 build = {
    type = "builtin",
    modules = {
-      ["canvas-lms"]          = "canvas-lms.lua",
-      ["canvas-lms-config"]   = "canvas-lms-config.lua",
-      ["canvas-lms-http"]     = "canvas-lms-http.lua",
-      ["canvas-lms-students"] = "canvas-lms-students.lua",
-      ["canvas-lms-rubrics"]  = "canvas-lms-rubrics.lua",
-      ["canvas-lms-message"]  = "canvas-lms-message.lua",
-      ["canvas-lms-assign"]   = "canvas-lms-assign.lua",
-      ["canvas-lms-grades"]   = "canvas-lms-grades.lua",
+      ["canvas-lms"]          = "canvas-lms/canvas-lms.lua",
+      ["canvas-lms-config"]   = "canvas-lms/canvas-lms-config.lua",
+      ["canvas-lms-http"]     = "canvas-lms/canvas-lms-http.lua",
+      ["canvas-lms-students"] = "canvas-lms/canvas-lms-students.lua",
+      ["canvas-lms-rubrics"]  = "canvas-lms/canvas-lms-rubrics.lua",
+      ["canvas-lms-message"]  = "canvas-lms/canvas-lms-message.lua",
+      ["canvas-lms-assign"]   = "canvas-lms/canvas-lms-assign.lua",
+      ["canvas-lms-grades"]   = "canvas-lms/canvas-lms-grades.lua",
    }
 }
 dependencies = {
