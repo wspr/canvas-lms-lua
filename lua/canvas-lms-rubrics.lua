@@ -9,7 +9,7 @@ canvas.get_rubrics = function(self)
 
   print("# Getting rubrics currently in Canvas")
 
-  local all_rubrics = canvas:get_pages(true,self.course_prefix.."rubrics")
+  local all_rubrics = self:get_pages(true,self.course_prefix.."rubrics")
   local rubrics_hash = {}
   for ii,vv in ipairs(all_rubrics) do
     rubrics_hash[vv.title] = vv.id
@@ -29,7 +29,7 @@ end
 
 canvas.send_rubric = function(self,rubric)
 
-  local all_rubrics = canvas:get_pages(true,canvas.course_prefix.."rubrics")
+  local all_rubrics = self:get_pages(true,canvas.course_prefix.."rubrics")
   local rubric_hash = {}
   for ii,vv in ipairs(all_rubrics) do
     rubric_hash[vv.title] = vv.id
@@ -38,9 +38,9 @@ canvas.send_rubric = function(self,rubric)
   rubric_id = rubric_hash[rubric.title]
   local canvas_rubric
   if rubric_id then
-    canvas_rubric = canvas:put(canvas.course_prefix.."rubrics/"..rubric_id,{rubric = rubric})
+    canvas_rubric = self:put(canvas.course_prefix.."rubrics/"..rubric_id,{rubric = rubric})
   else
-    canvas_rubric = canvas:post(canvas.course_prefix.."rubrics",{rubric = rubric})
+    canvas_rubric = self:post(canvas.course_prefix.."rubrics",{rubric = rubric})
   end
 
   return canvas_rubric
@@ -60,7 +60,7 @@ canvas.assoc_rubric = function(self,args)
           purpose = "grading" ,
         }
       }
-  a = canvas:post(canvas.course_prefix.."rubric_associations",rassoc)
+  a = self:post(canvas.course_prefix.."rubric_associations",rassoc)
 
   return a
 end

@@ -59,7 +59,7 @@ canvas.get_assignment_list = function(self,opt)
   local get_bool = opt.download or false
   local print_list = opt.print or false
 
-  local all_assign = canvas:get_pages(get_bool,canvas.course_prefix.."assignments")
+  local all_assign = self:get_pages(get_bool,canvas.course_prefix.."assignments")
   local all_assign_byname = {}
   if opt.print then print("# ASSIGNMENT LIST") end
   for k,v in pairs(all_assign) do
@@ -75,7 +75,7 @@ canvas.get_assignments = function(self)
 
   print("# Getting assignments currently in Canvas")
 
-  local all_assign = canvas:get_pages(true,self.course_prefix.."assignments")
+  local all_assign = self:get_pages(true,self.course_prefix.."assignments")
   local assign_hash = {}
   for ii,vv in ipairs(all_assign) do
     assign_hash[vv.name] = vv.id
@@ -93,11 +93,11 @@ end
 
 
 canvas.get_assignment = function(self,use_cache_bool,assign_name,assign_opts)
-  return canvas:get_assignment_generic(use_cache_bool,assign_name,assign_opts,"Assign "..assign_name)
+  return self:get_assignment_generic(use_cache_bool,assign_name,assign_opts,"Assign "..assign_name)
 end
 
 canvas.get_assignment_ungrouped = function(self,use_cache_bool,assign_name,assign_opts)
-  return canvas:get_assignment_generic(use_cache_bool,assign_name,assign_opts,"Assign "..assign_name.." Ungrouped")
+  return self:get_assignment_generic(use_cache_bool,assign_name,assign_opts,"Assign "..assign_name.." Ungrouped")
 end
 
 canvas.get_assignment_generic = function(self,use_cache_bool,assign_name,assign_opts,cache_name)
@@ -113,7 +113,7 @@ canvas.get_assignment_generic = function(self,use_cache_bool,assign_name,assign_
     print('ASSIGNMENT NAME: '..assign_name)
     print('ASSIGNMENT ID:   '..assign_id)
     print('GETTING SUBMISSIONS:')
-    local canvas_sub = canvas:get_pages(true,self.course_prefix .. "assignments/" .. assign_id .. "/submissions",assign_opts)
+    local canvas_sub = self:get_pages(true,self.course_prefix .. "assignments/" .. assign_id .. "/submissions",assign_opts)
     print("(" .. #canvas_sub .. " submissions)")
 
     local to_remove = {}
@@ -307,9 +307,9 @@ canvas.create_assign = function(self,args)
     print("## "..args.name)
     local a
     if assign_id then
-      a = canvas:put(self.course_prefix.."assignments/"..assign_id,new_assign)
+      a = self:put(self.course_prefix.."assignments/"..assign_id,new_assign)
     else
-      a = canvas:post(self.course_prefix.."assignments",new_assign)
+      a = self:post(self.course_prefix.."assignments",new_assign)
       self.assignment_ids[args.name] = a.id
     end
     if a.errors then

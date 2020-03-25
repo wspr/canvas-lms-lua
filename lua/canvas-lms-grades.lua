@@ -10,7 +10,7 @@ canvas.assign_grades = function(self,get_switch,assign_names,students_by_cid)
     elseif get_switch == "never" then
       download_check = "n"
     end
-    local assign = canvas:get_assignment_ungrouped(download_check=="y",assign_name)
+    local assign = self:get_assignment_ungrouped(download_check=="y",assign_name)
     for i,j in pairs(assign) do
       if students_by_cid[j.user_id] then
         students_by_cid[j.user_id].grades = students_by_cid[j.user_id].grades or {}

@@ -24,7 +24,7 @@ canvas.message_group_wfile = function(self,send_check,msg)
     opt = recipients.."&"..subject.."&"..body.."&"..fileid.."&"..isgroup
 
     if send_check=="y" then
-      canvas:post("conversations",encode(opt))
+      self:post("conversations",encode(opt))
     else
       print("MESSAGE:")
       print(opt)
@@ -59,7 +59,7 @@ canvas.message_user = function(self,send_check,msg)
   opt = forcenew.."&"..recipients.."&"..subject.."&"..body
 
   if send_check then
-    canvas:post("conversations",opt)
+    self:post("conversations",opt)
   else
     -- print(opt)
   end
