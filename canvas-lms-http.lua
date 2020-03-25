@@ -16,6 +16,10 @@ canvas.put = function(self,req,opt)
   return canvas.getpostput(self,"PUT",req,opt)
 end
 
+canvas.delete = function(self,req,opt)
+  return canvas.getpostput(self,"DELETE",req,opt)
+end
+
 canvas.getpostput = function(self,param,req,opt_arg)
 
     local use_json = false

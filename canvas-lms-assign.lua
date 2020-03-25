@@ -3,9 +3,25 @@ local binser = require("binser")
 local pretty = require("pl.pretty")
 local date   = require("pl.date")
 
-canvas.setup_assignment_groups = function(self,assign_groups)
+canvas.setup_assignment_groups = function(self,args)
 
   print("# Setting up assignment groups")
+
+  local assign_groups = {}
+  local any_weights = false
+  for ii,vv in ipairs(args) do
+    assign_groups[ii] = {}
+    assign_groups[ii].position = ii
+    assign_groups[ii].name = vv.name
+    assign_groups[ii].group_weight = vv.weight or vv.group_weight or 0
+    if assign_groups[ii].group_weight > 0 then
+      any_weights = true
+    end
+  end
+
+  if any_weights then
+    self:put(self.course_prefix,{course={apply_assignment_group_weights="true"}})
+  end
 
   local assign_grps = self:get_pages(true,self.course_prefix.."assignment_groups")
   local grp_hash = {}
@@ -14,15 +30,10 @@ canvas.setup_assignment_groups = function(self,assign_groups)
   end
 
   for ii,vv in ipairs(assign_groups) do
-    local opt = "position="..ii
-    for kkk,vvv in pairs(vv) do
-      opt = opt .. "&" .. kkk .. "=" .. vvv
-    end
-
     if grp_hash[vv.name] then
-      canvas:put(self.course_prefix.."assignment_groups/"..grp_hash[vv.name],opt)
+      self:put(self.course_prefix.."assignment_groups/"..grp_hash[vv.name],vv)
     else
-      xx = canvas:post(self.course_prefix.."assignment_groups",opt)
+      xx = self:post(self.course_prefix.."assignment_groups",vv)
       grp_hash[xx.name] = xx.id
     end
   end
@@ -130,7 +141,18 @@ end
 
 
 
-
+local day_string_to_num = function(argday)
+  if type(argday) == "string" then
+    if argday == "mon"  then argday = 0 end
+    if argday == "tue"  then argday = 1 end
+    if argday == "wed"  then argday = 2 end
+    if argday == "thu"  then argday = 3 end
+    if argday == "fri"  then argday = 4 end
+    if argday == "sat"  then argday = 5 end
+    if argday == "sun"  then argday = 6 end
+  end
+  return argday
+end
 
 
 
@@ -139,11 +161,16 @@ canvas.create_assign = function(self,args)
     ARGS:
     group_category
     day
-    unlockhr
-    duehr
-    lockhr
+    open_days
+    late_days
+    unlockhr / unlocktime
+    duehr / unlocktime
+    lockhr / unlocktime
     published
     sem
+    assign_type = one of {"online_quiz","none","on_paper","discussion_topic","external_tool"}
+    omit_from_final_grade
+}
 --]]
 
   local sem = args.sem or 1
@@ -163,21 +190,41 @@ canvas.create_assign = function(self,args)
   end
 
   local argday = args.day or 0
-  if type(argday) == "string" then
-    if argday == "mon"  then argday = 0 end
-    if argday == "tue"  then argday = 1 end
-    if argday == "wed"  then argday = 2 end
-    if argday == "thu"  then argday = 3 end
-    if argday == "fri"  then argday = 4 end
-    if argday == "sat"  then argday = 5 end
-    if argday == "sun"  then argday = 6 end
+  argday = day_string_to_num(argday)
+
+  args.open_days = args.open_days or 5
+  args.late_days = args.late_days or 0
+
+  local argtypes_allowed = {"online_quiz","none","on_paper","discussion_topic","external_tool","online_upload","online_text_entry","online_url","media_recording"}
+  args.assign_type = args.assign_type or "online_upload"
+  do
+    local arg_bad = true
+    for ii,vv in ipairs(argtypes_allowed) do
+      if args.assign_type == vv then arg_bad = false end
+    end
+    if arg_bad then
+      print("The 'assign_type' option for creating assignments can be one of:")
+      pretty.dump(argtypes_allowed)
+      error("Bad argument for 'assign_type'.")
+    end
   end
 
-  local argtype = arg.type or "online_upload"
+  local duehr       = args.duehr    or "15"
+  local lockhr      = args.lockhr   or "17"
+  local unlockhr    = args.unlockhr or "08"
+  local duetime     = duehr..":00:00"
+  local locktime    = lockhr..":00:00"
+  local unlocktime  = unlockhr..":00:00"
 
-  local duehr    = args.duehr    or "15"
-  local lockhr   = args.lockhr   or "17"
-  local unlockhr = args.unlockhr or "08"
+  if duehr == "24" then
+    duetime = "23:59:00"
+  end
+  if unlockhr == "24" then
+    unlocktime = "23:59:00"
+  end
+  if lockhr == "24" then
+    locktime = "23:59:00"
+  end
 
   local wkoffset = args.week
   if self.sem_break_week[sem] > 0 and self.sem_break_length[sem] > 0 then
@@ -188,21 +235,21 @@ canvas.create_assign = function(self,args)
 
   local datef = date.Format 'yyyy-mm-dd'
 
-  local today_date = date{}
-  local todaystr   = datef:tostring(today_date)
+  local today_date    = date{}
+  local todaystr      = datef:tostring(today_date)
+  local dayoffset     = argday+7*(wkoffset-1)
 
-  local dayoffset = argday+7*(wkoffset-1)
+  local duedate       = date(self.sem_first_monday[sem]):add{day=dayoffset}
+  local duedatestr    = datef:tostring(duedate).."T"..duetime
+  local duediff       = today_date.time - duedate.time
 
-  local duedate     = date(self.sem_first_monday[sem]):add{day=dayoffset}
-  local duedatestr  = datef:tostring(duedate).."T"..duehr..":00:00"
-  local duediff     = today_date.time - duedate.time
+  local lockdate      = date(self.sem_first_monday[sem]):add{day=dayoffset+args.late_days}
+  local lockdatestr   = datef:tostring(lockdate).."T"..locktime
+  local lockdiff      = today_date.time - lockdate.time
 
-  local lockdate    = date(self.sem_first_monday[sem]):add{day=dayoffset}
-  local lockdatestr = datef:tostring(lockdate).."T"..lockhr..":00:00"
-
-  local dd = date(self.sem_first_monday[sem]):add{day=dayoffset}
-  local unlockdate = dd:add{day=-5}
-  local unlockdatestr = datef:tostring(unlockdate).."T"..unlockhr..":00:00"
+  local unlockdate    = date(self.sem_first_monday[sem]):add{day=dayoffset-args.open_days}
+  local unlockdatestr = datef:tostring(unlockdate).."T"..unlocktime
+  local unlockdiff    = today_date.time - unlockdate.time
 
   local new_assign = {
     assignment =  {
@@ -212,11 +259,11 @@ canvas.create_assign = function(self,args)
                                  unlock_at = unlockdatestr        ,
                                  published = args.published or "true" ,
                            points_possible = args.points          ,
-                          submission_types = argtype              ,
+                          submission_types = args.assign_type     ,
                        assignment_group_id = self.assignment_groups[args.assign_group] ,
                   }
   }
-  if argtype == "online_upload" then
+  if arg.type == "online_upload" then
     new_assign.assignment.allowed_extensions = arg.ext or "pdf"
   end
   if args.rubric then
@@ -224,6 +271,9 @@ canvas.create_assign = function(self,args)
   end
   if group_proj_id then
     new_assign.assignment.group_category_id = group_proj_id
+  end
+  if arg.omit_from_final_grade then
+    new_assign.assignment.omit_from_final_grade = arg.omit_from_final_grade
   end
 
   local descr_filename = args.descr
@@ -239,9 +289,20 @@ canvas.create_assign = function(self,args)
   end
   pretty.dump(new_assign)
 
-  if duediff >= 0 then
-    print("Assignment due in the past; skipping")
+  local diffcontinue = true
+  if lockdiff >= 0 then
+    print("Assignment already locked for students; aborting assignment creation/update.")
+    diffcontinue = false
   else
+    if unlockdiff >= 0 then
+      print("Assignment already unlocked for students, are you sure?")
+      print("Type y to proceed:")
+      local check = io.read()
+      diffcontinue = check == "y"
+    end
+  end
+
+  if diffcontinue then
     local assign_id = self.assignment_ids[args.name]
     print("## "..args.name)
     local a
@@ -257,10 +318,12 @@ canvas.create_assign = function(self,args)
     end
 
     -- RUBRIC
-    if args.rubric then print("ASSIGN RUBRIC: "..args.rubric) end
-    local rubric_id = self.rubric_ids[args.rubric]
-    if rubric_id then
-      self:assoc_rubric{rubric_id = rubric_id, assign_id = assign_id}
+    if args.rubric then
+      print("ASSIGN RUBRIC: "..args.rubric)
+      local rubric_id = self.rubric_ids[args.rubric]
+      if rubric_id then
+        self:assoc_rubric{rubric_id = rubric_id, assign_id = assign_id}
+      end
     end
   end
 
