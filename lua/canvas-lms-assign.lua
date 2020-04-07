@@ -23,23 +23,21 @@ canvas.setup_assignment_groups = function(self,args)
     self:put(self.course_prefix,{course={apply_assignment_group_weights="true"}})
   end
 
-  local assign_grps = self:get_pages(true,self.course_prefix.."assignment_groups")
-  local grp_hash = {}
-  for ii,vv in ipairs(assign_grps) do
-    grp_hash[vv.name] = vv.id
+  if self.assignment_groups == nil then
+    self:get_assignment_groups()
   end
 
   for ii,vv in ipairs(assign_groups) do
-    if grp_hash[vv.name] then
-      self:put(self.course_prefix.."assignment_groups/"..grp_hash[vv.name],vv)
+    if self.assignment_groups[vv.name] then
+      self:put(self.course_prefix.."assignment_groups/"..self.assignment_groups[vv.name],vv)
     else
       xx = self:post(self.course_prefix.."assignment_groups",vv)
-      grp_hash[xx.name] = xx.id
+      self.assignment_groups[xx.name] = xx.id
     end
   end
 
   print("## ASSIGNMENT GROUPS")
-  pretty.dump(grp_hash)
+  pretty.dump(self.assignment_groups)
 
   local Nmarks = 0
   for ii,vv in ipairs(assign_groups) do
@@ -47,6 +45,16 @@ canvas.setup_assignment_groups = function(self,args)
   end
   print("TOTAL MARKS: "..Nmarks)
 
+end
+
+
+canvas.get_assignment_groups = function(self,args)
+
+  local assign_grps = self:get_pages(true,self.course_prefix.."assignment_groups")
+  local grp_hash = {}
+  for ii,vv in ipairs(assign_grps) do
+    grp_hash[vv.name] = vv.id
+  end
   self.assignment_groups = grp_hash
 
 end
@@ -156,7 +164,7 @@ end
 
 
 
-canvas.create_assign = function(self,args)
+canvas.create_assignment = function(self,args)
 --[[
     ARGS:
     group_category
@@ -172,6 +180,11 @@ canvas.create_assign = function(self,args)
     omit_from_final_grade
 }
 --]]
+
+
+  if self.assignment_groups == nil then
+    self:get_assignment_groups()
+  end
 
   local sem = args.sem or 1
 
@@ -303,6 +316,9 @@ canvas.create_assign = function(self,args)
   end
 
   if diffcontinue then
+    if self.assignment_ids == nil then
+      self:get_assignments()
+    end
     local assign_id = self.assignment_ids[args.name]
     print("## "..args.name)
     local a

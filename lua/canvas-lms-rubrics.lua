@@ -29,21 +29,28 @@ end
 
 canvas.send_rubric = function(self,rubric)
 
-  local all_rubrics = self:get_pages(true,canvas.course_prefix.."rubrics")
-  local rubric_hash = {}
-  for ii,vv in ipairs(all_rubrics) do
-    rubric_hash[vv.title] = vv.id
-  end
-
-  rubric_id = rubric_hash[rubric.title]
   local canvas_rubric
+
+  if self.rubrics == nil then
+    self:get_rubrics()
+  end
+  local rubric_id = self.rubric_ids[rubric.title]
+
   if rubric_id then
-    canvas_rubric = self:put(canvas.course_prefix.."rubrics/"..rubric_id,{rubric = rubric})
+    print("RUBRIC SEND: "..rubric.title)
+    print("Rubric already exists in Canvas, are you sure you want to overwrite it?")
+    print("This will DELETE all comments made against any marked assignments.")
+    print("  ")
+    print("Type y to overwrite and delete comments:")
+    dl_check = io.read()
+    if dl_check == "y" then
+      canvas_rubric = self:put(canvas.course_prefix.."rubrics/"..rubric_id,{rubric = rubric})
+    end
   else
     canvas_rubric = self:post(canvas.course_prefix.."rubrics",{rubric = rubric})
   end
 
-  return canvas_rubric
+  return canvas_rubric or {}
 end
 
 
@@ -177,23 +184,23 @@ canvas.setup_csv_rubrics = function(self,args)
 
   print("# Sending CSV rubrics")
 
-  rubric_hash = {}
+  if self.rubrics == nil then
+    self:get_rubrics()
+  end
 
   for ii,vv in ipairs(args.csv) do
     local rubric  = self:rubric_from_csv(args.prefix..vv..args.suffix)
     local crubric = self:send_rubric(rubric)
     if crubric.error_report_id then
       error("Rubric create/update failed :(")
+    elseif crubric.rubric then
+      self.rubric_ids[rubric.title] = crubric.rubric.id
     end
-    rubric_hash[rubric.title] = crubric.rubric.id
 
   end
 
-  self.rubric_ids = rubric_hash
-
   print("## RUBRICS - .rubric_ids ")
   pretty.dump(self.rubric_ids)
-
 
 end
 
