@@ -46,8 +46,11 @@ do
   loadfile('canvas-data.lua', 't', shared)()
 end
 
-canvas.sem_break_week    = canvas.sem_break_week   or {0,0}
+canvas.sem_break_week    = canvas.sem_break_week   or {99,99}
 canvas.sem_break_length  = canvas.sem_break_length or {2,2}
+if #canvas.sem_break_length == 1 then
+  canvas.sem_break_length = {canvas.sem_break_length[1],canvas.sem_break_length[1]}
+end
 
 canvas.cache_dir = canvas.cache_dir or "./cache/"
 lfs.mkdir(canvas.cache_dir)
