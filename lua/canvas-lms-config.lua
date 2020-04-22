@@ -35,15 +35,15 @@ end
 
 do
   local shared = {
-    canvas_url   = function(x) canvas:set_url(x)          end,
-    course_id    = function(x) canvas:set_course_id(x)    end,
-    token        = function(x) canvas:set_token(x)        end,
-    first_monday = function(x) canvas:set_first_monday(x) end,
-    break_week   = function(x) canvas:set_break_week(x)   end,
-    break_length = function(x) canvas:set_break_length(x)   end,
-    cache_dir    = function(x) canvas:set_cache_dir(x)   end,
+    canvas_url       = function(x) canvas:set_url(x)          end,
+    course_id        = function(x) canvas:set_course_id(x)    end,
+    token            = function(x) canvas:set_token(x)        end,
+    first_monday     = function(x) canvas:set_first_monday(x) end,
+    break_after_week = function(x) canvas:set_break_week(x)   end,
+    break_length     = function(x) canvas:set_break_length(x)   end,
+    cache_dir        = function(x) canvas:set_cache_dir(x)   end,
   }
-  loadfile('canvas-data.lua', 't', shared)()
+  loadfile('canvas-config.lua', 't', shared)()
 end
 
 canvas.sem_break_week    = canvas.sem_break_week   or {99,99}
