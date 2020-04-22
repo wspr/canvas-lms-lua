@@ -1,10 +1,10 @@
-package = "lua-canvas-api"
+package = "canvas-lms-lua"
 version = "dev-1"
 source = {
-   url = "git+ssh://git@github.com/wspr/lua-canvas-api.git"
+   url = "git+ssh://git@github.com/wspr/canvas-lms-lua.git"
 }
 description = {
-   homepage = "http://wspr.io/lua-canvas-api",
+   homepage = "http://wspr.io/canvas-lms-lua",
    license = "Apache v2"
 }
 build = {
