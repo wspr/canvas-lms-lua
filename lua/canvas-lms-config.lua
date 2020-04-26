@@ -19,7 +19,8 @@ canvas.set_cache_dir = function(self,str)
 end
 
 canvas.sem_first_monday = {}
-canvas.sem_break_week = {}
+canvas.sem_break_week   = {}
+canvas.sem_break_length = {}
 
 canvas.set_first_monday = function(self,arg)
   self.sem_first_monday[#self.sem_first_monday+1] = arg

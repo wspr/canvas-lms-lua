@@ -167,7 +167,7 @@ end
 canvas.create_assignment = function(self,args)
 --[[
     ARGS:
-    group_category
+    student_group_category -- implies a group submission
     day
     open_days
     late_days
@@ -191,10 +191,6 @@ canvas.create_assignment = function(self,args)
 
   local sem = args.sem or 1
 
-  if not(args.points) then
-    error("Need to specify 'points' this assignment is worth.")
-  end
-
   local group_proj_id = nil
   if args.student_group_category then
     group_proj_id = self.student_group_category[args.student_group_category]
@@ -204,12 +200,6 @@ canvas.create_assignment = function(self,args)
       print("Student group category: "..group_proj_id)
     end
   end
-
-  local argday = args.day or 0
-  argday = day_string_to_num(argday)
-
-  args.open_days = args.open_days or 5
-  args.late_days = args.late_days or 0
 
   local argtypes_allowed = {"online_quiz","none","on_paper","discussion_topic","external_tool","online_upload","online_text_entry","online_url","media_recording"}
   args.assign_type = args.assign_type or "online_upload"
@@ -225,60 +215,80 @@ canvas.create_assignment = function(self,args)
     end
   end
 
-  local duehr       = args.duehr    or "15"
-  local lockhr      = args.lockhr   or "17"
-  local unlockhr    = args.unlockhr or "08"
-  local duetime     = duehr..":00:00"
-  local locktime    = lockhr..":00:00"
-  local unlocktime  = unlockhr..":00:00"
-
-  if duehr == "24" then
-    duetime = "23:59:00"
+  if args.published == nil then
+     args.published = "true"
   end
-  if unlockhr == "24" then
-    unlocktime = "23:59:00"
-  end
-  if lockhr == "24" then
-    locktime = "23:59:00"
-  end
-
-  local wkoffset = args.week
-  if self.sem_break_week[sem] > 0 and self.sem_break_length[sem] > 0 then
-    if wkoffset > self.sem_break_week[sem] then
-      wkoffset = wkoffset + self.sem_break_length[sem]
-    end
-  end
-
-  local datef = date.Format 'yyyy-mm-dd'
-
-  local today_date    = date{}
-  local todaystr      = datef:tostring(today_date)
-  local dayoffset     = argday+7*(wkoffset-1)
-
-  local duedate       = date(self.sem_first_monday[sem]):add{day=dayoffset}
-  local duedatestr    = datef:tostring(duedate).."T"..duetime
-  local duediff       = today_date.time - duedate.time
-
-  local lockdate      = date(self.sem_first_monday[sem]):add{day=dayoffset+args.late_days}
-  local lockdatestr   = datef:tostring(lockdate).."T"..locktime
-  local lockdiff      = today_date.time - lockdate.time
-
-  local unlockdate    = date(self.sem_first_monday[sem]):add{day=dayoffset-args.open_days}
-  local unlockdatestr = datef:tostring(unlockdate).."T"..unlocktime
-  local unlockdiff    = today_date.time - unlockdate.time
 
   local new_assign = {
     assignment =  {
-                                      name = args.name            ,
-                                    due_at = duedatestr           ,
-                                   lock_at = lockdatestr          ,
-                                 unlock_at = unlockdatestr        ,
-                                 published = args.published or "true" ,
-                           points_possible = args.points          ,
-                          submission_types = args.assign_type     ,
-                       assignment_group_id = self.assignment_groups[args.assign_group] ,
+                              name = args.name                                 ,
+                         published = args.published                            ,
+                   points_possible = args.points or "0"                        ,
+                  submission_types = args.assign_type                          ,
+               assignment_group_id = self.assignment_groups[args.assign_group] ,
                   }
   }
+
+  local lockdiff   = -1
+  local unlockdiff =  0
+  -- these are set up so that an assignment with no due date will be queried but not aborted
+
+  if args.week then
+
+    local argday = args.day or 0
+    argday = day_string_to_num(argday)
+
+    args.open_days = args.open_days or 5
+    args.late_days = args.late_days or 0
+
+    local duehr       = args.duehr    or "15"
+    local lockhr      = args.lockhr   or "17"
+    local unlockhr    = args.unlockhr or "08"
+    local duetime     = duehr..":00:00"
+    local locktime    = lockhr..":00:00"
+    local unlocktime  = unlockhr..":00:00"
+
+    if duehr == "24" then
+      duetime = "23:59:00"
+    end
+    if unlockhr == "24" then
+      unlocktime = "23:59:00"
+    end
+    if lockhr == "24" then
+      locktime = "23:59:00"
+    end
+
+    local wkoffset = args.week
+    if self.sem_break_week[sem] > 0 and self.sem_break_length[sem] > 0 then
+      if wkoffset > self.sem_break_week[sem] then
+        wkoffset = wkoffset + self.sem_break_length[sem]
+      end
+    end
+
+    local datef = date.Format 'yyyy-mm-dd'
+
+    local today_date    = date{}
+    local todaystr      = datef:tostring(today_date)
+    local dayoffset     = argday+7*(wkoffset-1)
+
+    local duedate       = date(self.sem_first_monday[sem]):add{day=dayoffset}
+    local duedatestr    = datef:tostring(duedate).."T"..duetime
+    local duediff       = today_date.time - duedate.time
+
+    local lockdate      = date(self.sem_first_monday[sem]):add{day=dayoffset+args.late_days}
+    local lockdatestr   = datef:tostring(lockdate).."T"..locktime
+    local lockdiff      = today_date.time - lockdate.time
+
+    local unlockdate    = date(self.sem_first_monday[sem]):add{day=dayoffset-args.open_days}
+    local unlockdatestr = datef:tostring(unlockdate).."T"..unlocktime
+    local unlockdiff    = today_date.time - unlockdate.time
+
+    new_assign.assignment.due_at    = duedatestr
+    new_assign.assignment.lock_at   = lockdatestr
+    new_assign.assignment.unlock_at = unlockdatestr
+
+  end
+
   if arg.type == "online_upload" then
     new_assign.assignment.allowed_extensions = arg.ext or "pdf"
   end
@@ -303,6 +313,7 @@ canvas.create_assignment = function(self,args)
     descr_html = descr_html:gsub("\n","")
     new_assign.assignment.description = descr_html
   end
+  print("ASSIGNMENT DETAILS FOR CREATION/UPDATE:")
   pretty.dump(new_assign)
 
   local diffcontinue = true
