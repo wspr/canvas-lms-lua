@@ -86,7 +86,24 @@ canvas.setup_group_categories = function(self,categories)
 
   self.student_group_category = projgrp_hash
 
-  print("## PROJECT GROUP CATEGORIES: .student_group_category =")
+  print("## STUDENT GROUP CATEGORIES: .student_group_category =")
+  pretty.dump(self.student_group_category)
+
+end
+
+canvas.get_student_group_categories = function(self)
+
+  print("# Getting student group categories")
+
+  local group_cats = self:get_pages(true,canvas.course_prefix.."group_categories")
+  local projgrp_hash = {}
+  for ii,vv in ipairs(group_cats) do
+    projgrp_hash[vv.name] = vv.id
+  end
+
+  self.student_group_category = projgrp_hash
+
+  print("## STUDENT GROUP CATEGORIES: .student_group_category =")
   pretty.dump(self.student_group_category)
 
 end

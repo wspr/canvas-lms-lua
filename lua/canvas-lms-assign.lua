@@ -185,6 +185,9 @@ canvas.create_assignment = function(self,args)
   if self.assignment_groups == nil then
     self:get_assignment_groups()
   end
+  if self.student_group_category == nil then
+    self:get_student_group_categories()
+  end
 
   local sem = args.sem or 1
 
@@ -335,6 +338,9 @@ canvas.create_assignment = function(self,args)
 
     -- RUBRIC
     if args.rubric then
+      if self.rubric_ids == nil then
+        self:get_rubrics()
+      end
       print("ASSIGN RUBRIC: "..args.rubric)
       local rubric_id = self.rubric_ids[args.rubric]
       if rubric_id then
