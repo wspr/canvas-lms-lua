@@ -30,7 +30,7 @@ canvas.set_break_week = function(self,arg)
 end
 
 canvas.set_break_length = function(self,arg)
-  self.sem_break_length[#self.sem_break_week+1] = arg
+  self.sem_break_length[#self.sem_break_length+1] = arg
 end
 
 do
