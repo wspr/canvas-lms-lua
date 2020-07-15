@@ -5,7 +5,7 @@ local pretty = require("pl.pretty")
 
 canvas.find_user = function(self,str)
 
-  user_data = self:get(self.course_prefix.."users","search_term="..str)
+  user_data = self:get(self.course_prefix.."users",{search_term=str})
 
   return user_data
 
@@ -19,7 +19,7 @@ canvas.get_students = function(self,download_bool)
     download_bool = true
   end
 
-  local students = self:get_pages(download_bool,canvas.course_prefix.."users","enrollment_type[]=student")
+  local students = self:get_pages(download_bool,canvas.course_prefix.."users",{["enrollment_type[]"]="student"})
 
   local students_by_cid = {}
   for k,v in pairs(students) do
@@ -51,7 +51,7 @@ canvas.get_groups = function(self,use_cache_bool,group_category_name)
     local canvas_data = self:get_pages(true, "group_categories/" .. gcat_id .. "/groups" )
     local groups = {}
     for i,j in ipairs(canvas_data) do
-      local group_users = self:get( "groups/" .. j.id .. "/users" , "" )
+      local group_users = self:get( "groups/" .. j.id .. "/users" )
       groups[j.id] = {
                        canvasid   = j.id ,
                        canvasname = j.name ,

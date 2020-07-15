@@ -51,7 +51,7 @@ canvas.message_user = function(self,send_check,msg)
 	  return str
 	end
 
-  local forcenew="force_new=true"
+  local forcenew="bulk_message=true&force_new=true"
   local recipients="recipients[]="..msg.canvasid
   local subject="subject="..encode(msg.subject)
   local body="body="..encode(msg.body)
