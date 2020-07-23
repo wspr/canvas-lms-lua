@@ -12,5 +12,6 @@ require("canvas-lms-assign")
 require("canvas-lms-rubrics")
 require("canvas-lms-grades")
 require("canvas-lms-message")
+require("canvas-lms-modules-pages")
 
 return canvas

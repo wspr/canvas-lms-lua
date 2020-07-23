@@ -44,7 +44,7 @@ do
     break_length     = function(x) canvas:set_break_length(x)   end,
     cache_dir        = function(x) canvas:set_cache_dir(x)   end,
   }
-  loadfile('canvas-config.lua', 't', shared)()
+  loadfile(canvas_config or 'canvas-config.lua', 't', shared)()
 end
 
 canvas.sem_break_week    = canvas.sem_break_week   or {99,99}
