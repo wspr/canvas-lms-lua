@@ -76,13 +76,25 @@ canvas.update_module = function(self,module_name,items)
     self:get_modules()
   end
 
-  if self.modules[module_name] == nil
+  if self.modules[module_name] == nil then
     error("Unknown module: "..module_name)
   end
 
-  local curr_items = self:get_pages(true,self.course_prefix.."modules/"..self.modules[module_name])
+  local module_url = self.course_prefix.."modules/"..self.modules[module_name].."/items"
+
+  local curr_items = self:get_pages(true,module_url)
 
   pretty.dump(curr_items)
+
+  for i,j in ipairs(items) do
+
+    local this_item = j
+    for ii,jj in ipairs(this_item) do
+      this_item.position = ii
+    end
+--    self:post(module_url,{module_item=this_item})
+
+  end
 
 end
 
