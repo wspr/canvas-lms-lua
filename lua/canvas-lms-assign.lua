@@ -210,13 +210,18 @@ canvas.create_assignment = function(self,args)
 
   local argtypes_allowed = {"online_quiz","none","on_paper","discussion_topic","external_tool","online_upload","online_text_entry","online_url","media_recording"}
   args.assign_type = args.assign_type or "online_upload"
+  if type(args.assign_type) == "string" then
+    args.assign_type = {args.assign_type}
+  end
   do
     local arg_bad = true
-    for ii,vv in ipairs(argtypes_allowed) do
-      if args.assign_type == vv then arg_bad = false end
+    for iii,vvv in ipairs(args.assign_type) do
+      for ii,vv in ipairs(argtypes_allowed) do
+        if vvv == vv then arg_bad = false end
+      end
     end
     if arg_bad then
-      print("The 'assign_type' option for creating assignments can be one of:")
+      print("The 'assign_type' option for creating assignments can be any of:")
       pretty.dump(argtypes_allowed)
       error("Bad argument for 'assign_type'.")
     end
@@ -296,7 +301,7 @@ canvas.create_assignment = function(self,args)
 
   end
 
-  if arg.type == "online_upload" then
+  if args.assign_type == "online_upload" then
     new_assign.assignment.allowed_extensions = arg.ext or "pdf"
   end
   if args.rubric then
