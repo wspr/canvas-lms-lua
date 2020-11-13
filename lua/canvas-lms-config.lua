@@ -15,7 +15,8 @@ canvas.set_token = function(self,str)
 end
 
 canvas.set_cache_dir = function(self,str)
-  self.cache_dir = str
+  self.cache_top = str
+  self.cache_dir = str..self.courseid.."/"
 end
 
 canvas.sem_first_monday = {}

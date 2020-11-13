@@ -1,4 +1,4 @@
-local Date   = require("pl.tablex")
+local tablex   = require("pl.tablex")
 
 canvas.assign_grades = function(self,get_switch,assign_names,students_by_cid)
 

@@ -58,10 +58,17 @@ canvas.message_user = function(self,send_check,msg)
 
   opt = forcenew.."&"..recipients.."&"..subject.."&"..body
 
+  if msg.context then
+    opt = opt.."&context_code="..encode(msg.context)
+  end
+  if msg.course then
+    opt = opt.."&context_code="..encode("course_"..msg.course)
+  end
+
   if send_check then
     self:post("conversations",opt)
   else
-    -- print(opt)
+    print(opt)
   end
 
 

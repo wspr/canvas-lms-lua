@@ -368,6 +368,9 @@ canvas.create_assignment = function(self,args)
       local rubric_id = self.rubric_ids[args.rubric]
       if rubric_id then
         self:assoc_rubric{rubric_id = rubric_id, assign_id = assign_id}
+      else
+        pretty.dump(self.rubric_ids)
+        error("Assoc rubric failed; no rubric '"..args.rubric.."'")
       end
     end
   end
