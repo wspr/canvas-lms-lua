@@ -12,11 +12,16 @@ canvas.find_user = function(self,str)
 end
 
 
-canvas.get_students = function(self,download_bool)
+canvas.get_students = function(self,opt)
 
-  local download_bool = download_bool
-  if download_bool == nil then
+  local opt = opt or {}
+  local download_bool = opt.download
+  if self.students_cid == false then
     download_bool = true
+  else
+    if download_bool == nil then
+      download_bool = false
+    end
   end
 
   local students = self:get_pages(download_bool,canvas.course_prefix.."users",{["enrollment_type[]"]="student"})
@@ -26,6 +31,7 @@ canvas.get_students = function(self,download_bool)
     students_by_cid[v.id] = v
   end
 
+  self.students_cid = students_by_cid
   return students_by_cid
 
 end

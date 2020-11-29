@@ -60,9 +60,10 @@ canvas.message_user = function(self,send_check,msg)
 
   if msg.context then
     opt = opt.."&context_code="..encode(msg.context)
-  end
-  if msg.course then
-    opt = opt.."&context_code="..encode("course_"..msg.course)
+  elseif msg.course then
+    opt = opt.."&context_code=course_"..msg.course
+  else
+    opt = opt.."&context_code=course_"..self.courseid
   end
 
   if send_check then
