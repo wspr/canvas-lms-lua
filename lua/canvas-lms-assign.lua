@@ -117,11 +117,36 @@ canvas.get_assignment_generic = function(self,use_cache_bool,assign_name,assign_
 
     canvas_data = self:get(self.course_prefix .. "assignments","search_term=" .. assign_name)
     assign_id = canvas_data[1]["id"]
+    local final_grader_id = canvas_data[1]["final_grader_id"]
+
+    local moderator_reset = false
+
+    if final_grader_id then
+      print('Moderated assignment -- checking')
+
+      local canvas_me = self:get("users/self")
+      local my_id = canvas_me.id
+
+      if final_grader_id == my_id then
+        print('You are the allocated "moderator" -- good')
+      else
+        print('Switching "moderator"')
+        self:put(self.course_prefix .. "assignments/"..assign_id,{assignment={final_grader_id=my_id}})
+        moderator_reset = true
+      end
+
+    end
 
     print('ASSIGNMENT NAME: '..assign_name)
     print('ASSIGNMENT ID:   '..assign_id)
     print('GETTING SUBMISSIONS:')
     local canvas_sub = self:get_pages(true,self.course_prefix .. "assignments/" .. assign_id .. "/submissions",assign_opts)
+
+    if moderator_reset then
+        print('Resetting "moderator"')
+        self:put(self.course_prefix .. "assignments/"..assign_id,{assignment={final_grader_id=final_grader_id}})
+    end
+
     print("(" .. #canvas_sub .. " submissions)")
 
     local to_remove = {}
