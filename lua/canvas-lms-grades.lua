@@ -1,4 +1,5 @@
 local tablex   = require("pl.tablex")
+local pretty   = require("pl.pretty")
 
 canvas.get_assign_grades = function(self,opt)
 
@@ -17,7 +18,7 @@ canvas.get_assign_grades = function(self,opt)
     for i,j in pairs(assign) do
       if self.students_cid[j.user_id] then
         self.students_cid[j.user_id].grades = self.students_cid[j.user_id].grades or {}
-        self.students_cid[j.user_id].grades[assign_name] = j.score
+        self.students_cid[j.user_id].grades[assign_name] = j.grade
       end
     end
 
