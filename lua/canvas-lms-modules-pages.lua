@@ -25,7 +25,6 @@ canvas.setup_modules = function(self,modules)
     if canvas.modules[j] == nil then
       xx = self:post(self.course_prefix.."modules",{module={name=j,position=i}})
       modules[j] = xx.id
-      pretty.dump(xx)
     end
   end
 
@@ -65,6 +64,7 @@ canvas.setup_modules = function(self,modules)
     end
   end
 
+  self:get_modules()
 
 end
 
@@ -81,20 +81,63 @@ canvas.update_module = function(self,module_name,items)
   end
 
   local module_url = self.course_prefix.."modules/"..self.modules[module_name].."/items"
-
   local curr_items = self:get_pages(true,module_url)
 
-  pretty.dump(curr_items)
+  local curr_items_lookup = {}
+  for i,this_item in ipairs(curr_items) do
+    curr_items_lookup[this_item.title] = this_item.id
+  end
 
+  -- setup
+  local items_lookup = {}
+  local items = items
   for i,j in ipairs(items) do
 
-    local this_item = j
-    for ii,jj in ipairs(this_item) do
-      this_item.position = ii
-    end
---    self:post(module_url,{module_item=this_item})
+      local this_item = j
+      this_item.position = i
 
+      if not(this_item.heading==nil) then
+        this_item.type = "SubHeader"
+        this_item.title = this_item.heading
+        this_item.heading = nil
+      end
+
+      if not(this_item.filename==nil) then
+        this_item.type = "File"
+        local tmp = self:get(self.course_prefix.."files/",{search_term=this_item.filename})
+        if not(tmp[1].id==nil) then
+          this_item.content_id = tmp[1].id
+        end
+        this_item.filename = nil
+      end
+
+      if not(this_item.echo==nil) then
+        this_item.type = "ExternalTool"
+        this_item.external_url = "https://echo360.org.au/lti/5444fea8-33ce-4784-934a-2e9f0cb5a200"
+        this_item.echo = nil
+      end
+
+      if not(curr_items_lookup[this_item.title]==nil) then
+        self:put(module_url.."/"..curr_items_lookup[this_item.title],{module_item=this_item})
+      else
+        self:post(module_url,{module_item=this_item})
+      end
+
+      items_lookup[this_item.title] = true
   end
+
+  for k,id in pairs(curr_items_lookup) do
+    if not(items_lookup[k]) then
+      print("Module '"..module_name.."': item currently exists but not specified: '"..k.. "'. Delete it?")
+      print("Type y to do so:")
+      check = io.read()
+      if check == "y" then
+        self:delete(module_url.."/"..id)
+      end
+    end
+  end
+
+
 
 end
 

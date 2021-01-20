@@ -266,6 +266,7 @@ canvas.create_assignment = function(self,args)
                   }
   }
 
+  local duediff    =  0
   local lockdiff   = -1
   local unlockdiff =  0
   -- these are set up so that an assignment with no due date will be queried but not aborted
@@ -310,15 +311,15 @@ canvas.create_assignment = function(self,args)
 
     local duedate       = date(self.sem_first_monday[sem]):add{day=dayoffset}
     local duedatestr    = datef:tostring(duedate).."T"..duetime
-    local duediff       = today_date.time - duedate.time
+    duediff       = today_date.time - duedate.time
 
     local lockdate      = date(self.sem_first_monday[sem]):add{day=dayoffset+args.late_days}
     local lockdatestr   = datef:tostring(lockdate).."T"..locktime
-    local lockdiff      = today_date.time - lockdate.time
+    lockdiff      = today_date.time - lockdate.time
 
     local unlockdate    = date(self.sem_first_monday[sem]):add{day=dayoffset-args.open_days}
     local unlockdatestr = datef:tostring(unlockdate).."T"..unlocktime
-    local unlockdiff    = today_date.time - unlockdate.time
+    unlockdiff    = today_date.time - unlockdate.time
 
     new_assign.assignment.due_at    = duedatestr
     new_assign.assignment.lock_at   = lockdatestr
@@ -355,7 +356,7 @@ canvas.create_assignment = function(self,args)
 
   local diffcontinue = true
   if lockdiff >= 0 then
-    print("Assignment already locked for students; aborting assignment creation/update.")
+    print("Assignment already locked for students; skipping assignment creation/update.")
     diffcontinue = false
   else
     if unlockdiff >= 0 then
@@ -365,6 +366,8 @@ canvas.create_assignment = function(self,args)
       diffcontinue = check == "y"
     end
   end
+
+  local assign_out
 
   if diffcontinue then
     if self.assignment_ids == nil then
@@ -383,6 +386,7 @@ canvas.create_assignment = function(self,args)
       pretty.dump(a)
       error("Create/update assignment failed")
     end
+    assign_out = a
 
     -- RUBRIC
     if args.rubric then
@@ -399,6 +403,8 @@ canvas.create_assignment = function(self,args)
       end
     end
   end
+
+  return assign_out
 
 end
 
