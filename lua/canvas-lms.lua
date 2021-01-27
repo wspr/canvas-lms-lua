@@ -14,5 +14,6 @@ require("canvas-lms-grades")
 require("canvas-lms-message")
 require("canvas-lms-announcements")
 require("canvas-lms-modules-pages")
+require("canvas-lms-discuss")
 
 return canvas
