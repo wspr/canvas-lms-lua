@@ -5,7 +5,7 @@ local pretty = require("pl.pretty")
 
 canvas.get_modules = function(self,args)
 
-  local modules = self:get_pages(true,self.course_prefix.."modules")
+  local modules = self:get_pages(true,self.course_prefix.."modules",{include={"items"}})
   local hash = {}
   for ii,vv in ipairs(modules) do
     modules[vv.name] = vv.id
@@ -138,6 +138,53 @@ canvas.update_module = function(self,module_name,items)
   end
 
 
+
+end
+
+
+
+canvas.check_modules = function(self)
+
+  if self.modules == nil then
+    self:get_modules()
+  end
+
+  for ii,jj in ipairs(self.modules) do
+
+    if jj.published then
+
+      local any_published = false
+      for iii,jjj in ipairs(jj.items) do
+        if jjj.published then
+          any_published = true
+        end
+      end
+      if not(any_published) then
+        print("Module '"..jj.name.."' it published but has no published items. Un-publish now?")
+        print("Type y to do so:")
+        if io.read() == "y" then
+          self:put(self.course_prefix.."modules/"..jj.id,{module={published=false}})
+        end
+      end
+
+    else
+
+      local any_published = false
+      for iii,jjj in ipairs(jj.items) do
+        if jjj.published then
+          any_published = true
+        end
+      end
+      if any_published then
+        print("Module '"..jj.name.."' it not published but has published items. Publish now?")
+        print("Type y to do so:")
+        if io.read() == "y" then
+          self:put(self.course_prefix.."modules/"..jj.id,{module={published=true}})
+        end
+      end
+
+    end
+  end
 
 end
 

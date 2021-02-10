@@ -7,7 +7,14 @@ local pretty = require("pl.pretty")
 --]]
 canvas.setup_discussion_topics = function(self,args)
 
-  print("# Setting up assignment groups")
+  print("# Setting up discussion topics")
+
+  print("Disable students from creating their own topics?")
+  print("Type y to do so:")
+  check = io.read()
+  if check == "y" then
+    self:put(self.course_prefix.."settings/",{allow_student_discussion_topics=false})
+  end
 
   local discussion_topics = {}
   local titles_lookup = {}

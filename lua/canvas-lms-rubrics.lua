@@ -1,7 +1,7 @@
 
 local pretty = require("pl.pretty")
 local csv    = require("csv")
-
+local path   = require("pl.path")
 
 
 
@@ -77,6 +77,9 @@ end
 
 canvas.rubric_from_csv = function(self,csvfile)
 
+  if not(path.exists(csvfile)) then
+    error("File '"..csvfile.."' not found.")
+  end
   local f = csv.open(csvfile)
 
   local Nrow = 0
