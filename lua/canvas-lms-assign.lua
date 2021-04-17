@@ -2,6 +2,8 @@
 local binser = require("binser")
 local pretty = require("pl.pretty")
 local date   = require("pl.date")
+local path   = require("pl.path")
+local markdown = require("markdown")
 
 canvas.setup_assignment_groups = function(self,args)
 
@@ -344,11 +346,24 @@ canvas.create_assignment = function(self,args)
 
   local descr_filename = args.descr
   if descr_filename then
-    descr_html = nil
+    local descr = nil
+    local descr_html = nil
+    if not(path.isfile(descr_filename)) then
+      descr_filename = "assign_details/"..descr_filename
+      if not(path.isfile(descr_filename)) then
+        error("Description file '"..descr_filename.."' does not seem to exist.")
+      end
+    end
     do
-      local f = assert(io.open("assign_details/"..descr_filename, "r"))
-      descr_html = f:read("*all")
+      local f = assert(io.open(descr_filename, "r"))
+      descr = f:read("*all")
       f:close()
+    end
+    fname,fext = splitext(descr_filename)
+    if fext == "html" then
+      descr_html = descr
+    elseif fext == "md" then
+      descr_html = markdown(descr)
     end
     descr_html = descr_html:gsub("\n","")
     new_assign.assignment.description = descr_html
