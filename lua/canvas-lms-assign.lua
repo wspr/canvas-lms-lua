@@ -203,6 +203,7 @@ end
 canvas.create_assignment = function(self,args)
 --[[
     ARGS:
+    ask
     student_group_category -- implies a group submission
     day
     open_days
@@ -217,6 +218,15 @@ canvas.create_assignment = function(self,args)
 }
 --]]
 
+  local ask = args.ask or ""
+
+  if ask == "" then
+    print("Create/update items for assignment '"..module_name.."'?")
+    print("Type y to proceed:")
+    ask = io.read()
+  end
+
+  if ask == "y" then
 
   if self.assignment_groups == nil then
     self:get_assignment_groups()
@@ -419,6 +429,8 @@ canvas.create_assignment = function(self,args)
         error("Assoc rubric failed; no rubric '"..args.rubric.."'")
       end
     end
+  end
+
   end
 
   return assign_out
