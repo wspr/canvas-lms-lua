@@ -178,6 +178,7 @@ local day_string_to_num = function(argday)
   if type(argday) == "string" then
     if argday == "mon"       then argday =   0 end
     if argday == "tue"       then argday =   1 end
+    if argday == "tues"      then argday =   1 end
     if argday == "wed"       then argday =   2 end
     if argday == "thu"       then argday =   3 end
     if argday == "fri"       then argday =   4 end
@@ -185,6 +186,7 @@ local day_string_to_num = function(argday)
     if argday == "sun"       then argday =   6 end
     if argday == "mon-next"  then argday = 7+0 end
     if argday == "tue-next"  then argday = 7+1 end
+    if argday == "tues-next" then argday = 7+1 end
     if argday == "wed-next"  then argday = 7+2 end
     if argday == "thu-next"  then argday = 7+3 end
     if argday == "fri-next"  then argday = 7+4 end
