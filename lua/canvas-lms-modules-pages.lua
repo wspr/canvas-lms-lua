@@ -69,8 +69,9 @@ canvas.setup_modules = function(self,modules)
 end
 
 
+-- https://canvas.instructure.com/doc/api/modules.html#method.context_module_items_api.create
 
-canvas.update_module = function(self,module_name,items)
+canvas.update_module = function(self,module_name,ask,items)
 
   if self.modules == nil then
     self:get_modules()
@@ -79,6 +80,14 @@ canvas.update_module = function(self,module_name,items)
   if self.modules[module_name] == nil then
     error("Unknown module: "..module_name)
   end
+
+  if ask == "" then
+    print("Create/update items for module '"..module_name.."'?")
+    print("Type y to proceed:")
+    ask = io.read()
+  end
+
+  if ask == "y" then
 
   local module_url = self.course_prefix.."modules/"..self.modules[module_name].."/items"
   local curr_items = self:get_pages(true,module_url)
@@ -102,10 +111,25 @@ canvas.update_module = function(self,module_name,items)
         this_item.heading = nil
       end
 
+      if not(this_item.url==nil) then
+        this_item.type = "ExternalUrl"
+        this_item.external_url = this_item.url
+        this_item.new_tab = true
+        this_item.url = nil
+      end
+
+      if not(this_item.page==nil) then
+        this_item.type = "Page"
+        this_item.page_url = this_item.page
+        this_item.page = nil
+      end
+
       if not(this_item.filename==nil) then
         this_item.type = "File"
         local tmp = self:get(self.course_prefix.."files/",{search_term=this_item.filename})
-        if not(tmp[1].id==nil) then
+        if tmp[1].id==nil then
+          error("File '"..this_item.filename.."' not found.")
+        else
           this_item.content_id = tmp[1].id
         end
         this_item.filename = nil
@@ -137,7 +161,7 @@ canvas.update_module = function(self,module_name,items)
     end
   end
 
-
+  end
 
 end
 
