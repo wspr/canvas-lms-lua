@@ -15,23 +15,22 @@ end
 canvas.get_students = function(self,opt)
 
   local opt = opt or {}
-  local download_bool = opt.download
+  local download_bool = opt.download or false
   if self.students_cid == false then
     download_bool = true
-  else
-    if download_bool == nil then
-      download_bool = false
-    end
   end
 
   local students = self:get_pages(download_bool,canvas.course_prefix.."users",{["enrollment_type[]"]="student"})
 
   local students_by_cid = {}
+  local students_by_id = {}
   for k,v in pairs(students) do
     students_by_cid[v.id] = v
+    students_by_id[v.sis_user_id] = v
   end
 
   self.students_cid = students_by_cid
+  self.students_id  = students_by_id
   return students_by_cid
 
 end
