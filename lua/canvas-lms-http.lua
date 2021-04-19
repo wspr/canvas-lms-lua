@@ -6,31 +6,42 @@ local ltn12  = require("ltn12")
 local json   = require("json")
 local binser = require("binser")
 
---- Wrapper for REST GET
--- @param self ,
--- @param req URL to get
+--- Wrapper for GET
+-- @param self
+-- @param req URL to GET from
 -- @param opt table of optional parameters
--- @return the REST result
+-- @return table of the REST result
 canvas.get = function(self,req,opt)
   return canvas.getpostput(self,"GET",req,opt)
 end
 
---- Wrapper for REST POST
--- @param self ,
--- @param req URL to post
+--- Wrapper for POST
+-- @param self
+-- @param req URL to POST to
 -- @param opt table of optional parameters
--- @return the REST result
+-- @return table of the REST result
 canvas.post = function(self,req,opt)
   return canvas.getpostput(self,"POST",req,opt)
 end
 
+--- Wrapper for PUT
+-- @param self
+-- @param req URL to PUT to
+-- @param opt table of optional parameters
+-- @return table of the REST result
 canvas.put = function(self,req,opt)
   return canvas.getpostput(self,"PUT",req,opt)
 end
 
+--- Wrapper for DELETE
+-- @param self
+-- @param req URL to DELETE from
+-- @param opt table of optional parameters
+-- @return table of the REST result
 canvas.delete = function(self,req,opt)
   return canvas.getpostput(self,"DELETE",req,opt)
 end
+
 
 canvas.getpostput = function(self,param,req,opt_arg)
 
@@ -53,7 +64,6 @@ canvas.getpostput = function(self,param,req,opt_arg)
     end
 
     return canvas_data
-
 end
 
 canvas.getpostput_str = function(self,param,req,opt)
@@ -139,6 +149,17 @@ canvas.upload = function(self,path,file)
 end
 
 
+--- Paginated GET
+-- Most REST interfaces use pagination to control sizes out return data.
+-- This requires iteration of multiple requests to return a full collection of information.
+-- Since this can be quite slow, this function has a built-in cache feature that stores
+-- the data to disk and if desired re-reads this cache instead of slowly requesting the data again.
+-- Where the cache is stored can be customised in the config file.
+-- @param self
+-- @param download_bool true | false | "ask"
+-- @param req URL to GET from
+-- @param opt table of optional parameters
+-- @return table of the REST result
 
 canvas.get_pages = function(self,download_bool,req,opt)
 
