@@ -38,24 +38,21 @@ jobs:
           luarocks install ldoc
 
       # Checks-out your repository under $GITHUB_WORKSPACE
-      - uses: actions/checkout@v2
+      - name: Github magic
+        uses: actions/checkout@v2
         with:
+          fetch-depth: 0
           ref: gh-pages
-
-      - name: Update to latest canvas-lms-lua
+          
+      # apparently this works
+      - name: LDoc and deploy
         run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
           git rebase master
-
-      - name: Run ldoc
-        run: |
           cd canvas-lms-lua
           ldoc lua/
-          
-      - name: Push to gh-pages branch
-        run: |
-          cd canvas-lms-lua
           git add doc/*
           git commit -m "doc update"
           git push -f
-          
          
