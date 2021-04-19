@@ -39,13 +39,22 @@ jobs:
         # uses: leafo/gh-actions-luarocks@218573cd14f9a47b079c9b89349f9b71cb5ee706
         uses: leafo/gh-actions-luarocks@v4.0.0
 
-      - name: Run ldoc
+      - name: Install ldoc
         run: |
           luarocks install ldoc
+          
+      - name: Run ldoc
+        run: |
           cd canvas-lms-lua
+          ldoc lua/
+          
+      - name: Push to gh-pages branch
+        run: |
+          cd canvas-lms-lua
+          git config --global user.email "noreply@wspr.io"
+          git config --global user.name  "Will Robertson's robot"
           git checkout gh-pages
           git rebase master
-          ldoc lua/
           git add doc/*
           git commit -m "doc update"
           git push -f
