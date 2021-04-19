@@ -54,25 +54,25 @@
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#canvas.get">canvas.get (self, req, opt)</a></td>
+	<td class="name" nowrap><a href="#get">get (self, req, opt)</a></td>
 	<td class="summary">Wrapper for GET</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#canvas.post">canvas.post (self, req, opt)</a></td>
+	<td class="name" nowrap><a href="#get_pages">get_pages (self, download_bool, req, opt)</a></td>
+	<td class="summary">Paginated GET
+ Most REST interfaces use pagination to control sizes out return data.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#post">post (self, req, opt)</a></td>
 	<td class="summary">Wrapper for POST</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#canvas.put">canvas.put (self, req, opt)</a></td>
+	<td class="name" nowrap><a href="#put">put (self, req, opt)</a></td>
 	<td class="summary">Wrapper for PUT</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#canvas.delete">canvas.delete (self, req, opt)</a></td>
+	<td class="name" nowrap><a href="#delete">delete (self, req, opt)</a></td>
 	<td class="summary">Wrapper for DELETE</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#canvas.get_pages">canvas.get_pages (self, download_bool, req, opt)</a></td>
-	<td class="summary">Paginated GET
- Most REST interfaces use pagination to control sizes out return data.</td>
 	</tr>
 </table>
 
@@ -84,8 +84,8 @@
 
     <dl class="function">
     <dt>
-    <a name = "canvas.get"></a>
-    <strong>canvas.get (self, req, opt)</strong>
+    <a name = "get"></a>
+    <strong>get (self, req, opt)</strong>
     </dt>
     <dd>
     Wrapper for GET
@@ -97,6 +97,7 @@
 
         </li>
         <li><span class="parameter">req</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
          URL to GET from
         </li>
         <li><span class="parameter">opt</span>
@@ -115,101 +116,8 @@
 
 </dd>
     <dt>
-    <a name = "canvas.post"></a>
-    <strong>canvas.post (self, req, opt)</strong>
-    </dt>
-    <dd>
-    Wrapper for POST
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">self</span>
-
-        </li>
-        <li><span class="parameter">req</span>
-         URL to POST to
-        </li>
-        <li><span class="parameter">opt</span>
-         table of optional parameters
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        table of the REST result
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "canvas.put"></a>
-    <strong>canvas.put (self, req, opt)</strong>
-    </dt>
-    <dd>
-    Wrapper for PUT
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">self</span>
-
-        </li>
-        <li><span class="parameter">req</span>
-         URL to PUT to
-        </li>
-        <li><span class="parameter">opt</span>
-         table of optional parameters
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        table of the REST result
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "canvas.delete"></a>
-    <strong>canvas.delete (self, req, opt)</strong>
-    </dt>
-    <dd>
-    Wrapper for DELETE
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">self</span>
-
-        </li>
-        <li><span class="parameter">req</span>
-         URL to DELETE from
-        </li>
-        <li><span class="parameter">opt</span>
-         table of optional parameters
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        table of the REST result
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "canvas.get_pages"></a>
-    <strong>canvas.get_pages (self, download_bool, req, opt)</strong>
+    <a name = "get_pages"></a>
+    <strong>get_pages (self, download_bool, req, opt)</strong>
     </dt>
     <dd>
     Paginated GET
@@ -229,7 +137,104 @@
          true | false | "ask"
         </li>
         <li><span class="parameter">req</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
          URL to GET from
+        </li>
+        <li><span class="parameter">opt</span>
+         table of optional parameters
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        table of the REST result
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "post"></a>
+    <strong>post (self, req, opt)</strong>
+    </dt>
+    <dd>
+    Wrapper for POST
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">self</span>
+
+        </li>
+        <li><span class="parameter">req</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         URL to POST to
+        </li>
+        <li><span class="parameter">opt</span>
+         table of optional parameters
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        table of the REST result
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "put"></a>
+    <strong>put (self, req, opt)</strong>
+    </dt>
+    <dd>
+    Wrapper for PUT
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">self</span>
+
+        </li>
+        <li><span class="parameter">req</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         URL to PUT to
+        </li>
+        <li><span class="parameter">opt</span>
+         table of optional parameters
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        table of the REST result
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "delete"></a>
+    <strong>delete (self, req, opt)</strong>
+    </dt>
+    <dd>
+    Wrapper for DELETE
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">self</span>
+
+        </li>
+        <li><span class="parameter">req</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         URL to DELETE from
         </li>
         <li><span class="parameter">opt</span>
          table of optional parameters
@@ -253,7 +258,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2021-04-19 08:16:06 </i>
+<i style="float:right;">Last updated 2021-04-19 08:21:30 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
