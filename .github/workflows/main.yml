@@ -43,8 +43,7 @@ jobs:
      
       - name: copy & push
         run: |
-          ls -R
-          cp -f canvas-repo/doc/* canvas-doc/doc/
+          cp -rf canvas-repo/doc/* canvas-doc/doc/
           cd canvas-doc
           git config user.name github-actions
           git config user.email github-actions@github.com
