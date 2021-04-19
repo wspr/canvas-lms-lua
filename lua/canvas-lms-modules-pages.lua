@@ -1,3 +1,5 @@
+--- Canvas LMS in Lua: Modules and pages
+-- @module canvas-modules-pages
 
 local binser = require("binser")
 local pretty = require("pl.pretty")

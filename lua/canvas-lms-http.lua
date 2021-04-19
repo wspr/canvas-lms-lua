@@ -1,6 +1,6 @@
---- Canvas HTTP
+--- Canvas LMS in Lua: HTTP
 -- @module canvas-http
--- @alias  canvas
+
 
 local http   = require("ssl.https")
 local ltn12  = require("ltn12")

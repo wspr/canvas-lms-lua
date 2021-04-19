@@ -1,3 +1,5 @@
+--- Canvas LMS in Lua: Rubrics
+-- @module canvas-rubrics
 
 local pretty = require("pl.pretty")
 local csv    = require("csv")

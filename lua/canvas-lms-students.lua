@@ -1,3 +1,5 @@
+--- Canvas LMS in Lua: Students
+-- @module canvas-students
 
 local binser = require("binser")
 local pretty = require("pl.pretty")

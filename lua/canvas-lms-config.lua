@@ -1,3 +1,5 @@
+--- Canvas LMS in Lua: Configuration
+-- @module canvas-config
 
 local lfs    = require "lfs"
 

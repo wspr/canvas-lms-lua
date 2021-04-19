@@ -1,3 +1,5 @@
+--- Canvas LMS in Lua: Discussion Boards
+-- @module canvas-discuss
 
 local binser = require("binser")
 local pretty = require("pl.pretty")

@@ -1,3 +1,5 @@
+--- Canvas LMS in Lua: Assignments
+-- @module canvas-assign
 
 local binser = require("binser")
 local pretty = require("pl.pretty")
