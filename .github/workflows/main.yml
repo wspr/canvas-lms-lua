@@ -27,19 +27,23 @@ jobs:
 
       - name: Checkout repo
         uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-          ref: gh-pages
           
-      - name: Run ldoc and deploy
+      - name: Run ldoc
         run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git branch
-          git rebase master
           cd canvas-lms-lua
           ldoc lua/
-          git add doc/*
-          git commit -m "doc update"
-          git push -f
          
+      - name: Checkout repo
+        uses: actions/checkout@v2
+        with:
+          ref: gh-pages
+         path: canvas-doc
+     
+      - name: copy & push
+        run: |
+          cp -f canvas-lms-lua/doc/* canvas-doc/doc/
+          cd canvas-doc
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git commit -a -m "doc autogen"
+          git push
