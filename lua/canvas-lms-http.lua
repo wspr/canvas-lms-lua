@@ -7,7 +7,7 @@ local ltn12  = require("ltn12")
 local json   = require("json")
 local binser = require("binser")
 
---- Wrapper for GET
+--- Wrapper for GET.
 -- @param self
 -- @tparam string req URL to GET from
 -- @param opt table of optional parameters
@@ -17,7 +17,7 @@ canvas.get = function(self,req,opt)
 end
 
 
---- Paginated GET
+--- Paginated GET.
 -- Most REST interfaces use pagination to control sizes out return data.
 -- This requires iteration of multiple requests to return a full collection of information.
 -- Since this can be quite slow, this function has a built-in cache feature that stores
@@ -28,6 +28,7 @@ end
 -- @tparam string req URL to GET from
 -- @param opt table of optional parameters
 -- @return table of the REST result
+-- @usage canvas:get_pages(true,self.course_prefix.."assignments")
 
 canvas.get_pages = function(self,download_bool,req,opt)
 
@@ -75,7 +76,7 @@ canvas.get_pages = function(self,download_bool,req,opt)
 end
 
 
---- Wrapper for POST
+--- Wrapper for POST.
 -- @param self
 -- @tparam string req URL to POST to
 -- @param opt table of optional parameters
@@ -84,7 +85,7 @@ canvas.post = function(self,req,opt)
   return canvas.getpostput(self,"POST",req,opt)
 end
 
---- Wrapper for PUT
+--- Wrapper for PUT.
 -- @param self
 -- @tparam string req URL to PUT to
 -- @param opt table of optional parameters
@@ -93,7 +94,7 @@ canvas.put = function(self,req,opt)
   return canvas.getpostput(self,"PUT",req,opt)
 end
 
---- Wrapper for DELETE
+--- Wrapper for DELETE.
 -- @param self
 -- @tparam string req URL to DELETE from
 -- @param opt table of optional parameters
