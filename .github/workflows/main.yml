@@ -32,7 +32,7 @@ jobs:
           
       - name: Run ldoc
         run: |
-          cd canvas-lms-lua
+          cd canvas-repo
           ldoc lua/
          
       - name: Checkout doc repo
