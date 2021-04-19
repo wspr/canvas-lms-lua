@@ -33,7 +33,7 @@ jobs:
       - name: Run ldoc
         run: |
           cd canvas-repo
-          ldoc lua/
+          ldoc --dir docs lua
          
       - name: Checkout doc repo
         uses: actions/checkout@v2
