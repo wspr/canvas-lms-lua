@@ -7,6 +7,25 @@ local date   = require("pl.date")
 local path   = require("pl.path")
 local markdown = require("markdown")
 
+--- Get assignment groups IDs.
+-- Gets details of each assignment group and stores their IDs for later lookup. Data stored in |self.assignment_groups|.
+-- @param self
+
+canvas.get_assignment_groups = function(self)
+
+  local assign_grps = self:get_pages(true,self.course_prefix.."assignment_groups")
+  local grp_hash = {}
+  for ii,vv in ipairs(assign_grps) do
+    grp_hash[vv.name] = vv.id
+  end
+  self.assignment_groups = grp_hash
+
+end
+
+--- Set up assignment groups.
+-- @param self
+-- @tparam table setup arguments
+
 canvas.setup_assignment_groups = function(self,args)
 
   print("# Setting up assignment groups")
@@ -52,16 +71,6 @@ canvas.setup_assignment_groups = function(self,args)
 end
 
 
-canvas.get_assignment_groups = function(self,args)
-
-  local assign_grps = self:get_pages(true,self.course_prefix.."assignment_groups")
-  local grp_hash = {}
-  for ii,vv in ipairs(assign_grps) do
-    grp_hash[vv.name] = vv.id
-  end
-  self.assignment_groups = grp_hash
-
-end
 
 
 
@@ -83,6 +92,7 @@ canvas.get_assignment_list = function(self,opt)
 end
 
 
+--- Get all assignments and store their metadata.
 canvas.get_assignments = function(self)
 
   print("# Getting assignments currently in Canvas")
@@ -200,10 +210,10 @@ local day_string_to_num = function(argday)
   return argday
 end
 
---[[
-canvas.defaults.assignment.day = 0
---]]
 
+--- Create a Canvas assignment.
+-- @param self
+-- @tparam table arguments
 canvas.create_assignment = function(self,args)
 --[[
     ARGS:
@@ -219,8 +229,14 @@ canvas.create_assignment = function(self,args)
     sem
     assign_type = one of {"online_quiz","none","on_paper","discussion_topic","external_tool"}
     omit_from_final_grade
+	descr
+	description
 }
 --]]
+--[[
+canvas.defaults.assignment.day = 0
+--]]
+
 
   local assign_out
   local ask = args.ask or ""
@@ -471,7 +487,7 @@ canvas.create_assignment = function(self,args)
 
 end
 
-
+--- Compare assignments in Canvas to what has been defined locally.
 canvas.check_assignments = function(self)
 
   if self.assignment_ids == nil then

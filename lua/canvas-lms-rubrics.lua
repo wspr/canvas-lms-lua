@@ -6,7 +6,7 @@ local csv    = require("csv")
 local path   = require("pl.path")
 
 
-
+--- Get all course rubrics and store their metadata.
 canvas.get_rubrics = function(self)
 
   print("# Getting rubrics currently in Canvas")
@@ -28,7 +28,11 @@ end
 
 
 
-
+--- Send a rubric to Canvas.
+-- Note that rubrics are first defined independently from assignments, and later associated with an assignment.
+-- @see canvas.assoc_rubric
+-- @param self
+-- @tparam table rubric definition
 canvas.send_rubric = function(self,rubric)
 
   local canvas_rubric
