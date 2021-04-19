@@ -28,7 +28,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v2
         with:
-          path: canvas-lms-lua
+          path: canvas-repo
           
       - name: Run ldoc
         run: |
@@ -43,7 +43,8 @@ jobs:
      
       - name: copy & push
         run: |
-          cp -f canvas-lms-lua/doc/* canvas-doc/doc/
+          ls -R
+          cp -f canvas-lms-lua/canvas-repo/doc/* canvas-lms-lua/canvas-doc/doc/
           cd canvas-doc
           git config user.name github-actions
           git config user.email github-actions@github.com
