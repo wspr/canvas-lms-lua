@@ -42,5 +42,12 @@ jobs:
       - name: Run ldoc
         run: |
           luarocks install ldoc
+          cd canvas-lms-lua
+          git checkout gh-pages
+          git pull master
           ldoc lua/
+          git add doc/*
+          git commit -m "doc update"
+          git push
+          
          
