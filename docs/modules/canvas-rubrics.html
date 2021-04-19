@@ -1,0 +1,226 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>ldoc</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/canvas-announcements.html">canvas-announcements</a></li>
+  <li><a href="../modules/canvas-assign.html">canvas-assign</a></li>
+  <li><a href="../modules/canvas-config.html">canvas-config</a></li>
+  <li><a href="../modules/canvas-discuss.html">canvas-discuss</a></li>
+  <li><a href="../modules/canvas-grades.html">canvas-grades</a></li>
+  <li><a href="../modules/canvas-http.html">canvas-http</a></li>
+  <li><a href="../modules/canvas-message.html">canvas-message</a></li>
+  <li><a href="../modules/canvas-modules-pages.html">canvas-modules-pages</a></li>
+  <li><strong>canvas-rubrics</strong></li>
+  <li><a href="../modules/canvas-students.html">canvas-students</a></li>
+  <li><a href="../modules/canvas.html">canvas</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>canvas-rubrics</code></h1>
+<p>Canvas LMS in Lua: Rubrics</p>
+<p></p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#canvas.get_rubrics">canvas.get_rubrics (self)</a></td>
+	<td class="summary">Get all course rubrics and store their metadata.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#canvas.send_rubric">canvas.send_rubric (self, rubric)</a></td>
+	<td class="summary">Send a rubric to Canvas.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#canvas.assoc_rubric">canvas.assoc_rubric (self, args)</a></td>
+	<td class="summary">Associate a rubric to an assignment.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#canvas.rubric_from_csv">canvas.rubric_from_csv (self, csvfile)</a></td>
+	<td class="summary">Read in a carefully structure CSV file and convert it into a rubric.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#canvas.setup_csv_rubrics">canvas.setup_csv_rubrics (self, args)</a></td>
+	<td class="summary">Read a collection of CSV files and create rubrics from them all.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "canvas.get_rubrics"></a>
+    <strong>canvas.get_rubrics (self)</strong>
+    </dt>
+    <dd>
+    Get all course rubrics and store their metadata.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">self</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "canvas.send_rubric"></a>
+    <strong>canvas.send_rubric (self, rubric)</strong>
+    </dt>
+    <dd>
+    Send a rubric to Canvas.
+ Note that rubrics are first defined independently from assignments, and later associated with an assignment.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">self</span>
+
+        </li>
+        <li><span class="parameter">rubric</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         definition
+        </li>
+    </ul>
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/canvas-rubrics.html#canvas.assoc_rubric">canvas.assoc_rubric</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "canvas.assoc_rubric"></a>
+    <strong>canvas.assoc_rubric (self, args)</strong>
+    </dt>
+    <dd>
+    Associate a rubric to an assignment.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">self</span>
+
+        </li>
+        <li><span class="parameter">args</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         arguments
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "canvas.rubric_from_csv"></a>
+    <strong>canvas.rubric_from_csv (self, csvfile)</strong>
+    </dt>
+    <dd>
+    Read in a carefully structure CSV file and convert it into a rubric.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">self</span>
+
+        </li>
+        <li><span class="parameter">csvfile</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "canvas.setup_csv_rubrics"></a>
+    <strong>canvas.setup_csv_rubrics (self, args)</strong>
+    </dt>
+    <dd>
+    Read a collection of CSV files and create rubrics from them all.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">self</span>
+
+        </li>
+        <li><span class="parameter">args</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         arguments
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2021-04-19 15:17:49 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

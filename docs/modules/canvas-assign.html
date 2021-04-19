@@ -1,0 +1,214 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>ldoc</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/canvas-announcements.html">canvas-announcements</a></li>
+  <li><strong>canvas-assign</strong></li>
+  <li><a href="../modules/canvas-config.html">canvas-config</a></li>
+  <li><a href="../modules/canvas-discuss.html">canvas-discuss</a></li>
+  <li><a href="../modules/canvas-grades.html">canvas-grades</a></li>
+  <li><a href="../modules/canvas-http.html">canvas-http</a></li>
+  <li><a href="../modules/canvas-message.html">canvas-message</a></li>
+  <li><a href="../modules/canvas-modules-pages.html">canvas-modules-pages</a></li>
+  <li><a href="../modules/canvas-rubrics.html">canvas-rubrics</a></li>
+  <li><a href="../modules/canvas-students.html">canvas-students</a></li>
+  <li><a href="../modules/canvas.html">canvas</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>canvas-assign</code></h1>
+<p>Canvas LMS in Lua: Assignments</p>
+<p></p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#canvas.get_assignment_groups">canvas.get_assignment_groups (self)</a></td>
+	<td class="summary">Get assignment groups IDs.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#canvas.setup_assignment_groups">canvas.setup_assignment_groups (self, args)</a></td>
+	<td class="summary">Set up assignment groups.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#canvas.get_assignments">canvas.get_assignments (self)</a></td>
+	<td class="summary">Get all assignments and store their metadata.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#canvas.create_assignment">canvas.create_assignment (self, args)</a></td>
+	<td class="summary">Create a Canvas assignment.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#canvas.check_assignments">canvas.check_assignments (self)</a></td>
+	<td class="summary">Compare assignments in Canvas to what has been defined locally.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "canvas.get_assignment_groups"></a>
+    <strong>canvas.get_assignment_groups (self)</strong>
+    </dt>
+    <dd>
+    Get assignment groups IDs.
+ Gets details of each assignment group and stores their IDs for later lookup. Data stored in |self.assignment_groups|.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">self</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "canvas.setup_assignment_groups"></a>
+    <strong>canvas.setup_assignment_groups (self, args)</strong>
+    </dt>
+    <dd>
+    Set up assignment groups.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">self</span>
+
+        </li>
+        <li><span class="parameter">args</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         setup arguments
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "canvas.get_assignments"></a>
+    <strong>canvas.get_assignments (self)</strong>
+    </dt>
+    <dd>
+    Get all assignments and store their metadata.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">self</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "canvas.create_assignment"></a>
+    <strong>canvas.create_assignment (self, args)</strong>
+    </dt>
+    <dd>
+    Create a Canvas assignment.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">self</span>
+
+        </li>
+        <li><span class="parameter">args</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         arguments
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "canvas.check_assignments"></a>
+    <strong>canvas.check_assignments (self)</strong>
+    </dt>
+    <dd>
+    Compare assignments in Canvas to what has been defined locally.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">self</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2021-04-19 15:17:49 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>
