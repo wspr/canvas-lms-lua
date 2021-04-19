@@ -1,5 +1,6 @@
 --- Canvas HTTP
 -- @module canvas-http
+-- @alias  canvas
 
 local http   = require("ssl.https")
 local ltn12  = require("ltn12")
@@ -8,16 +9,75 @@ local binser = require("binser")
 
 --- Wrapper for GET
 -- @param self
--- @param req URL to GET from
+-- @tparam string req URL to GET from
 -- @param opt table of optional parameters
 -- @return table of the REST result
 canvas.get = function(self,req,opt)
   return canvas.getpostput(self,"GET",req,opt)
 end
 
+
+--- Paginated GET
+-- Most REST interfaces use pagination to control sizes out return data.
+-- This requires iteration of multiple requests to return a full collection of information.
+-- Since this can be quite slow, this function has a built-in cache feature that stores
+-- the data to disk and if desired re-reads this cache instead of slowly requesting the data again.
+-- Where the cache is stored can be customised in the config file.
+-- @param self
+-- @param download_bool true | false | "ask"
+-- @tparam string req URL to GET from
+-- @param opt table of optional parameters
+-- @return table of the REST result
+
+canvas.get_pages = function(self,download_bool,req,opt)
+
+  local cache_name = string.gsub(req,"/"," - ")
+  local cache_file = self.cache_dir.."Pages - "..cache_name..".lua"
+
+  if download_bool == "ask" then
+    print("Download all pages for requested GET ["..req.."] ?")
+    print("Type y to do so:")
+    dl_check = io.read()
+    download_bool = dl_check == "y"
+  end
+
+  if download_bool then
+    local canvas_pages = {}
+    local has_data = true
+    local data_page = 0
+
+    while has_data do
+
+      data_page = data_page + 1
+      local opt = opt or {}
+      opt.page = data_page
+      canvas_data = self:get(req,opt)
+      for i=1,#canvas_data do
+          if not(canvas_data[i].missing) then
+            canvas_pages[#canvas_pages+1] = canvas_data[i]
+          end
+      end
+
+      if #canvas_data == 0 then
+        has_data = false
+      else
+        print("Retrieved page "..data_page)
+      end
+
+    end
+
+    binser.writeFile(cache_file,canvas_pages)
+  end
+
+  local canvas_pages = binser.readFile(cache_file)
+  return canvas_pages[1]
+
+end
+
+
 --- Wrapper for POST
 -- @param self
--- @param req URL to POST to
+-- @tparam string req URL to POST to
 -- @param opt table of optional parameters
 -- @return table of the REST result
 canvas.post = function(self,req,opt)
@@ -26,7 +86,7 @@ end
 
 --- Wrapper for PUT
 -- @param self
--- @param req URL to PUT to
+-- @tparam string req URL to PUT to
 -- @param opt table of optional parameters
 -- @return table of the REST result
 canvas.put = function(self,req,opt)
@@ -35,7 +95,7 @@ end
 
 --- Wrapper for DELETE
 -- @param self
--- @param req URL to DELETE from
+-- @tparam string req URL to DELETE from
 -- @param opt table of optional parameters
 -- @return table of the REST result
 canvas.delete = function(self,req,opt)
@@ -149,60 +209,4 @@ canvas.upload = function(self,path,file)
 end
 
 
---- Paginated GET
--- Most REST interfaces use pagination to control sizes out return data.
--- This requires iteration of multiple requests to return a full collection of information.
--- Since this can be quite slow, this function has a built-in cache feature that stores
--- the data to disk and if desired re-reads this cache instead of slowly requesting the data again.
--- Where the cache is stored can be customised in the config file.
--- @param self
--- @param download_bool true | false | "ask"
--- @param req URL to GET from
--- @param opt table of optional parameters
--- @return table of the REST result
-
-canvas.get_pages = function(self,download_bool,req,opt)
-
-  local cache_name = string.gsub(req,"/"," - ")
-  local cache_file = self.cache_dir.."Pages - "..cache_name..".lua"
-
-  if download_bool == "ask" then
-    print("Download all pages for requested GET ["..req.."] ?")
-    print("Type y to do so:")
-    dl_check = io.read()
-    download_bool = dl_check == "y"
-  end
-
-  if download_bool then
-    local canvas_pages = {}
-    local has_data = true
-    local data_page = 0
-
-    while has_data do
-
-      data_page = data_page + 1
-      local opt = opt or {}
-      opt.page = data_page
-      canvas_data = self:get(req,opt)
-      for i=1,#canvas_data do
-          if not(canvas_data[i].missing) then
-            canvas_pages[#canvas_pages+1] = canvas_data[i]
-          end
-      end
-
-      if #canvas_data == 0 then
-        has_data = false
-      else
-        print("Retrieved page "..data_page)
-      end
-
-    end
-
-    binser.writeFile(cache_file,canvas_pages)
-  end
-
-  local canvas_pages = binser.readFile(cache_file)
-  return canvas_pages[1]
-
-end
 
