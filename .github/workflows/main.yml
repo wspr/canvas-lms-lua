@@ -2,10 +2,8 @@
 name: Deploy docs
 
 on:
-  # Triggers the workflow on push or pull request events but only for the master branch
+  # Triggers the workflow on push events for the master branch, only
   push:
-    branches: [ master ]
-  pull_request:
     branches: [ master ]
 
   # Allows you to run this workflow manually from the Actions tab
@@ -15,10 +13,9 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-                
       - name: Install Lua/LuaJIT
         uses: leafo/gh-actions-lua@v8.0.0
-    
+
       - name: Install LuaRocks
         uses: leafo/gh-actions-luarocks@v4.0.0
 
@@ -29,19 +26,19 @@ jobs:
         uses: actions/checkout@v2
         with:
           path: canvas-repo
-          
-      - name: Run ldoc
-        run: |
-          cd canvas-repo
-          ldoc --dir docs lua
-         
+
       - name: Checkout doc repo
         uses: actions/checkout@v2
         with:
           ref: gh-pages
           path: canvas-doc
-     
-      - name: copy & push
+
+      - name: Run ldoc
+        run: |
+          cd canvas-repo
+          ldoc --dir docs lua
+
+      - name: Copy doc files & push
         run: |
           cp -rf canvas-repo/docs/* canvas-doc/docs/
           cd canvas-doc
