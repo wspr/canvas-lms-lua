@@ -57,3 +57,10 @@ end
 canvas.cache_dir = canvas.cache_dir or "./cache/"
 lfs.mkdir(canvas.cache_dir)
 
+--[[ DEFAULTS --]]
+
+canvas.defaults = {}
+canvas.defaults.assignment = {}
+canvas.defaults.assignment.day = nil
+canvas.defaults.assignment.open_days = nil
+canvas.defaults.assignment.late_days = nil

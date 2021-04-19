@@ -198,7 +198,9 @@ local day_string_to_num = function(argday)
   return argday
 end
 
-
+--[[
+canvas.defaults.assignment.day = 0
+--]]
 
 canvas.create_assignment = function(self,args)
 --[[
@@ -284,6 +286,20 @@ canvas.create_assignment = function(self,args)
                   }
   }
 
+  if args.assign_type == "online_upload" then
+    new_assign.assignment.allowed_extensions = arg.ext or "pdf"
+  end
+  if args.rubric then
+    new_assign.assignment.use_rubric_for_grading = "true"
+  end
+  if group_proj_id then
+    new_assign.assignment.group_category_id = group_proj_id
+  end
+  if arg.omit_from_final_grade then
+    new_assign.assignment.omit_from_final_grade = arg.omit_from_final_grade
+  end
+
+
   local duediff    =  0
   local lockdiff   = -1
   local unlockdiff =  0
@@ -291,18 +307,18 @@ canvas.create_assignment = function(self,args)
 
   if args.week then
 
-    local argday = args.day or 0
+    local argday = args.day or canvas.defaults.assignment.day or 4 -- friday
     argday = day_string_to_num(argday)
 
-    args.open_days = args.open_days or 5
-    args.late_days = args.late_days or 0
+    args.open_days = args.open_days or canvas.defaults.assignment.open_days
+    args.late_days = args.late_days or canvas.defaults.assignment.late_days
 
     local duehr       = args.duehr    or "15"
     local lockhr      = args.lockhr   or "17"
     local unlockhr    = args.unlockhr or "08"
     local duetime     = duehr..":00:00"
-    local locktime    = lockhr..":00:00"
     local unlocktime  = unlockhr..":00:00"
+    local locktime    = lockhr..":00:00"
 
     if duehr == "24" then
       duetime = "23:59:00"
@@ -330,32 +346,22 @@ canvas.create_assignment = function(self,args)
     local duedate       = date(self.sem_first_monday[sem]):add{day=dayoffset}
     local duedatestr    = datef:tostring(duedate).."T"..duetime
     duediff       = today_date.time - duedate.time
-
-    local lockdate      = date(self.sem_first_monday[sem]):add{day=dayoffset+args.late_days}
-    local lockdatestr   = datef:tostring(lockdate).."T"..locktime
-    lockdiff      = today_date.time - lockdate.time
-
-    local unlockdate    = date(self.sem_first_monday[sem]):add{day=dayoffset-args.open_days}
-    local unlockdatestr = datef:tostring(unlockdate).."T"..unlocktime
-    unlockdiff    = today_date.time - unlockdate.time
-
     new_assign.assignment.due_at    = duedatestr
-    new_assign.assignment.lock_at   = lockdatestr
-    new_assign.assignment.unlock_at = unlockdatestr
 
-  end
+    if args.open_days then
+      local unlockdate    = date(self.sem_first_monday[sem]):add{day=dayoffset-args.open_days}
+      local unlockdatestr = datef:tostring(unlockdate).."T"..unlocktime
+      unlockdiff    = today_date.time - unlockdate.time
+      new_assign.assignment.unlock_at = unlockdatestr
+    end
 
-  if args.assign_type == "online_upload" then
-    new_assign.assignment.allowed_extensions = arg.ext or "pdf"
-  end
-  if args.rubric then
-    new_assign.assignment.use_rubric_for_grading = "true"
-  end
-  if group_proj_id then
-    new_assign.assignment.group_category_id = group_proj_id
-  end
-  if arg.omit_from_final_grade then
-    new_assign.assignment.omit_from_final_grade = arg.omit_from_final_grade
+    if args.late_days then
+      local lockdate      = date(self.sem_first_monday[sem]):add{day=dayoffset+args.late_days}
+      local lockdatestr   = datef:tostring(lockdate).."T"..locktime
+      lockdiff      = today_date.time - lockdate.time
+      new_assign.assignment.lock_at   = lockdatestr
+    end
+
   end
 
   if args.description then
