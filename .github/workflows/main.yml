@@ -27,10 +27,10 @@ jobs:
 
       - name: Pull all changes
         run: |
-          git config user.email "noreply@wspr.io"
-          git config user.name  "Will Robertson's robot"
           [ -d "canvas-lms-lua" ] && (cd canvas-lms-lua/; git checkout master; git pull) || git clone https://github.com/wspr/canvas-lms-lua/ canvas-lms-lua
           cd canvas-lms-lua
+          git config user.email "noreply@wspr.io"
+          git config user.name  "Will Robertson's robot"
           git checkout gh-pages
           git rebase master
                 
