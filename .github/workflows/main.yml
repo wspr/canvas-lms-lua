@@ -40,9 +40,10 @@ jobs:
 
       - name: Copy doc files & push
         run: |
-          cp -rf canvas-repo/doc/* canvas-doc/docs/
+          cp -vrf canvas-repo/doc/* canvas-doc/docs/
           cd canvas-doc
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git commit -a -m "docs autogen"
+		  git add docs/*
+          git commit -m "docs autogen"
           git push
