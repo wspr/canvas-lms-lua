@@ -61,7 +61,9 @@ end
 
 
 
-
+--- Associate a rubric to an assignment.
+-- @param self
+-- @tparam table args arguments
 canvas.assoc_rubric = function(self,args)
 
   local rassoc = {
@@ -80,7 +82,9 @@ end
 
 
 
-
+--- Read in a carefully structure CSV file and convert it into a rubric.
+-- @param self
+-- @tparam string csvfile 
 canvas.rubric_from_csv = function(self,csvfile)
 
   if not(path.exists(csvfile)) then
@@ -183,7 +187,9 @@ canvas.rubric_from_csv = function(self,csvfile)
 end
 
 
-
+--- Read a collection of CSV files and create rubrics from them all.
+-- @param self
+-- @tparam table args arguments
 canvas.setup_csv_rubrics = function(self,args)
 
   args = args or {}

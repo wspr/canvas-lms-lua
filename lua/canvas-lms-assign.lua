@@ -24,7 +24,7 @@ end
 
 --- Set up assignment groups.
 -- @param self
--- @tparam table setup arguments
+-- @tparam table args setup arguments
 
 canvas.setup_assignment_groups = function(self,args)
 
@@ -213,7 +213,7 @@ end
 
 --- Create a Canvas assignment.
 -- @param self
--- @tparam table arguments
+-- @tparam table args arguments
 canvas.create_assignment = function(self,args)
 --[[
     ARGS:

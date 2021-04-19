@@ -1,4 +1,5 @@
-
+--- Canvas LMS in Lua: Announcements
+-- @module canvas-announcements
 
 canvas.get_announcements = function(self)
 
