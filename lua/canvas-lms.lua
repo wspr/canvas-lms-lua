@@ -3,6 +3,9 @@
       CANVAS-LMS
 --]================]
 
+--- "User" "interface" for managing Canvas LMS courses using its REST API
+-- @module canvas
+
 canvas = canvas or {}
 
 require("canvas-lms-config")

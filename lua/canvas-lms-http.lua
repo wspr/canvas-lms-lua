@@ -1,13 +1,25 @@
+--- Canvas HTTP
+-- @module canvas-http
 
 local http   = require("ssl.https")
 local ltn12  = require("ltn12")
 local json   = require("json")
 local binser = require("binser")
 
+--- Wrapper for REST GET
+-- @param self ,
+-- @param req URL to get
+-- @param opt table of optional parameters
+-- @return the REST result
 canvas.get = function(self,req,opt)
   return canvas.getpostput(self,"GET",req,opt)
 end
 
+--- Wrapper for REST POST
+-- @param self ,
+-- @param req URL to post
+-- @param opt table of optional parameters
+-- @return the REST result
 canvas.post = function(self,req,opt)
   return canvas.getpostput(self,"POST",req,opt)
 end
