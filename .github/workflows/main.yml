@@ -27,13 +27,15 @@ jobs:
 
       - name: Checkout repo
         uses: actions/checkout@v2
+        with:
+          path: canvas-lms-lua
           
       - name: Run ldoc
         run: |
           cd canvas-lms-lua
           ldoc lua/
          
-      - name: Checkout repo
+      - name: Checkout doc repo
         uses: actions/checkout@v2
         with:
           ref: gh-pages
