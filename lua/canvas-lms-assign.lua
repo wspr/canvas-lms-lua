@@ -218,10 +218,14 @@ canvas.create_assignment = function(self,args)
 }
 --]]
 
+  local assign_out
   local ask = args.ask or ""
 
+  self.assignment_setup = self.assignment_setup or {}
+  self.assignment_setup[args.name] = args
+
   if ask == "" then
-    print("Create/update items for assignment '"..module_name.."'?")
+    print("Create/update assignment '"..args.name.."'?")
     print("Type y to proceed:")
     ask = io.read()
   end
@@ -354,8 +358,18 @@ canvas.create_assignment = function(self,args)
     new_assign.assignment.omit_from_final_grade = arg.omit_from_final_grade
   end
 
+  if args.description then
+    local descr_html = markdown(args.description)
+    descr_html = descr_html:gsub("\n","")
+    new_assign.assignment.description = descr_html
+  end
+
   local descr_filename = args.descr
   if descr_filename then
+    if new_assign.assignment.description then
+     error("Assignment description already specified.")
+    end
+
     local descr = nil
     local descr_html = nil
     if not(path.isfile(descr_filename)) then
@@ -369,15 +383,22 @@ canvas.create_assignment = function(self,args)
       descr = f:read("*all")
       f:close()
     end
-    fname,fext = splitext(descr_filename)
-    if fext == "html" then
-      descr_html = descr
-    elseif fext == "md" then
-      descr_html = markdown(descr)
+    do
+      local fname,fext = path.splitext(descr_filename)
+      if fext == ".html" then
+        descr_html = descr
+      elseif fext == ".md" then
+        descr_html = markdown(descr)
+      else
+        error("Filename with extension '"..fext.."' is not supported.")
+      end
     end
     descr_html = descr_html:gsub("\n","")
     new_assign.assignment.description = descr_html
   end
+
+
+
   print("ASSIGNMENT DETAILS FOR CREATION/UPDATE:")
   pretty.dump(new_assign)
 
@@ -393,8 +414,6 @@ canvas.create_assignment = function(self,args)
       diffcontinue = check == "y"
     end
   end
-
-  local assign_out
 
   if diffcontinue then
     if self.assignment_ids == nil then
@@ -431,10 +450,50 @@ canvas.create_assignment = function(self,args)
     end
   end
 
+  else
+
+    if self.assignment_ids == nil then
+      self:get_assignments()
+    end
+    assign_out = {id = self.assignment_ids[args.name]}
+
   end
 
   return assign_out
 
 end
+
+
+canvas.check_assignments = function(self)
+
+  if self.assignment_ids == nil then
+    self:get_assignments()
+  end
+
+  local assign_def = {}
+  for kk in pairs(self.assignment_ids) do
+    assign_def[kk] = "true"
+  end
+  for kk in pairs(self.assignment_setup) do
+    assign_def[kk] = nil
+  end
+  for kk in pairs(assign_def) do
+    print("Assignment exists in Canvas but not defined: "..kk)
+  end
+
+  local assign_def = {}
+  for kk in pairs(self.assignment_setup) do
+    assign_def[kk] = "true"
+  end
+  for kk in pairs(self.assignment_ids) do
+    assign_def[kk] = nil
+  end
+  for kk in pairs(assign_def) do
+    print("Assignment defined but does not exist in Canvas: "..kk)
+  end
+
+end
+
+
 
 
