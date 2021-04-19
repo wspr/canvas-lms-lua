@@ -1,6 +1,51 @@
 local tablex   = require("pl.tablex")
 local pretty   = require("pl.pretty")
 
+
+canvas.get_grade_columns = function(self)
+
+  local xx = canvas:get_pages(true,canvas.course_prefix .. "custom_gradebook_columns")
+  self.custom_gradebook_columns = xx
+
+  self.custom_gradebook_column_ids = self.custom_gradebook_column_ids or {}
+
+  for i,j in ipairs(self.custom_gradebook_columns) do
+    self.custom_gradebook_column_ids[j.title] = j.id
+  end
+
+end
+
+
+canvas.setup_grade_columns = function(self,columns)
+
+  self:get_grade_columns()
+
+  local curr_cols = {}
+  for i,j in ipairs(self.custom_gradebook_columns) do
+    curr_cols[j.title] = true
+  end
+
+  for i,j in ipairs(columns) do
+    local column = j
+    column.position = i
+    if curr_cols[column.title] == nil then
+      xx = self:post(self.course_prefix.."custom_gradebook_columns",{column=column})
+    end
+  end
+
+end
+
+
+canvas.delete_grade_columns = function(self)
+
+  self:get_grade_columns()
+  for i,j in ipairs(self.custom_gradebook_columns) do
+    self:delete(self.course_prefix.."custom_gradebook_columns/"..j.id)
+  end
+
+end
+
+
 canvas.get_assign_grades = function(self,opt)
 
   get_switch = opt.download or "ask"
