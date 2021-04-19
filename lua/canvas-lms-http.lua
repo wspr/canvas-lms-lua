@@ -9,25 +9,27 @@ local binser = require("binser")
 
 --- Wrapper for GET.
 -- @param self
--- @tparam string req URL to GET from
+-- @tparam string req URL stub to GET from
 -- @param opt table of optional parameters
--- @return table of the REST result
+-- @treturn table REST result
 canvas.get = function(self,req,opt)
   return canvas.getpostput(self,"GET",req,opt)
 end
 
 
 --- Paginated GET.
--- Most REST interfaces use pagination to control sizes out return data.
+-- @param self
+-- @param download_bool true | false | "ask"
+-- @tparam string req URL stub to GET from
+-- @param opt table of optional parameters
+-- @treturn table REST result
+--
+-- Most REST interfaces use pagination to control sizes of return data.
 -- This requires iteration of multiple requests to return a full collection of information.
 -- Since this can be quite slow, this function has a built-in cache feature that stores
 -- the data to disk and if desired re-reads this cache instead of slowly requesting the data again.
 -- Where the cache is stored can be customised in the config file.
--- @param self
--- @param download_bool true | false | "ask"
--- @tparam string req URL to GET from
--- @param opt table of optional parameters
--- @return table of the REST result
+--
 -- @usage canvas:get_pages(true,self.course_prefix.."assignments")
 
 canvas.get_pages = function(self,download_bool,req,opt)
@@ -78,27 +80,27 @@ end
 
 --- Wrapper for POST.
 -- @param self
--- @tparam string req URL to POST to
+-- @tparam string req URL stub to POST to
 -- @param opt table of optional parameters
--- @return table of the REST result
+-- @treturn table REST result
 canvas.post = function(self,req,opt)
   return canvas.getpostput(self,"POST",req,opt)
 end
 
 --- Wrapper for PUT.
 -- @param self
--- @tparam string req URL to PUT to
+-- @tparam string req URL stub to PUT to
 -- @param opt table of optional parameters
--- @return table of the REST result
+-- @treturn table REST result
 canvas.put = function(self,req,opt)
   return canvas.getpostput(self,"PUT",req,opt)
 end
 
 --- Wrapper for DELETE.
 -- @param self
--- @tparam string req URL to DELETE from
+-- @tparam string req URL stub to DELETE from
 -- @param opt table of optional parameters
--- @return table of the REST result
+-- @treturn table REST result
 canvas.delete = function(self,req,opt)
   return canvas.getpostput(self,"DELETE",req,opt)
 end
