@@ -44,10 +44,10 @@ jobs:
           luarocks install ldoc
           cd canvas-lms-lua
           git checkout gh-pages
-          git pull master
+          git rebase master
           ldoc lua/
           git add doc/*
           git commit -m "doc update"
-          git push
+          git push -f
           
          
