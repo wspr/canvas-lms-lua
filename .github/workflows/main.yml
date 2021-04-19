@@ -27,7 +27,12 @@ jobs:
 
       - name: Pull all changes
         run: |
-          [ -d "canvas-lms-lua" ] && (cd canvas-lms-lua/; git pull) || git clone https://github.com/wspr/canvas-lms-lua/ canvas-lms-lua
+          git config user.email "noreply@wspr.io"
+          git config user.name  "Will Robertson's robot"
+          [ -d "canvas-lms-lua" ] && (cd canvas-lms-lua/; git checkout master; git pull) || git clone https://github.com/wspr/canvas-lms-lua/ canvas-lms-lua
+          cd canvas-lms-lua
+          git checkout gh-pages
+          git rebase master
                 
       - name: Install Lua/LuaJIT
         # You may pin to the exact commit or the version.
@@ -50,11 +55,6 @@ jobs:
           
       - name: Push to gh-pages branch
         run: |
-          cd canvas-lms-lua
-          git config --global user.email "noreply@wspr.io"
-          git config --global user.name  "Will Robertson's robot"
-          git checkout gh-pages
-          git rebase master
           git add doc/*
           git commit -m "doc update"
           git push -f
