@@ -4,20 +4,25 @@
 local binser = require("binser")
 local pretty = require("pl.pretty")
 
-
-canvas.get_modules = function(self,args)
+--- Get all Canvas modules and store their metadata.
+function canvas:get_modules(args)
 
   local modules = self:get_pages(true,self.course_prefix.."modules",{include={"items"}})
   local hash = {}
   for ii,vv in ipairs(modules) do
     modules[vv.name] = vv.id
+    hash[vv.name] = vv.id
   end
   self.modules = modules
+  self.module_ids = hash
 
 end
 
-
-canvas.setup_modules = function(self,modules)
+--- Create/edit all modules.
+-- @tparam table List of ordered module names to create.
+-- If names are different than the modules currently defined, new ones are created and/or current modules are re-ordered.
+-- If modules exist that aren't specified, the function will offer to delete them (case-by-case).
+function canvas:setup_modules(modules)
 
   if self.modules == nil then
     self:get_modules()
@@ -70,10 +75,12 @@ canvas.setup_modules = function(self,modules)
 
 end
 
-
--- https://canvas.instructure.com/doc/api/modules.html#method.context_module_items_api.create
-
-canvas.update_module = function(self,module_name,ask,items)
+--- Create/edit contents of an individual module.
+-- @tparam string module_name
+-- @tparam string ask of whether to proceed — *empty* asks, or |"y"| does, or *anything else* does not
+-- @tparam table module items (see [Canvas API documentation](https://canvas.instructure.com/doc/api/modules.html#method.context_module_items_api.create) for raw syntax)
+-- Table of module items has some shorthand definitions defined in the code. TODO: document these properly.
+function canvas:update_module(module_name,ask,items)
 
   if self.modules == nil then
     self:get_modules()
@@ -168,8 +175,11 @@ canvas.update_module = function(self,module_name,ask,items)
 end
 
 
-
-canvas.check_modules = function(self)
+--- Suite of sanity checks for all Canvas modules.
+-- * Checks if published module is empty
+-- * Checks if published items are located in unpublished module
+-- * More to come…
+function canvas:check_modules()
 
   if self.modules == nil then
     self:get_modules()

@@ -27,7 +27,8 @@ end
 -- TODO: logical week conversion for delayed posting.
 -- @tparam table args Table of tables with REST arguments (see [Canvas API documentation](https://erau.instructure.com/doc/api/discussion_topics.html#method.discussion_topics.create)).
 -- Usage:
---     canvas:setup_discussion_topics{   { title = "Course Q&A" , pinned = true },
+--     canvas:setup_discussion_topics{   
+--       { title = "Course Q&A" , pinned = true },
 --       { title = "Assign 1 discussion" },
 --       { title = "Assign 2 discussion" },
 --     }
