@@ -73,3 +73,4 @@ canvas.defaults.assignment = {}
 canvas.defaults.assignment.day = nil
 canvas.defaults.assignment.open_days = nil
 canvas.defaults.assignment.late_days = nil
+canvas.defaults.discussions.discussion_type = "threaded"

@@ -20,7 +20,17 @@ end
 
 
 --- Create/edit up discussion topics.
--- @tparam table args REST arguments (see [Canvas API documentation](https://erau.instructure.com/doc/api/discussion_topics.html#method.discussion_topics.create)).
+-- Generally I like to set up all discussion topics once at the beginning of semester.
+-- Due to interface confusion I also prefer to keep a "frozen" list of discussion topics and
+-- not allow students to create their own.
+-- Defaults to published and nested.
+-- TODO: logical week conversion for delayed posting.
+-- @tparam table args Table of tables with REST arguments (see [Canvas API documentation](https://erau.instructure.com/doc/api/discussion_topics.html#method.discussion_topics.create)).
+-- @usage canvas:setup_discussion_topics{
+-- @usage   { title = "Course Q&A" , pinned = true },
+-- @usage   { title = "Assign 1 discussion" },
+-- @usage   { title = "Assign 2 discussion" },
+-- @usage }
 function canvas:setup_discussion_topics(args)
 
   print("# Setting up discussion topics")
@@ -37,7 +47,7 @@ function canvas:setup_discussion_topics(args)
   for ii,vv in ipairs(args) do
     discussion_topics[ii] = vv
     discussion_topics[ii].published = discussion_topics[ii].published or true
-    discussion_topics[ii].discussion_type = discussion_topics[ii].discussion_type or "threaded"
+    discussion_topics[ii].discussion_type = discussion_topics[ii].discussion_type or canvas.defaults.discussions.discussion_type
     titles_lookup[vv.title] = true
   end
 
