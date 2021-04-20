@@ -5,7 +5,7 @@ local binser = require("binser")
 local pretty = require("pl.pretty")
 
 --- Get discussion topics and store their metadata and IDs.
-canvas.get_discussion_topics = function(self)
+function canvas:get_discussion_topics()
 
   local discuss_topics = self:get_pages(true,self.course_prefix.."discussion_topics")
 
@@ -20,9 +20,8 @@ end
 
 
 --- Create/edit up discussion topics.
--- @param self
--- @tparam table REST arguments (see [Canvas API documentation](https://erau.instructure.com/doc/api/discussion_topics.html#method.discussion_topics.create))
-canvas.setup_discussion_topics = function(self,args)
+-- @tparam table args REST arguments (see [Canvas API documentation](https://erau.instructure.com/doc/api/discussion_topics.html#method.discussion_topics.create)).
+function canvas:setup_discussion_topics(args)
 
   print("# Setting up discussion topics")
 
