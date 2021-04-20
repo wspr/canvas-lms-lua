@@ -62,71 +62,119 @@
 
 <div id="content">
 
-    # Lua interface for the Canvas LMS API
-<p>This repository contains a set of Lua interfaces to the Canvas LMS using its REST API.
+
+<h1>Lua interface for the Canvas LMS API</h1>
+
+<p>This repository contains a set of Lua interfaces to the Canvas LMS using its REST API.</p>
+
 <p>These Lua interfaces are not an ‘application’ in the sense that on their own they will
 not do anything. They are provided for individual users to chain together commands for
-controlling their own Canvas courses.
-<p>No claim to being comprehensive is made; functions are added as I need them.
+controlling their own Canvas courses.</p>
+
+<p>No claim to being comprehensive is made; functions are added as I need them.</p>
+
 <p>Please note that using this code could potentially destroy data that you are using for teaching.
-Be very careful to test in a sandbox before deploying such code! No warranties, etc.
-<p>
-## Installation
-<p>After cloning/obtaining the files in this repository, run
-<p>    luarocks make
-<p>This will theoretically install all dependencies automatically (see the `.rockspec` file
-for what these are).
-<p>However, this package requires OpenSSL to be installed and that might require additionoal steps.
-<p>### macOS
-<p>Using [HomeBrew](https://brew.sh), this worked for me:
-<p>    brew install lua
-    brew install openssl
-    luarocks install luasec OPENSSL_DIR=/usr/local/opt/openssl/
-<p>
-## Getting started
-<p>Load the module in Lua as normal:
-<p>    canvas = require('canvas-lms')
-<p>### Configuration
-<p>However, just the `require` line above will produce an error; before doing this you must
-create a local file `canvas-data.lua` that contains the following lines:
-<p>    canvas_url "<URL>/"
-    token      "<TOKEN>"
-    course_id  "<CID>"
-    first_monday { year=YYYY, month=MM, day=DD } -- first monday of week 1
-    break_length (M) -- there is a mid-semester break of M weeks long (optional, default = 2)
-    break_week   (N) -- the mid-semester break is *after* week N
-    cache_dir  "cache/" -- optional, this is the default
-<p>This file will be auto-loaded as the module is loaded.
-<p>### Obtaining an access token
-<p>From the Canvas developer documenation:
-<p>> The simplest option is to generate an access token on your user's profile page.
-> Note that asking any other user to manually generate a token and enter it into your
-> application is a violation of Canvas' terms of service.
-> Applications in use by multiple users MUST use OAuth to obtain tokens.
->
-> To manually generate a token for testing:
->
-> 1. Click the "profile" link in the top right menu bar, or navigate to /profile
-> 2. Under the "Approved Integrations" section, click the button to generate a new access token.
-> 3. Once the token is generated, you cannot view it again, and you'll have to generate a new token if you forget it. Remember that access tokens are password equivalent, so keep it secret.
+Be very careful to test in a sandbox before deploying such code! No warranties, etc.</p>
+
+
+<p><a name="Installation"></a></p>
+<h2>Installation</h2>
+
+<p>After cloning/obtaining the files in this repository, run</p>
+
+
+<pre>
+luarocks make
+</pre>
+
+<p>This will theoretically install all dependencies automatically (see the <code>.rockspec</code> file
+for what these are).</p>
+
+<p>However, this package requires OpenSSL to be installed and that might require additionoal steps.</p>
+
+<h3>macOS</h3>
+
+<p>Using <a href="https://brew.sh">HomeBrew</a>, this worked for me:</p>
+
+
+<pre>
+brew install lua
+brew install openssl
+luarocks install luasec OPENSSL_DIR=/usr/<span class="keyword">local</span>/opt/openssl/
+</pre>
+
+<p><a name="Getting_started"></a></p>
+<h2>Getting started</h2>
+
+<p>Load the module in Lua as normal:</p>
+
+
+<pre>
+canvas = <span class="global">require</span>(<span class="string">'canvas-lms'</span>)
+</pre>
+
+<h3>Configuration</h3>
+
+<p>However, just the <a href="https://www.lua.org/manual/5.1/manual.html#pdf-require">require</a> line above will produce an error; before doing this you must
+create a local file <code>canvas-data.lua</code> that contains the following lines:</p>
+
+
+<pre>
+canvas_url <span class="string">"&lt;URL&gt;/"</span>
+token      <span class="string">"&lt;TOKEN&gt;"</span>
+course_id  <span class="string">"&lt;CID&gt;"</span>
+first_monday { year=YYYY, month=MM, day=DD } <span class="comment">-- first monday of week 1
+</span>break_length (M) <span class="comment">-- there is a mid-semester break of M weeks long (optional, default = 2)
+</span>break_week   (N) <span class="comment">-- the mid-semester break is *after* week N
+</span>cache_dir  <span class="string">"cache/"</span> <span class="comment">-- optional, this is the default</span>
+</pre>
+
+<p>This file will be auto-loaded as the module is loaded.</p>
+
+<h3>Obtaining an access token</h3>
+
+<p>From the Canvas developer documenation:</p>
+
+<blockquote>
+    <p>The simplest option is to generate an access token on your user's profile page.
+    Note that asking any other user to manually generate a token and enter it into your
+    application is a violation of Canvas' terms of service.
+    Applications in use by multiple users MUST use OAuth to obtain tokens.</p>
+
+    <p>To manually generate a token for testing:</p>
+
+    <ol>
+        <li>Click the "profile" link in the top right menu bar, or navigate to /profile</li>
+        <li>Under the "Approved Integrations" section, click the button to generate a new access token.</li>
+        <li>Once the token is generated, you cannot view it again, and you'll have to generate a new token if you forget it. Remember that access tokens are password equivalent, so keep it secret.</li>
+    </ol>
+</blockquote>
+
 <p>I have quoted the text around OAuth to emphasise that this repository does not provide
 an ‘application’ for Canvas. When using the Lua interfaces in this repoository you are
-writing your own custom applications for your own sole use.
+writing your own custom applications for your own sole use.</p>
+
 <p>Currently the Lua interfaces do not provide a means to connect via OAuth but with time permitting
-I would like to add somoething. (Doing it cross-platform could be tricky?)
-<p>## Documentation
-<p>TODO
-<p>
-## Licence and copyright
+I would like to add somoething. (Doing it cross-platform could be tricky?)</p>
+
+<p><a name="Documentation"></a></p>
+<h2>Documentation</h2>
+
+<p>TODO</p>
+
+
+<p><a name="Licence_and_copyright"></a></p>
+<h2>Licence and copyright</h2>
+
 <p>Distributed under the terms and conditions of the Apache Licence v2.
-Copyright 2020 The University of Adelaide and Will Robertson
+Copyright 2020 The University of Adelaide and Will Robertson</p>
 
 
 </div> <!-- id="content" -->
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2021-04-20 03:53:05 </i>
+<i style="float:right;">Last updated 2021-04-20 03:58:19 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
