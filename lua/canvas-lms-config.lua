@@ -3,19 +3,23 @@
 
 local lfs    = require "lfs"
 
+--- Set course ID, which defines course prefix.
 canvas.set_course_id = function(self,str)
   self.courseid = str
   self.course_prefix = "courses/"..str.."/"
 end
 
+--- Set Canvas URL.
 canvas.set_url = function(self,str)
   self.url = str
 end
 
+--- Set user token for authenticated to API (keep this secret!).
 canvas.set_token = function(self,str)
   self.token = str
 end
 
+--- Set folder for storing cache files of this library.
 canvas.set_cache_dir = function(self,str)
   self.cache_top = str
   self.cache_dir = str..self.courseid.."/"
@@ -25,14 +29,17 @@ canvas.sem_first_monday = {}
 canvas.sem_break_week   = {}
 canvas.sem_break_length = {}
 
+--- Set date of first Monday of teaching interval (multiple allowed).
 canvas.set_first_monday = function(self,arg)
   self.sem_first_monday[#self.sem_first_monday+1] = arg
 end
 
+--- Set last week before mid-interval break (multiple allowed). 
 canvas.set_break_week = function(self,arg)
   self.sem_break_week[#self.sem_break_week+1] = arg
 end
 
+--- Set number of weeks of mid-interval break (multiple allowed).
 canvas.set_break_length = function(self,arg)
   self.sem_break_length[#self.sem_break_length+1] = arg
 end
@@ -44,8 +51,8 @@ do
     token            = function(x) canvas:set_token(x)        end,
     first_monday     = function(x) canvas:set_first_monday(x) end,
     break_after_week = function(x) canvas:set_break_week(x)   end,
-    break_length     = function(x) canvas:set_break_length(x)   end,
-    cache_dir        = function(x) canvas:set_cache_dir(x)   end,
+    break_length     = function(x) canvas:set_break_length(x) end,
+    cache_dir        = function(x) canvas:set_cache_dir(x)    end,
   }
   loadfile(canvas_config or 'canvas-config.lua', 't', shared)()
 end
