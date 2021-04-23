@@ -3,7 +3,7 @@
 <html>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <head>
-    <title>Reference</title>
+    <title>Canvas LMS in Lua</title>
     <link rel="stylesheet" href="ldoc.css" type="text/css" />
 </head>
 <body>
@@ -27,94 +27,974 @@
 <h1>canvas-lms-lua</h1>
 
 
+<h2>Contents</h2>
+<ul>
+<li><a href="#canvas_lms_config_Functions">canvas-lms-config Functions</a></li>
+<li><a href="#canvas_lms_http_Functions">canvas-lms-http Functions</a></li>
+<li><a href="#canvas_lms_assign_Functions">canvas-lms-assign Functions</a></li>
+<li><a href="#canvas_lms_discuss_Functions">canvas-lms-discuss Functions</a></li>
+<li><a href="#canvas_lms_modules_pages_Functions">canvas-lms-modules-pages Functions</a></li>
+<li><a href="#canvas_lms_rubrics_Functions">canvas-lms-rubrics Functions</a></li>
+</ul>
 
 
 <h2>Modules</h2>
 <ul class="nowrap">
-  <li><a href="modules/canvas-announcements.html">canvas-announcements</a></li>
-  <li><a href="modules/canvas-assign.html">canvas-assign</a></li>
-  <li><a href="modules/canvas-config.html">canvas-config</a></li>
-  <li><a href="modules/canvas-discuss.html">canvas-discuss</a></li>
-  <li><a href="modules/canvas-grades.html">canvas-grades</a></li>
-  <li><a href="modules/canvas-http.html">canvas-http</a></li>
-  <li><a href="modules/canvas-message.html">canvas-message</a></li>
-  <li><a href="modules/canvas-modules-pages.html">canvas-modules-pages</a></li>
-  <li><a href="modules/canvas-rubrics.html">canvas-rubrics</a></li>
-  <li><a href="modules/canvas-students.html">canvas-students</a></li>
-  <li><a href="modules/canvas.html">canvas</a></li>
+  <li><strong>canvas</strong></li>
 </ul>
 <h2>Topics</h2>
 <ul class="">
-  <li><a href="topics/README.md.html">README</a></li>
+  <li><a href="topics/01-introduction.md.html">Getting started</a></li>
 </ul>
 
 </div>
 
 <div id="content">
 
+<h1>Module <code>canvas</code></h1>
+<p>User interface for managing Canvas LMS courses using its REST API.</p>
+<p> There is a single table used in an object-like way for interacting with a single Canvas course.
+ The functions below are stored within the canvas table and store their data and metadata in the same table.</p>
 
-  <h2>Canvas LMS interface using Lua</h2>
 
-<h2>Modules</h2>
-<table class="module_list">
+<h2><a href="#canvas_lms_config_Functions">canvas-lms-config Functions</a></h2>
+<table class="function_list">
 	<tr>
-		<td class="name"  nowrap><a href="modules/canvas-announcements.html">canvas-announcements</a></td>
-		<td class="summary">Canvas LMS in Lua: Announcements</td>
+	<td class="name" nowrap><a href="#set_course_id">set_course_id (self, str)</a></td>
+	<td class="summary">Set course ID, which defines course prefix.</td>
 	</tr>
 	<tr>
-		<td class="name"  nowrap><a href="modules/canvas-assign.html">canvas-assign</a></td>
-		<td class="summary">Canvas LMS in Lua: Assignments</td>
+	<td class="name" nowrap><a href="#set_url">set_url (self, str)</a></td>
+	<td class="summary">Set Canvas URL.</td>
 	</tr>
 	<tr>
-		<td class="name"  nowrap><a href="modules/canvas-config.html">canvas-config</a></td>
-		<td class="summary">Canvas LMS in Lua: Configuration</td>
+	<td class="name" nowrap><a href="#set_token">set_token (self, str)</a></td>
+	<td class="summary">Set user token for authenticated to API (keep this secret!).</td>
 	</tr>
 	<tr>
-		<td class="name"  nowrap><a href="modules/canvas-discuss.html">canvas-discuss</a></td>
-		<td class="summary">Canvas LMS in Lua: Discussion Boards</td>
+	<td class="name" nowrap><a href="#set_cache_dir">set_cache_dir (self, str)</a></td>
+	<td class="summary">Set folder for storing cache files of this library.</td>
 	</tr>
 	<tr>
-		<td class="name"  nowrap><a href="modules/canvas-grades.html">canvas-grades</a></td>
-		<td class="summary">Canvas LMS in Lua: Grades and gradebook</td>
+	<td class="name" nowrap><a href="#set_first_monday">set_first_monday (self, arg)</a></td>
+	<td class="summary">Set date of first Monday of teaching interval (multiple allowed).</td>
 	</tr>
 	<tr>
-		<td class="name"  nowrap><a href="modules/canvas-http.html">canvas-http</a></td>
-		<td class="summary">Canvas LMS in Lua: HTTP</td>
+	<td class="name" nowrap><a href="#set_break_week">set_break_week (self, arg)</a></td>
+	<td class="summary">Set last week before mid-interval break (multiple allowed).</td>
 	</tr>
 	<tr>
-		<td class="name"  nowrap><a href="modules/canvas-message.html">canvas-message</a></td>
-		<td class="summary">Canvas LMS in Lua: Messaging</td>
-	</tr>
-	<tr>
-		<td class="name"  nowrap><a href="modules/canvas-modules-pages.html">canvas-modules-pages</a></td>
-		<td class="summary">Canvas LMS in Lua: Modules and pages</td>
-	</tr>
-	<tr>
-		<td class="name"  nowrap><a href="modules/canvas-rubrics.html">canvas-rubrics</a></td>
-		<td class="summary">Canvas LMS in Lua: Rubrics</td>
-	</tr>
-	<tr>
-		<td class="name"  nowrap><a href="modules/canvas-students.html">canvas-students</a></td>
-		<td class="summary">Canvas LMS in Lua: Students</td>
-	</tr>
-	<tr>
-		<td class="name"  nowrap><a href="modules/canvas.html">canvas</a></td>
-		<td class="summary">User interface for managing Canvas LMS courses using its REST API</td>
+	<td class="name" nowrap><a href="#set_break_length">set_break_length (self, arg)</a></td>
+	<td class="summary">Set number of weeks of mid-interval break (multiple allowed).</td>
 	</tr>
 </table>
-<h2>Topics</h2>
-<table class="module_list">
+<h2><a href="#canvas_lms_http_Functions">canvas-lms-http Functions</a></h2>
+<table class="function_list">
 	<tr>
-		<td class="name"  nowrap><a href="topics/README.md.html">README.md</a></td>
-		<td class="summary"></td>
+	<td class="name" nowrap><a href="#get">get (self, req, opt)</a></td>
+	<td class="summary">Wrapper for GET.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#get_pages">get_pages (self, download_bool, req, opt)</a></td>
+	<td class="summary">Paginated GET.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#post">post (self, req, opt)</a></td>
+	<td class="summary">Wrapper for POST.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#put">put (self, req, opt)</a></td>
+	<td class="summary">Wrapper for PUT.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#delete">delete (self, req, opt)</a></td>
+	<td class="summary">Wrapper for DELETE.</td>
 	</tr>
 </table>
+<h2><a href="#canvas_lms_assign_Functions">canvas-lms-assign Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#get_assignment_groups">get_assignment_groups (self)</a></td>
+	<td class="summary">Get assignment groups IDs.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setup_assignment_groups">setup_assignment_groups (self, args)</a></td>
+	<td class="summary">Set up assignment groups.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#get_assignments">get_assignments (self)</a></td>
+	<td class="summary">Get all assignments and store their metadata.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#create_assignment">create_assignment (self, args)</a></td>
+	<td class="summary">Create a Canvas assignment.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#check_assignments">check_assignments (self)</a></td>
+	<td class="summary">Compare assignments in Canvas to what has been defined locally.</td>
+	</tr>
+</table>
+<h2><a href="#canvas_lms_discuss_Functions">canvas-lms-discuss Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#get_discussion_topics">get_discussion_topics ()</a></td>
+	<td class="summary">Get discussion topics and store their metadata and IDs.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setup_discussion_topics">setup_discussion_topics (args)</a></td>
+	<td class="summary">Create/edit up discussion topics.</td>
+	</tr>
+</table>
+<h2><a href="#canvas_lms_modules_pages_Functions">canvas-lms-modules-pages Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#get_modules">get_modules (args)</a></td>
+	<td class="summary">Get all Canvas modules and store their metadata.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setup_modules">setup_modules (modules)</a></td>
+	<td class="summary">Create/edit all modules.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#update_module">update_module (module_name, ask, items)</a></td>
+	<td class="summary">Create/edit contents of an individual module.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#check_modules">check_modules ()</a></td>
+	<td class="summary">Suite of sanity checks for all Canvas modules.</td>
+	</tr>
+</table>
+<h2><a href="#canvas_lms_rubrics_Functions">canvas-lms-rubrics Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#get_rubrics">get_rubrics (self)</a></td>
+	<td class="summary">Get all course rubrics and store their metadata.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#send_rubric">send_rubric (self, rubric)</a></td>
+	<td class="summary">Send a rubric to Canvas.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#assoc_rubric">assoc_rubric (self, args)</a></td>
+	<td class="summary">Associate a rubric to an assignment.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#rubric_from_csv">rubric_from_csv (self, csvfile)</a></td>
+	<td class="summary">Read in a carefully structure CSV file and convert it into a rubric.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setup_csv_rubrics">setup_csv_rubrics (self, args)</a></td>
+	<td class="summary">Read a collection of CSV files and create rubrics from them all.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="canvas_lms_config_Functions"></a>canvas-lms-config Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "set_course_id"></a>
+    <strong>set_course_id (self, str)</strong>
+    </dt>
+    <dd>
+    Set course ID, which defines course prefix.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">self</span>
+
+
+
+        </li>
+        <li><span class="parameter">str</span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "set_url"></a>
+    <strong>set_url (self, str)</strong>
+    </dt>
+    <dd>
+    Set Canvas URL.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">self</span>
+
+
+
+        </li>
+        <li><span class="parameter">str</span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "set_token"></a>
+    <strong>set_token (self, str)</strong>
+    </dt>
+    <dd>
+    Set user token for authenticated to API (keep this secret!).
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">self</span>
+
+
+
+        </li>
+        <li><span class="parameter">str</span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "set_cache_dir"></a>
+    <strong>set_cache_dir (self, str)</strong>
+    </dt>
+    <dd>
+    Set folder for storing cache files of this library.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">self</span>
+
+
+
+        </li>
+        <li><span class="parameter">str</span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "set_first_monday"></a>
+    <strong>set_first_monday (self, arg)</strong>
+    </dt>
+    <dd>
+    Set date of first Monday of teaching interval (multiple allowed).
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">self</span>
+
+
+
+        </li>
+        <li><span class="parameter">arg</span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "set_break_week"></a>
+    <strong>set_break_week (self, arg)</strong>
+    </dt>
+    <dd>
+    Set last week before mid-interval break (multiple allowed).
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">self</span>
+
+
+
+        </li>
+        <li><span class="parameter">arg</span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "set_break_length"></a>
+    <strong>set_break_length (self, arg)</strong>
+    </dt>
+    <dd>
+    Set number of weeks of mid-interval break (multiple allowed).
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">self</span>
+
+
+
+        </li>
+        <li><span class="parameter">arg</span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="canvas_lms_http_Functions"></a>canvas-lms-http Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "get"></a>
+    <strong>get (self, req, opt)</strong>
+    </dt>
+    <dd>
+    Wrapper for GET.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">self</span>
+
+
+
+        </li>
+        <li><span class="parameter">req</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         URL stub to GET from
+        </li>
+        <li><span class="parameter">opt</span>
+         table of optional parameters
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        REST result
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "get_pages"></a>
+    <strong>get_pages (self, download_bool, req, opt)</strong>
+    </dt>
+    <dd>
+    Paginated GET.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">self</span>
+
+
+
+        </li>
+        <li><span class="parameter">download_bool</span>
+         true | false | "ask"
+        </li>
+        <li><span class="parameter">req</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         URL stub to GET from
+        </li>
+        <li><span class="parameter">opt</span>
+         table of optional parameters
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         REST result</p>
+
+<p> Most REST interfaces use pagination to control sizes of return data.
+ This requires iteration of multiple requests to return a full collection of information.
+ Since this can be quite slow, this function has a built-in cache feature that stores
+ the data to disk and if desired re-reads this cache instead of slowly requesting the data again.
+ Where the cache is stored can be customised in the config file.
+    </ol>
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example">canvas:get_pages(<span class="keyword">true</span>,self.course_prefix..<span class="string">"assignments"</span>)</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "post"></a>
+    <strong>post (self, req, opt)</strong>
+    </dt>
+    <dd>
+    Wrapper for POST.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">self</span>
+
+
+
+        </li>
+        <li><span class="parameter">req</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         URL stub to POST to
+        </li>
+        <li><span class="parameter">opt</span>
+         table of optional parameters
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        REST result
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "put"></a>
+    <strong>put (self, req, opt)</strong>
+    </dt>
+    <dd>
+    Wrapper for PUT.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">self</span>
+
+
+
+        </li>
+        <li><span class="parameter">req</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         URL stub to PUT to
+        </li>
+        <li><span class="parameter">opt</span>
+         table of optional parameters
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        REST result
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "delete"></a>
+    <strong>delete (self, req, opt)</strong>
+    </dt>
+    <dd>
+    Wrapper for DELETE.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">self</span>
+
+
+
+        </li>
+        <li><span class="parameter">req</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         URL stub to DELETE from
+        </li>
+        <li><span class="parameter">opt</span>
+         table of optional parameters
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        REST result
+    </ol>
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="canvas_lms_assign_Functions"></a>canvas-lms-assign Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "get_assignment_groups"></a>
+    <strong>get_assignment_groups (self)</strong>
+    </dt>
+    <dd>
+    Get assignment groups IDs.
+ Gets details of each assignment group and stores their IDs for later lookup. Data stored in |self.assignment_groups|.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">self</span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setup_assignment_groups"></a>
+    <strong>setup_assignment_groups (self, args)</strong>
+    </dt>
+    <dd>
+    Set up assignment groups.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">self</span>
+
+
+
+        </li>
+        <li><span class="parameter">args</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         setup arguments
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "get_assignments"></a>
+    <strong>get_assignments (self)</strong>
+    </dt>
+    <dd>
+    Get all assignments and store their metadata.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">self</span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "create_assignment"></a>
+    <strong>create_assignment (self, args)</strong>
+    </dt>
+    <dd>
+    Create a Canvas assignment.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">self</span>
+
+
+
+        </li>
+        <li><span class="parameter">args</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         arguments
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "check_assignments"></a>
+    <strong>check_assignments (self)</strong>
+    </dt>
+    <dd>
+    Compare assignments in Canvas to what has been defined locally.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">self</span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="canvas_lms_discuss_Functions"></a>canvas-lms-discuss Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "get_discussion_topics"></a>
+    <strong>get_discussion_topics ()</strong>
+    </dt>
+    <dd>
+    Get discussion topics and store their metadata and IDs.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setup_discussion_topics"></a>
+    <strong>setup_discussion_topics (args)</strong>
+    </dt>
+    <dd>
+    Create/edit up discussion topics.
+ Generally I like to set up all discussion topics once at the beginning of semester.
+ Due to interface confusion I also prefer to keep a "frozen" list of discussion topics and
+ not allow students to create their own.
+ Defaults to published and nested.
+ TODO: logical week conversion for delayed posting.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+<p> Table of tables with REST arguments (see <a href="https://erau.instructure.com/doc/api/discussion_topics.html#method.discussion_topics.create">Canvas API documentation</a>).
+ Usage:</p>
+<pre><code> canvas:setup_discussion_topics{
+   { title = "Course Q&amp;A" , pinned = true },
+   { title = "Assign 1 discussion" },
+   { title = "Assign 2 discussion" },
+ }
+</code></pre>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="canvas_lms_modules_pages_Functions"></a>canvas-lms-modules-pages Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "get_modules"></a>
+    <strong>get_modules (args)</strong>
+    </dt>
+    <dd>
+    Get all Canvas modules and store their metadata.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setup_modules"></a>
+    <strong>setup_modules (modules)</strong>
+    </dt>
+    <dd>
+    Create/edit all modules.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">modules</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+           List of ordered module names to create.
+ If names are different than the modules currently defined, new ones are created and/or current modules are re-ordered.
+ If modules exist that aren't specified, the function will offer to delete them (case-by-case).
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "update_module"></a>
+    <strong>update_module (module_name, ask, items)</strong>
+    </dt>
+    <dd>
+    Create/edit contents of an individual module.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">module_name</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+
+
+
+        </li>
+        <li><span class="parameter">ask</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         of whether to proceed — <em>empty</em> asks, or |"y"| does, or <em>anything else</em> does not
+        </li>
+        <li><span class="parameter">items</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         (see <a href="https://canvas.instructure.com/doc/api/modules.html#method.context_module_items_api.create">Canvas API documentation</a> for raw syntax)
+ Table of module items has some shorthand definitions defined in the code. TODO: document these properly.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "check_modules"></a>
+    <strong>check_modules ()</strong>
+    </dt>
+    <dd>
+    Suite of sanity checks for all Canvas modules.
+ * Checks if published module is empty
+ * Checks if published items are located in unpublished module
+ * More to come…
+
+
+
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="canvas_lms_rubrics_Functions"></a>canvas-lms-rubrics Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "get_rubrics"></a>
+    <strong>get_rubrics (self)</strong>
+    </dt>
+    <dd>
+    Get all course rubrics and store their metadata.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">self</span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "send_rubric"></a>
+    <strong>send_rubric (self, rubric)</strong>
+    </dt>
+    <dd>
+    Send a rubric to Canvas.
+ Note that rubrics are first defined independently from assignments, and later associated with an assignment.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">self</span>
+
+
+
+        </li>
+        <li><span class="parameter">rubric</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         definition
+        </li>
+    </ul>
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="index.html#assoc_rubric">canvas.assoc_rubric</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "assoc_rubric"></a>
+    <strong>assoc_rubric (self, args)</strong>
+    </dt>
+    <dd>
+    Associate a rubric to an assignment.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">self</span>
+
+
+
+        </li>
+        <li><span class="parameter">args</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         arguments
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "rubric_from_csv"></a>
+    <strong>rubric_from_csv (self, csvfile)</strong>
+    </dt>
+    <dd>
+    Read in a carefully structure CSV file and convert it into a rubric.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">self</span>
+
+
+
+        </li>
+        <li><span class="parameter">csvfile</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setup_csv_rubrics"></a>
+    <strong>setup_csv_rubrics (self, args)</strong>
+    </dt>
+    <dd>
+    Read a collection of CSV files and create rubrics from them all.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">self</span>
+
+
+
+        </li>
+        <li><span class="parameter">args</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         arguments
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+
 
 </div> <!-- id="content" -->
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2021-04-23 00:09:51 </i>
+<i style="float:right;">Last updated 2021-04-23 01:00:29 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
