@@ -19,7 +19,7 @@ function canvas:get_modules(args)
 end
 
 --- Create/edit all modules.
--- @tparam table List of ordered module names to create.
+-- @tparam table modules   List of ordered module names to create.
 -- If names are different than the modules currently defined, new ones are created and/or current modules are re-ordered.
 -- If modules exist that aren't specified, the function will offer to delete them (case-by-case).
 function canvas:setup_modules(modules)
@@ -78,7 +78,7 @@ end
 --- Create/edit contents of an individual module.
 -- @tparam string module_name
 -- @tparam string ask of whether to proceed — *empty* asks, or |"y"| does, or *anything else* does not
--- @tparam table module items (see [Canvas API documentation](https://canvas.instructure.com/doc/api/modules.html#method.context_module_items_api.create) for raw syntax)
+-- @tparam table items (see [Canvas API documentation](https://canvas.instructure.com/doc/api/modules.html#method.context_module_items_api.create) for raw syntax)
 -- Table of module items has some shorthand definitions defined in the code. TODO: document these properly.
 function canvas:update_module(module_name,ask,items)
 

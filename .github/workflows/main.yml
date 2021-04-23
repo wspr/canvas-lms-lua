@@ -36,7 +36,7 @@ jobs:
       - name: Run ldoc
         run: |
           cd canvas-repo
-          ldoc -p canvas-lms-lua lua
+          ldoc .
 
       - name: Copy doc files & push
         run: |

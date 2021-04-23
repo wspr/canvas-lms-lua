@@ -2,6 +2,9 @@
 
 This repository contains a set of Lua interfaces to the Canvas LMS using its REST API.
 
+- This is the main repository README.
+- API documentation is located here: <https://wspr.io/canvas-lms-lua>.
+
 These Lua interfaces are not an ‘application’ in the sense that on their own they will
 not do anything. They are provided for individual users to chain together commands for
 controlling their own Canvas courses.
@@ -41,7 +44,7 @@ Load the module in Lua as normal:
 ### Configuration
 
 However, just the `require` line above will produce an error; before doing this you must
-create a local file `canvas-data.lua` that contains the following lines:
+create a local file `canvas-config.lua` that contains the following lines:
 
     canvas_url "<URL>/"
     token      "<TOKEN>"
@@ -75,9 +78,6 @@ writing your own custom applications for your own sole use.
 Currently the Lua interfaces do not provide a means to connect via OAuth but with time permitting
 I would like to add somoething. (Doing it cross-platform could be tricky?)
 
-## Documentation
-
-TODO
 
 
 ## Licence and copyright
