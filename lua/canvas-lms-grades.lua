@@ -78,7 +78,9 @@ end
 
 
 
-canvas.write_grades = function(self,gfile,assign_names,all_assign_byname)
+canvas.write_grades = function(self,gfile,assign_names)
+
+  self.get_assignments(force=false)
 
   print("Writing gradebook data to file '"..gfile.."'")
 
@@ -96,9 +98,9 @@ canvas.write_grades = function(self,gfile,assign_names,all_assign_byname)
   io.write("\n")
 
   io.write("Max Points,,")
-  for i,assign_name in ipairs(assign_names) do
-    if all_assign_byname[assign_name] then
-      io.write(all_assign_byname[assign_name].points_possible..",")
+  for i,v in ipairs(assign_names) do
+    if self.assignments[v] then
+      io.write(self.assignments[v].points_possible..",")
     end
   end
   io.write("\n")

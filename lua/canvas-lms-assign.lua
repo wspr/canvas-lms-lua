@@ -71,48 +71,47 @@ end
 
 
 
-
-canvas.get_assignment_list = function(self,opt)
-
-  local opt = opt or {}
-  local get_bool = opt.download or false
-  local print_list = opt.print or false
-
-  local all_assign = self:get_pages(get_bool,canvas.course_prefix.."assignments")
-  local all_assign_byname = {}
-  if opt.print then print("# ASSIGNMENT LIST") end
-  for k,v in pairs(all_assign) do
-    if opt.print then print(" • "..v.name) end
-    all_assign_byname[v.name] = v
-  end
-
-  return all_assign_byname
-end
-
-
 --- Get all assignments and store their metadata.
-canvas.get_assignments = function(self)
+-- @tparam table arg list of arguments
+-- download = true | false | "ask"
+function canvas:get_assignments(arg)
 
-  print("# Getting assignments currently in Canvas")
-
-  local all_assign = self:get_pages(true,self.course_prefix.."assignments")
-  local assign_hash = {}
-  for ii,vv in ipairs(all_assign) do
-    assign_hash[vv.name] = vv.id
+  local arg = arg or {}
+  local force = arg.force or false
+  local dl_check
+  if self.assignments then
+    dl_check = false
+  else
+    dl_check = true
+  end
+  if self.assignments and force == "ask" then
+    print("Assignment data exists but might be out of date. Re-download assignment data?")
+    print("Type y to do so:")
+    dl_check = io.read() == "y"
   end
 
-  self.assignments = all_assign
-  self.assignment_ids = assign_hash
+  if dl_check then
+    print("# Getting assignments currently in Canvas")
+    local all_assign = self:get_pages(true,self.course_prefix.."assignments")
+    local assign_tbl = {}
+    for ii,vv in ipairs(all_assign) do
+      assign_tbl[vv.name] = vv
+    end
+    self.assignments = assign_tbl
+  end
 
-  print("## ASSIGNMENTS - .assignment_ids ")
-  pretty.dump(self.assignment_ids)
+  print("## ASSIGNMENTS - .assignments ")
+  pretty.dump(self.assignments)
 
 end
 
 
 
-
-canvas.get_assignment = function(self,use_cache_bool,assign_name,assign_opts)
+--- Get full details of a single assignment
+-- @tparam bool use_cache_bool Don't download if cache available?
+-- @tparam string assign_name Name of the assignment
+-- @tparam table assign_opts Additional REST arguments (link)
+function canvas:get_assignment(use_cache_bool,assign_name,assign_opts)
   return self:get_assignment_generic(use_cache_bool,assign_name,assign_opts,"Assign "..assign_name)
 end
 
