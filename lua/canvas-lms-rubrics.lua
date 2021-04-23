@@ -1,5 +1,5 @@
 --- Canvas LMS in Lua: Rubrics
--- @module canvas-rubrics
+-- @submodule canvas
 
 local pretty = require("pl.pretty")
 local csv    = require("csv")
@@ -84,7 +84,7 @@ end
 
 --- Read in a carefully structure CSV file and convert it into a rubric.
 -- @param self
--- @tparam string csvfile 
+-- @tparam string csvfile
 canvas.rubric_from_csv = function(self,csvfile)
 
   if not(path.exists(csvfile)) then

@@ -1,5 +1,5 @@
 --- Canvas LMS in Lua: Configuration
--- @module canvas-config
+-- @submodule canvas
 
 local lfs    = require "lfs"
 
@@ -34,7 +34,7 @@ canvas.set_first_monday = function(self,arg)
   self.sem_first_monday[#self.sem_first_monday+1] = arg
 end
 
---- Set last week before mid-interval break (multiple allowed). 
+--- Set last week before mid-interval break (multiple allowed).
 canvas.set_break_week = function(self,arg)
   self.sem_break_week[#self.sem_break_week+1] = arg
 end

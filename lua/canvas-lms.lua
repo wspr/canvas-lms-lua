@@ -2,8 +2,11 @@
       CANVAS-LMS
 --]================]
 
---- User interface for managing Canvas LMS courses using its REST API
+--- User interface for managing Canvas LMS courses using its REST API.
+-- There is a single table used in an object-like way for interacting with a single Canvas course.
+-- The functions below are stored within the canvas table and store their data and metadata in the same table.
 -- @module canvas
+
 
 canvas = canvas or {}
 

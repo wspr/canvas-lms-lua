@@ -1,5 +1,5 @@
 --- Canvas LMS in Lua: Messaging
--- @module canvas-message
+-- @submodule canvas
 
 
 canvas.message_group_wfile = function(self,send_check,msg)

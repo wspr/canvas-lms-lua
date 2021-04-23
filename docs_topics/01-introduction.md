@@ -1,4 +1,4 @@
-# Canvas LMS in Lua
+# Getting started
 
 Intro
 

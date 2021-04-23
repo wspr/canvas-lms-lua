@@ -1,5 +1,5 @@
 --- Canvas LMS in Lua: Assignments
--- @module canvas-assign
+-- @submodule canvas
 
 local binser = require("binser")
 local pretty = require("pl.pretty")
@@ -10,7 +10,6 @@ local markdown = require("markdown")
 --- Get assignment groups IDs.
 -- Gets details of each assignment group and stores their IDs for later lookup. Data stored in |self.assignment_groups|.
 -- @param self
-
 canvas.get_assignment_groups = function(self)
 
   local assign_grps = self:get_pages(true,self.course_prefix.."assignment_groups")
@@ -25,7 +24,6 @@ end
 --- Set up assignment groups.
 -- @param self
 -- @tparam table args setup arguments
-
 canvas.setup_assignment_groups = function(self,args)
 
   print("# Setting up assignment groups")

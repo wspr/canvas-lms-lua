@@ -1,5 +1,5 @@
 --- Canvas LMS in Lua: HTTP
--- @module canvas-http
+-- @submodule canvas
 
 
 local http   = require("ssl.https")

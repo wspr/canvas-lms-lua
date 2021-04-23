@@ -1,5 +1,5 @@
 --- Canvas LMS in Lua: Grades and gradebook
--- @module canvas-grades
+-- @submodule canvas
 
 local tablex   = require("pl.tablex")
 local pretty   = require("pl.pretty")
