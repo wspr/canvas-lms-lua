@@ -9,8 +9,7 @@ local markdown = require("markdown")
 
 --- Get assignment groups IDs.
 -- Gets details of each assignment group and stores their IDs for later lookup. Data stored in |self.assignment_groups|.
--- @param self
-canvas.get_assignment_groups = function(self)
+function canvas:get_assignment_groups()
 
   local assign_grps = self:get_pages(true,self.course_prefix.."assignment_groups")
   local grp_hash = {}
@@ -22,9 +21,8 @@ canvas.get_assignment_groups = function(self)
 end
 
 --- Set up assignment groups.
--- @param self
 -- @tparam table args setup arguments
-canvas.setup_assignment_groups = function(self,args)
+function canvas:setup_assignment_groups(args)
 
   print("# Setting up assignment groups")
 
@@ -115,11 +113,11 @@ function canvas:get_assignment(use_cache_bool,assign_name,assign_opts)
   return self:get_assignment_generic(use_cache_bool,assign_name,assign_opts,"Assign "..assign_name)
 end
 
-canvas.get_assignment_ungrouped = function(self,use_cache_bool,assign_name,assign_opts)
+function canvas:get_assignment_ungrouped(use_cache_bool,assign_name,assign_opts)
   return self:get_assignment_generic(use_cache_bool,assign_name,assign_opts,"Assign "..assign_name.." Ungrouped")
 end
 
-canvas.get_assignment_generic = function(self,use_cache_bool,assign_name,assign_opts,cache_name)
+function canvas:get_assignment_generic(use_cache_bool,assign_name,assign_opts,cache_name)
 
   local cache_name = cache_name or assign_name
   local cache_file = canvas.cache_dir..cache_name..".lua"
@@ -184,8 +182,8 @@ end
 
 
 
-
-local day_string_to_num = function(argday)
+--- Simple lookup table to allow string arguments to specify days of the week
+local function day_string_to_num(argday)
   if type(argday) == "string" then
     if argday == "mon"       then argday =   0 end
     if argday == "tue"       then argday =   1 end
@@ -484,8 +482,10 @@ canvas.defaults.assignment.day = 0
 
 end
 
+
+
 --- Compare assignments in Canvas to what has been defined locally.
-canvas.check_assignments = function(self)
+function canvas:check_assignments()
 
   if self.assignment_ids == nil then
     self:get_assignments()

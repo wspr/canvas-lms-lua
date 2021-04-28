@@ -5,7 +5,8 @@ local tablex   = require("pl.tablex")
 local pretty   = require("pl.pretty")
 
 
-canvas.get_grade_columns = function(self)
+--- Retrieve and store the names and IDs of any added custom gradebook columns
+function canvas:get_grade_columns()
 
   local xx = canvas:get_pages(true,canvas.course_prefix .. "custom_gradebook_columns")
   self.custom_gradebook_columns = xx
@@ -19,7 +20,9 @@ canvas.get_grade_columns = function(self)
 end
 
 
-canvas.setup_grade_columns = function(self,columns)
+--- Create custom gradebook columns
+-- Currently this function only creates, not updates!
+function canvas:setup_grade_columns(columns)
 
   self:get_grade_columns()
 
@@ -39,17 +42,22 @@ canvas.setup_grade_columns = function(self,columns)
 end
 
 
-canvas.delete_grade_columns = function(self)
+--- Delete all custom gradebook columns -- warning!
+function canvas:delete_grade_columns()
 
-  self:get_grade_columns()
-  for i,j in ipairs(self.custom_gradebook_columns) do
-    self:delete(self.course_prefix.."custom_gradebook_columns/"..j.id)
+  print("About to delete all custom gradebook columns, are you sure? Type y to do so:")
+  if io.read() == "y" then
+    self:get_grade_columns()
+    for i,j in ipairs(self.custom_gradebook_columns) do
+      self:delete(self.course_prefix.."custom_gradebook_columns/"..j.id)
+    end
   end
 
 end
 
 
-canvas.get_assign_grades = function(self,opt)
+--- Retrieve and store grades from specified assignments
+function canvas:get_assign_grades(opt)
 
   get_switch = opt.download or "ask"
   assign_names = opt.assignments
@@ -77,8 +85,8 @@ canvas.get_assign_grades = function(self,opt)
 end
 
 
-
-canvas.write_grades = function(self,gfile,assign_names)
+--- Write grades to CSV from specified assignments
+canvas.write_grades = function(gfile,assign_names)
 
   self.get_assignments(force=false)
 

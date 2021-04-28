@@ -4,23 +4,23 @@
 local lfs    = require "lfs"
 
 --- Set course ID, which defines course prefix.
-canvas.set_course_id = function(self,str)
+function canvas:set_course_id(str)
   self.courseid = str
   self.course_prefix = "courses/"..str.."/"
 end
 
 --- Set Canvas URL.
-canvas.set_url = function(self,str)
+function canvas:set_url(str)
   self.url = str
 end
 
 --- Set user token for authenticated to API (keep this secret!).
-canvas.set_token = function(self,str)
+function canvas:set_token(self,str)
   self.token = str
 end
 
 --- Set folder for storing cache files of this library.
-canvas.set_cache_dir = function(self,str)
+function canvas:set_cache_dir(str)
   self.cache_top = str
   self.cache_dir = str..self.courseid.."/"
 end
@@ -30,17 +30,17 @@ canvas.sem_break_week   = {}
 canvas.sem_break_length = {}
 
 --- Set date of first Monday of teaching interval (multiple allowed).
-canvas.set_first_monday = function(self,arg)
+function canvas:set_first_monday(arg)
   self.sem_first_monday[#self.sem_first_monday+1] = arg
 end
 
 --- Set last week before mid-interval break (multiple allowed).
-canvas.set_break_week = function(self,arg)
+function canvas:set_break_week(arg)
   self.sem_break_week[#self.sem_break_week+1] = arg
 end
 
 --- Set number of weeks of mid-interval break (multiple allowed).
-canvas.set_break_length = function(self,arg)
+function canvas:set_break_length(arg)
   self.sem_break_length[#self.sem_break_length+1] = arg
 end
 
