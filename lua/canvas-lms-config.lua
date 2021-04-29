@@ -15,7 +15,7 @@ function canvas:set_url(str)
 end
 
 --- Set user token for authenticated to API (keep this secret!).
-function canvas:set_token(self,str)
+function canvas:set_token(str)
   self.token = str
 end
 
@@ -73,4 +73,5 @@ canvas.defaults.assignment = {}
 canvas.defaults.assignment.day = nil
 canvas.defaults.assignment.open_days = nil
 canvas.defaults.assignment.late_days = nil
-canvas.defaults.discussions.discussion_type = "threaded"
+canvas.defaults.discussion = {}
+canvas.defaults.discussion.discussion_type = "threaded"

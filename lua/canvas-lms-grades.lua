@@ -86,9 +86,9 @@ end
 
 
 --- Write grades to CSV from specified assignments
-canvas.write_grades = function(gfile,assign_names)
+function canvas:write_grades(gfile,assign_names)
 
-  self.get_assignments(force=false)
+  self.get_assignments{force=false}
 
   print("Writing gradebook data to file '"..gfile.."'")
 
