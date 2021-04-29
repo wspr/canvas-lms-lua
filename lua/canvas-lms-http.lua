@@ -6,6 +6,9 @@ local http   = require("ssl.https")
 local ltn12  = require("ltn12")
 local json   = require("json")
 local binser = require("binser")
+local mppost = require("multipart-post")
+local pretty = require("pl.pretty")
+local path   = require("pl.path")
 
 --- Wrapper for GET.
 -- @tparam string req URL stub to GET from
@@ -181,30 +184,72 @@ function canvas:getpostput_json(param,req,opt)
 
 end
 
+--- Upload a file to a Canvas course
+-- @tparam table opt
+-- Required argument `opt.filename` specifies filename to upload.
+-- `opt.filepath.."/"..opt.filename` defines where the file is to be found in the local filesystem.
+-- File will be uploaded in the root directory for the course or as specified by `opt.folder`.
+-- Additional arguments specified in the [Canvas Files API](https://canvas.instructure.com/doc/api/files.html#method.files.api_update).
+function canvas:file_upload(opt)
 
-canvas.upload = function(self,path,file)
+  local res  = {}
+  local res2 = {}
+  local res3 = {}
 
-  local formparam = "name="..file.."&".."parent_folder_path="..path
-  local res = {}
+  opt.filepath = opt.filepath or "."
 
+  local args = {}
+  args.name = opt.filename
+  args.parent_folder_path = opt.folder or "/"
+  local args_json = json:encode(args)
+
+  local uploadurl = self.url .. "api/v1/" .. self.course_prefix .. "files/"
   local body, code, headers, status = http.request{
-      url = self.url .. "api/v1/" .. "files" ,
+      url = uploadurl,
       method = "POST",
       headers = {
-        ["authorization"]  = "Bearer " .. self.token,
-        ["Content-Type"]   = "application/x-www-form-urlencoded";
-        ["Content-Length"] = #formparam;
+        ["authorization"] = "Bearer " .. self.token ,
+        ["content-type"]  = "application/json" ,
+        ["content-length"] = args_json:len()     ,
       },
-      source = ltn12.source.string(formparam),
-      sink = ltn12.sink.table(res),
+      source = ltn12.source.string(args_json),
+      sink   = ltn12.sink.table(res),
   }
-
-  serialise(res)
-
   res = table.concat(res)
-  canvas_data = json:decode(res)
+  res = json:decode(res)
 
-  return canvas_data
+  local file_full = opt.filepath.."/"..opt.filename
+  if not(path.exists(file_full)) then
+    error("File '"..file_full.."' not found.")
+  end
+  local file = io.open(file_full, "r")
+  local file_length = file:seek("end")
+  file:seek("set", 0)
+
+  local rq = mppost.gen_request{ myfile = {
+          name = opt.filename,
+          data = file,
+          len = file_length,
+      }
+  }
+  rq.url  = res.upload_url
+  rq.sink = ltn12.sink.table(res2)
+  local body, code, headers, status = http.request(rq)
+  res2 = table.concat(res2)
+  res2 = json:decode(res2)
+
+  local body, code, headers, status = http.request{
+      url = res2.location,
+      method = "POST",
+      headers = {
+        ["authorization"] = "Bearer " .. self.token ,
+      },
+      sink   = ltn12.sink.table(res3),
+  }
+  res3 = table.concat(res3)
+  res3 = json:decode(res3)
+
+  return res3
 
 end
 
