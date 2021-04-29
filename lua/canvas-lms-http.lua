@@ -8,17 +8,15 @@ local json   = require("json")
 local binser = require("binser")
 
 --- Wrapper for GET.
--- @param self
 -- @tparam string req URL stub to GET from
 -- @param opt table of optional parameters
 -- @treturn table REST result
-canvas.get = function(self,req,opt)
+function canvas:get(req,opt)
   return canvas.getpostput(self,"GET",req,opt)
 end
 
 
 --- Paginated GET.
--- @param self
 -- @param download_bool true | false | "ask"
 -- @tparam string req URL stub to GET from
 -- @param opt table of optional parameters
@@ -32,7 +30,7 @@ end
 --
 -- @usage canvas:get_pages(true,self.course_prefix.."assignments")
 
-canvas.get_pages = function(self,download_bool,req,opt)
+function canvas:get_pages(download_bool,req,opt)
 
   local cache_name = string.gsub(req,"/"," - ")
   local cache_file = self.cache_dir.."Pages - "..cache_name..".lua"
@@ -79,11 +77,10 @@ end
 
 
 --- Wrapper for POST.
--- @param self
 -- @tparam string req URL stub to POST to
 -- @param opt table of optional parameters
 -- @treturn table REST result
-canvas.post = function(self,req,opt)
+function canvas:post(req,opt)
   return canvas.getpostput(self,"POST",req,opt)
 end
 
@@ -92,7 +89,7 @@ end
 -- @tparam string req URL stub to PUT to
 -- @param opt table of optional parameters
 -- @treturn table REST result
-canvas.put = function(self,req,opt)
+function canvas:put(req,opt)
   return canvas.getpostput(self,"PUT",req,opt)
 end
 
@@ -101,12 +98,12 @@ end
 -- @tparam string req URL stub to DELETE from
 -- @param opt table of optional parameters
 -- @treturn table REST result
-canvas.delete = function(self,req,opt)
+function canvas:delete(req,opt)
   return canvas.getpostput(self,"DELETE",req,opt)
 end
 
 
-canvas.getpostput = function(self,param,req,opt_arg)
+function canvas:getpostput(param,req,opt_arg)
 
     local use_json = false
     local opt_str
@@ -129,7 +126,7 @@ canvas.getpostput = function(self,param,req,opt_arg)
     return canvas_data
 end
 
-canvas.getpostput_str = function(self,param,req,opt)
+function canvas:getpostput_str(param,req,opt)
 
     if not(opt == "") then
       opt = "?"..opt
@@ -158,7 +155,7 @@ canvas.getpostput_str = function(self,param,req,opt)
 
 end
 
-canvas.getpostput_json = function(self,param,req,opt)
+function canvas:getpostput_json(param,req,opt)
 
     local httpreq = self.url .. "api/v1/" .. req
     print("HTTP "..param.." REQUEST: " .. httpreq )
