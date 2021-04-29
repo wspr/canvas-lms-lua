@@ -1,22 +1,12 @@
 --- Canvas LMS in Lua: HTTP
 -- @submodule canvas
 
-
 local http   = require("ssl.https")
 local ltn12  = require("ltn12")
 local json   = require("json")
 local binser = require("binser")
 local mppost = require("multipart-post")
-local pretty = require("pl.pretty")
 local path   = require("pl.path")
-
---- Wrapper for GET.
--- @tparam string req URL stub to GET from
--- @param opt table of optional parameters
--- @treturn table REST result
-function canvas:get(req,opt)
-  return canvas.getpostput(self,"GET",req,opt)
-end
 
 
 --- Paginated GET.
@@ -25,6 +15,7 @@ end
 -- @param opt table of optional parameters
 -- @treturn table REST result
 --
+-- This is the workhorse function for most commands that retrieve data from Canvas.
 -- Most REST interfaces use pagination to control sizes of return data.
 -- This requires iteration of multiple requests to return a full collection of information.
 -- Since this can be quite slow, this function has a built-in cache feature that stores
@@ -78,6 +69,13 @@ function canvas:get_pages(download_bool,req,opt)
 
 end
 
+--- Wrapper for GET.
+-- @tparam string req URL stub to GET from
+-- @param opt table of optional parameters
+-- @treturn table REST result
+function canvas:get(req,opt)
+  return canvas.getpostput(self,"GET",req,opt)
+end
 
 --- Wrapper for POST.
 -- @tparam string req URL stub to POST to
@@ -185,6 +183,7 @@ function canvas:getpostput_json(param,req,opt)
 end
 
 --- Upload a file to a Canvas course
+-- The process for uploading files to Canvas is [documented here](https://canvas.instructure.com/doc/api/file.file_uploads.html#method.file_uploads.post).
 -- @tparam table opt
 -- Required argument `opt.filename` specifies filename to upload.
 -- `opt.filepath.."/"..opt.filename` defines where the file is to be found in the local filesystem.
@@ -197,15 +196,19 @@ function canvas:file_upload(opt)
   local res3 = {}
 
   opt.filepath = opt.filepath or "."
+  local file_full = opt.filepath.."/"..opt.filename
+  if not(path.exists(file_full)) then
+    error("File '"..file_full.."' not found.")
+  end
 
   local args = {}
   args.name = opt.filename
   args.parent_folder_path = opt.folder or "/"
   local args_json = json:encode(args)
 
-  local uploadurl = self.url .. "api/v1/" .. self.course_prefix .. "files/"
-  local body, code, headers, status = http.request{
-      url = uploadurl,
+  -- Step 1: Telling Canvas about the file upload and getting a token
+  local body, code, headers, status = http.request {
+      url = self.url .. "api/v1/" .. self.course_prefix .. "files/",
       method = "POST",
       headers = {
         ["authorization"] = "Bearer " .. self.token ,
@@ -215,30 +218,24 @@ function canvas:file_upload(opt)
       source = ltn12.source.string(args_json),
       sink   = ltn12.sink.table(res),
   }
-  res = table.concat(res)
-  res = json:decode(res)
+  res = json:decode(table.concat(res))
 
-  local file_full = opt.filepath.."/"..opt.filename
-  if not(path.exists(file_full)) then
-    error("File '"..file_full.."' not found.")
-  end
+  -- Step 1.5: Read file
   local file = io.open(file_full, "r")
   local file_length = file:seek("end")
   file:seek("set", 0)
 
-  local rq = mppost.gen_request{ myfile = {
-          name = opt.filename,
-          data = file,
-          len = file_length,
-      }
+  -- Step 2: Upload the file data to the URL given in the previous response
+  local rq = mppost.gen_request {
+    myfile = { name = opt.filename, data = file, len = file_length }
   }
   rq.url  = res.upload_url
   rq.sink = ltn12.sink.table(res2)
   local body, code, headers, status = http.request(rq)
-  res2 = table.concat(res2)
-  res2 = json:decode(res2)
+  res2 = json:decode(table.concat(res2))
 
-  local body, code, headers, status = http.request{
+  -- Step 3: Confirm the upload's success
+  local body, code, headers, status = http.request {
       url = res2.location,
       method = "POST",
       headers = {
@@ -246,8 +243,7 @@ function canvas:file_upload(opt)
       },
       sink   = ltn12.sink.table(res3),
   }
-  res3 = table.concat(res3)
-  res3 = json:decode(res3)
+  res3 = json:decode(table.concat(res3))
 
   return res3
 
