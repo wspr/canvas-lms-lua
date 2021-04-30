@@ -20,5 +20,6 @@ require("canvas-lms-message")
 require("canvas-lms-announcements")
 require("canvas-lms-modules-pages")
 require("canvas-lms-discuss")
+require("canvas-lms-files")
 
 return canvas
