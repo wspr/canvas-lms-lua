@@ -29,11 +29,19 @@ function canvas:get_pages(download_bool,req,opt)
   local cache_name = string.gsub(req,"/"," - ")
   local cache_file = self.cache_dir.."Pages - "..cache_name..".lua"
 
+  if download_bool == false and not(path.exists(cache_file)) then
+    print("Cache file for requested GET ["..req.."] does not exist; forcing Canvas download.")
+    download_bool = true
+  end
+
   if download_bool == "ask" then
-    print("Download all pages for requested GET ["..req.."] ?")
-    print("Type y to do so:")
-    dl_check = io.read()
-    download_bool = dl_check == "y"
+    if path.exists(cache_file) then
+      print("Download all pages for requested GET ["..req.."] ?")
+      print("Type y to do so:")
+      download_bool = io.read() == "y"
+    else
+      download_bool = true
+    end
   end
 
   if download_bool then
@@ -68,6 +76,37 @@ function canvas:get_pages(download_bool,req,opt)
   return canvas_pages[1]
 
 end
+
+
+--- Define getter function to retrieve and store item metadata.
+-- @string field_name  Name of REST field to store item data
+-- @string index_name  Name of metadata field to reference item data (default: `"name"`)
+-- @tparam table arg   List of additional arguments
+-- Custom argument: `download` = `true` | `false` | `"ask"`
+-- Other args are passed through as REST arguments.
+function canvas:define_getter(field_name,index_name)
+  self["get_"..field_name] = function(self,arg)
+
+    local index_name = index_name or "name"
+    local arg = arg or {}
+    local download = arg.download or false
+    if self[field_name] == nil then
+      download = true
+    end
+    arg.download = nil
+    local opt = arg or {}
+
+    print("# Getting "..field_name.." data currently in Canvas")
+    local all_items = self:get_pages(download,self.course_prefix..field_name,opt)
+    local items_by_name = {}
+    for ii,vv in ipairs(all_items) do
+      items_by_name[vv[index_name]] = vv
+    end
+    self[field_name] = items_by_name
+
+  end
+end
+
 
 --- Wrapper for GET.
 -- @tparam string req URL stub to GET from

@@ -7,6 +7,8 @@ local date   = require("pl.date")
 local path   = require("pl.path")
 local markdown = require("markdown")
 
+canvas:define_getter("assignments")
+
 --- Get assignment groups IDs.
 -- Gets details of each assignment group and stores their IDs for later lookup. Data stored in |self.assignment_groups|.
 function canvas:get_assignment_groups()
@@ -68,40 +70,6 @@ end
 
 
 
-
---- Get all assignments and store their metadata.
--- @tparam table arg list of arguments
--- download = true | false | "ask"
-function canvas:get_assignments(arg)
-
-  local arg = arg or {}
-  local force = arg.force or false
-  local dl_check
-  if self.assignments then
-    dl_check = false
-  else
-    dl_check = true
-  end
-  if self.assignments and force == "ask" then
-    print("Assignment data exists but might be out of date. Re-download assignment data?")
-    print("Type y to do so:")
-    dl_check = io.read() == "y"
-  end
-
-  if dl_check then
-    print("# Getting assignments currently in Canvas")
-    local all_assign = self:get_pages(true,self.course_prefix.."assignments")
-    local assign_tbl = {}
-    for ii,vv in ipairs(all_assign) do
-      assign_tbl[vv.name] = vv
-    end
-    self.assignments = assign_tbl
-  end
-
-  print("## ASSIGNMENTS - .assignments ")
-  pretty.dump(self.assignments)
-
-end
 
 
 
