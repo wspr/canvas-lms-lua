@@ -1,5 +1,5 @@
 
-name: Deploy docs
+name: Check code and deploy docs
 
 on:
   # Triggers the workflow on push events for the master branch, only
@@ -22,10 +22,18 @@ jobs:
       - name: Install ldoc
         run:  luarocks install ldoc
 
+      - name: Install luacheck
+        run:  luarocks install luacheck
+
       - name: Checkout repo
         uses: actions/checkout@v2
         with:
           path: canvas-repo
+
+      - name: Execute luacheck
+        run: |
+          cd canvas-repo
+          luacheck lua
 
       - name: Checkout doc repo
         uses: actions/checkout@v2
