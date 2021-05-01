@@ -24,18 +24,18 @@
 
 <div id="navigation">
 <br/>
-<h1>canvas-lms-lua</h1>
+<h1>canvas-lms</h1>
 
 
 <h2>Contents</h2>
 <ul>
-<li><a href="#canvas_lms_config_Functions">canvas-lms-config Functions</a></li>
-<li><a href="#canvas_lms_http_Functions">canvas-lms-http Functions</a></li>
-<li><a href="#canvas_lms_assign_Functions">canvas-lms-assign Functions</a></li>
-<li><a href="#canvas_lms_discuss_Functions">canvas-lms-discuss Functions</a></li>
-<li><a href="#canvas_lms_grades_Functions">canvas-lms-grades Functions</a></li>
-<li><a href="#canvas_lms_modules_pages_Functions">canvas-lms-modules-pages Functions</a></li>
-<li><a href="#canvas_lms_rubrics_Functions">canvas-lms-rubrics Functions</a></li>
+<li><a href="#canvas_lms_config_Functions">canvas-lms.config Functions</a></li>
+<li><a href="#canvas_lms_http_Functions">canvas-lms.http Functions</a></li>
+<li><a href="#canvas_lms_assign_Functions">canvas-lms.assign Functions</a></li>
+<li><a href="#canvas_lms_discuss_Functions">canvas-lms.discuss Functions</a></li>
+<li><a href="#canvas_lms_grades_Functions">canvas-lms.grades Functions</a></li>
+<li><a href="#canvas_lms_modules_pages_Functions">canvas-lms.modules-pages Functions</a></li>
+<li><a href="#canvas_lms_rubrics_Functions">canvas-lms.rubrics Functions</a></li>
 </ul>
 
 
@@ -58,7 +58,7 @@
  The functions below are stored within the canvas table and store their data and metadata in the same table.</p>
 
 
-<h2><a href="#canvas_lms_config_Functions">canvas-lms-config Functions</a></h2>
+<h2><a href="#canvas_lms_config_Functions">canvas-lms.config Functions</a></h2>
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#set_course_id">set_course_id (str)</a></td>
@@ -89,14 +89,14 @@
 	<td class="summary">Set number of weeks of mid-interval break (multiple allowed).</td>
 	</tr>
 </table>
-<h2><a href="#canvas_lms_http_Functions">canvas-lms-http Functions</a></h2>
+<h2><a href="#canvas_lms_http_Functions">canvas-lms.http Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#get_pages">get_pages (download_bool, req, opt)</a></td>
+	<td class="name" nowrap><a href="#get_pages">get_pages (download_bool, req, opt_arg)</a></td>
 	<td class="summary">Paginated GET.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#define_getter">define_getter (field_name, index_name, arg)</a></td>
+	<td class="name" nowrap><a href="#define_getter">define_getter (field_name, index_name_arg)</a></td>
 	<td class="summary">Define getter function to retrieve and store item metadata.</td>
 	</tr>
 	<tr>
@@ -108,11 +108,11 @@
 	<td class="summary">Wrapper for POST.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#put">put (self, req, opt)</a></td>
+	<td class="name" nowrap><a href="#put">put (req, opt)</a></td>
 	<td class="summary">Wrapper for PUT.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#delete">delete (self, req, opt)</a></td>
+	<td class="name" nowrap><a href="#delete">delete (req, opt)</a></td>
 	<td class="summary">Wrapper for DELETE.</td>
 	</tr>
 	<tr>
@@ -121,7 +121,7 @@
  The process for uploading files to Canvas is <a href="https://canvas.instructure.com/doc/api/file.file_uploads.html#method.file_uploads.post">documented here</a>.</td>
 	</tr>
 </table>
-<h2><a href="#canvas_lms_assign_Functions">canvas-lms-assign Functions</a></h2>
+<h2><a href="#canvas_lms_assign_Functions">canvas-lms.assign Functions</a></h2>
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#get_assignment_groups">get_assignment_groups ()</a></td>
@@ -144,7 +144,7 @@
 	<td class="summary">Compare assignments in Canvas to what has been defined locally.</td>
 	</tr>
 </table>
-<h2><a href="#canvas_lms_discuss_Functions">canvas-lms-discuss Functions</a></h2>
+<h2><a href="#canvas_lms_discuss_Functions">canvas-lms.discuss Functions</a></h2>
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#get_discussion_topics">get_discussion_topics ()</a></td>
@@ -155,7 +155,7 @@
 	<td class="summary">Create/edit up discussion topics.</td>
 	</tr>
 </table>
-<h2><a href="#canvas_lms_grades_Functions">canvas-lms-grades Functions</a></h2>
+<h2><a href="#canvas_lms_grades_Functions">canvas-lms.grades Functions</a></h2>
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#get_grade_columns">get_grade_columns ()</a></td>
@@ -175,10 +175,10 @@
 	<td class="summary">Write grades to CSV from specified assignments</td>
 	</tr>
 </table>
-<h2><a href="#canvas_lms_modules_pages_Functions">canvas-lms-modules-pages Functions</a></h2>
+<h2><a href="#canvas_lms_modules_pages_Functions">canvas-lms.modules-pages Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#get_modules">get_modules (args)</a></td>
+	<td class="name" nowrap><a href="#get_modules">get_modules ()</a></td>
 	<td class="summary">Get all Canvas modules and store their metadata.</td>
 	</tr>
 	<tr>
@@ -194,7 +194,7 @@
 	<td class="summary">Suite of sanity checks for all Canvas modules.</td>
 	</tr>
 </table>
-<h2><a href="#canvas_lms_rubrics_Functions">canvas-lms-rubrics Functions</a></h2>
+<h2><a href="#canvas_lms_rubrics_Functions">canvas-lms.rubrics Functions</a></h2>
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#get_rubrics">get_rubrics (self)</a></td>
@@ -209,7 +209,7 @@
 	<td class="summary">Associate a rubric to an assignment.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#rubric_from_csv">rubric_from_csv (self, csvfile)</a></td>
+	<td class="name" nowrap><a href="#rubric_from_csv">rubric_from_csv (csvfile)</a></td>
 	<td class="summary">Read in a carefully structure CSV file and convert it into a rubric.</td>
 	</tr>
 	<tr>
@@ -222,7 +222,7 @@
 <br/>
 
 
-    <h2 class="section-header "><a name="canvas_lms_config_Functions"></a>canvas-lms-config Functions</h2>
+    <h2 class="section-header "><a name="canvas_lms_config_Functions"></a>canvas-lms.config Functions</h2>
 
     <dl class="function">
     <dt>
@@ -380,12 +380,12 @@
 
 </dd>
 </dl>
-    <h2 class="section-header "><a name="canvas_lms_http_Functions"></a>canvas-lms-http Functions</h2>
+    <h2 class="section-header "><a name="canvas_lms_http_Functions"></a>canvas-lms.http Functions</h2>
 
     <dl class="function">
     <dt>
     <a name = "get_pages"></a>
-    <strong>get_pages (download_bool, req, opt)</strong>
+    <strong>get_pages (download_bool, req, opt_arg)</strong>
     </dt>
     <dd>
     Paginated GET.
@@ -400,7 +400,7 @@
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
          URL stub to GET from
         </li>
-        <li><span class="parameter">opt</span>
+        <li><span class="parameter">opt_arg</span>
          table of optional parameters
         </li>
     </ul>
@@ -429,7 +429,7 @@
 </dd>
     <dt>
     <a name = "define_getter"></a>
-    <strong>define_getter (field_name, index_name, arg)</strong>
+    <strong>define_getter (field_name, index_name_arg)</strong>
     </dt>
     <dd>
     Define getter function to retrieve and store item metadata.
@@ -441,15 +441,10 @@
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
           Name of REST field to store item data
         </li>
-        <li><span class="parameter">index_name</span>
+        <li><span class="parameter">index_name_arg</span>
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
           Name of metadata field to reference item data (default: <code>&quot;name&quot;</code>)
-        </li>
-        <li><span class="parameter">arg</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
-           List of additional arguments
  Custom argument: <code>download</code> = <code>true</code> | <code>false</code> | <code>&quot;ask&quot;</code>
- Other args are passed through as REST arguments.
         </li>
     </ul>
 
@@ -520,7 +515,7 @@
 </dd>
     <dt>
     <a name = "put"></a>
-    <strong>put (self, req, opt)</strong>
+    <strong>put (req, opt)</strong>
     </dt>
     <dd>
     Wrapper for PUT.
@@ -528,11 +523,6 @@
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">self</span>
-
-
-
-        </li>
         <li><span class="parameter">req</span>
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
          URL stub to PUT to
@@ -555,7 +545,7 @@
 </dd>
     <dt>
     <a name = "delete"></a>
-    <strong>delete (self, req, opt)</strong>
+    <strong>delete (req, opt)</strong>
     </dt>
     <dd>
     Wrapper for DELETE.
@@ -563,11 +553,6 @@
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">self</span>
-
-
-
-        </li>
         <li><span class="parameter">req</span>
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
          URL stub to DELETE from
@@ -614,7 +599,7 @@
 
 </dd>
 </dl>
-    <h2 class="section-header "><a name="canvas_lms_assign_Functions"></a>canvas-lms-assign Functions</h2>
+    <h2 class="section-header "><a name="canvas_lms_assign_Functions"></a>canvas-lms.assign Functions</h2>
 
     <dl class="function">
     <dt>
@@ -723,7 +708,7 @@
 
 </dd>
 </dl>
-    <h2 class="section-header "><a name="canvas_lms_discuss_Functions"></a>canvas-lms-discuss Functions</h2>
+    <h2 class="section-header "><a name="canvas_lms_discuss_Functions"></a>canvas-lms.discuss Functions</h2>
 
     <dl class="function">
     <dt>
@@ -776,7 +761,7 @@
 
 </dd>
 </dl>
-    <h2 class="section-header "><a name="canvas_lms_grades_Functions"></a>canvas-lms-grades Functions</h2>
+    <h2 class="section-header "><a name="canvas_lms_grades_Functions"></a>canvas-lms.grades Functions</h2>
 
     <dl class="function">
     <dt>
@@ -866,25 +851,17 @@
 
 </dd>
 </dl>
-    <h2 class="section-header "><a name="canvas_lms_modules_pages_Functions"></a>canvas-lms-modules-pages Functions</h2>
+    <h2 class="section-header "><a name="canvas_lms_modules_pages_Functions"></a>canvas-lms.modules-pages Functions</h2>
 
     <dl class="function">
     <dt>
     <a name = "get_modules"></a>
-    <strong>get_modules (args)</strong>
+    <strong>get_modules ()</strong>
     </dt>
     <dd>
     Get all Canvas modules and store their metadata.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">args</span>
-
-
-
-        </li>
-    </ul>
 
 
 
@@ -904,7 +881,8 @@
         <li><span class="parameter">modules</span>
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
            List of ordered module names to create.
- If names are different than the modules currently defined, new ones are created and/or current modules are re-ordered.
+ If names are different than the modules currently defined, new ones are created and/or
+ current modules are re-ordered.
  If modules exist that aren't specified, the function will offer to delete them (case-by-case).
         </li>
     </ul>
@@ -964,7 +942,7 @@
 
 </dd>
 </dl>
-    <h2 class="section-header "><a name="canvas_lms_rubrics_Functions"></a>canvas-lms-rubrics Functions</h2>
+    <h2 class="section-header "><a name="canvas_lms_rubrics_Functions"></a>canvas-lms.rubrics Functions</h2>
 
     <dl class="function">
     <dt>
@@ -1048,7 +1026,7 @@
 </dd>
     <dt>
     <a name = "rubric_from_csv"></a>
-    <strong>rubric_from_csv (self, csvfile)</strong>
+    <strong>rubric_from_csv (csvfile)</strong>
     </dt>
     <dd>
     Read in a carefully structure CSV file and convert it into a rubric.
@@ -1056,11 +1034,6 @@
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">self</span>
-
-
-
-        </li>
         <li><span class="parameter">csvfile</span>
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
 
@@ -1107,7 +1080,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2021-04-30 13:03:27 </i>
+<i style="float:right;">Last updated 2021-05-01 14:29:56 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
