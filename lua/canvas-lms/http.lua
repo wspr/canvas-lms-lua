@@ -19,8 +19,8 @@ local canvas = {}
 
 --- Paginated GET.
 -- @param download_bool true | false | "ask"
--- @tparam string req URL stub to GET from
--- @param opt table of optional parameters
+-- @string req URL stub to GET from
+-- @param opt_arg table of optional parameters
 -- @treturn table REST result
 --
 -- This is the workhorse function for most commands that retrieve data from Canvas.
@@ -88,10 +88,8 @@ end
 
 --- Define getter function to retrieve and store item metadata.
 -- @string field_name  Name of REST field to store item data
--- @string index_name  Name of metadata field to reference item data (default: `"name"`)
--- @tparam table arg   List of additional arguments
+-- @string index_name_arg  Name of metadata field to reference item data (default: `"name"`)
 -- Custom argument: `download` = `true` | `false` | `"ask"`
--- Other args are passed through as REST arguments.
 function canvas:define_getter(field_name,index_name_arg)
   self["get_"..field_name] = function(self_,opt_arg)
 
@@ -138,7 +136,6 @@ function canvas:post(req,opt)
 end
 
 --- Wrapper for PUT.
--- @param self
 -- @tparam string req URL stub to PUT to
 -- @param opt table of optional parameters
 -- @treturn table REST result
@@ -147,7 +144,6 @@ function canvas:put(req,opt)
 end
 
 --- Wrapper for DELETE.
--- @param self
 -- @tparam string req URL stub to DELETE from
 -- @param opt table of optional parameters
 -- @treturn table REST result

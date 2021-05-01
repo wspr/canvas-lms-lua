@@ -7,26 +7,25 @@
 -- The functions below are stored within the canvas table and store their data and metadata in the same table.
 -- @module canvas
 
-local current_folder = (...):gsub('%.init$', '')
-
 local canvas = {}
 
-local function copy_functions(new)
+local function copy_functions(name)
+  local new = require(name)
   for k,v in pairs(new) do
     canvas[k] = v
   end
 end
 
-copy_functions(require(current_folder .. ".config"))
-copy_functions(require(current_folder .. ".http"))
-copy_functions(require(current_folder .. ".students"))
-copy_functions(require(current_folder .. ".assign"))
-copy_functions(require(current_folder .. ".rubrics"))
-copy_functions(require(current_folder .. ".grades"))
-copy_functions(require(current_folder .. ".message"))
-copy_functions(require(current_folder .. ".announcements"))
-copy_functions(require(current_folder .. ".modules-pages"))
-copy_functions(require(current_folder .. ".discuss"))
-copy_functions(require(current_folder .. ".files"))
+ copy_functions("canvas-lms.config")
+copy_functions("canvas-lms.http")
+copy_functions("canvas-lms.students")
+copy_functions("canvas-lms.assign")
+copy_functions("canvas-lms.rubrics")
+copy_functions("canvas-lms.grades")
+copy_functions("canvas-lms.message")
+copy_functions("canvas-lms.announcements")
+copy_functions("canvas-lms.modules-pages")
+copy_functions("canvas-lms.discuss")
+copy_functions("canvas-lms.files")
 
 return canvas
