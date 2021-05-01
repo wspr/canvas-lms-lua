@@ -4,10 +4,11 @@
 local binser = require("binser")
 local pretty = require("pl.pretty")
 
+local canvas = {}
 
 canvas.find_user = function(self,str)
 
-  user_data = self:get(self.course_prefix.."users",{search_term=str})
+  local user_data = self:get(self.course_prefix.."users",{search_term=str})
 
   return user_data
 
@@ -16,17 +17,17 @@ end
 
 canvas.get_students = function(self,opt)
 
-  local opt = opt or {}
-  local download_bool = opt.download or false
+  local optv = opt or {}
+  local download_bool = optv.download or false
   if self.students_cid == false then
     download_bool = true
   end
 
-  local students = self:get_pages(download_bool,canvas.course_prefix.."users",{["enrollment_type[]"]="student"})
+  local students = self:get_pages(download_bool,self.course_prefix.."users",{["enrollment_type[]"]="student"})
 
   local students_by_cid = {}
   local students_by_id = {}
-  for k,v in pairs(students) do
+  for _,v in pairs(students) do
     students_by_cid[v.id] = v
     students_by_id[v.sis_user_id] = v
   end
@@ -46,9 +47,9 @@ canvas.get_groups = function(self,use_cache_bool,group_category_name)
   local cache_path = self.cache_dir.."Group - "..group_category_name..".lua"
 
   if use_cache_bool then
-    local gcats = self:get( canvas.course_prefix .. "group_categories" )
-    gcat_id = 0;
-    for i,j in ipairs(gcats) do
+    local gcats = self:get( self.course_prefix .. "group_categories" )
+    local gcat_id = 0;
+    for _,j in ipairs(gcats) do
       if j.name == group_category_name then
         gcat_id = j.id
       end
@@ -57,7 +58,7 @@ canvas.get_groups = function(self,use_cache_bool,group_category_name)
     print('Group category id for "'..group_category_name..'" = '..gcat_id)
     local canvas_data = self:get_pages(true, "group_categories/" .. gcat_id .. "/groups" )
     local groups = {}
-    for i,j in ipairs(canvas_data) do
+    for _,j in ipairs(canvas_data) do
       local group_users = self:get( "groups/" .. j.id .. "/users" )
       groups[j.id] = {
                        canvasid   = j.id ,
@@ -78,15 +79,15 @@ canvas.setup_group_categories = function(self,categories)
 
   print("# Setting up student group categories")
 
-  local group_cats = self:get_pages(true,canvas.course_prefix.."group_categories")
+  local group_cats = self:get_pages(true,self.course_prefix.."group_categories")
   local projgrp_hash = {}
-  for ii,vv in ipairs(group_cats) do
+  for _,vv in ipairs(group_cats) do
     projgrp_hash[vv.name] = vv.id
   end
 
-  for ii,vv in ipairs(categories) do
+  for _,vv in ipairs(categories) do
     if projgrp_hash[vv] == nil then
-      local xx = self:post(canvas.course_prefix.."group_categories","name="..vv)
+      local xx = self:post(self.course_prefix.."group_categories","name="..vv)
       projgrp_hash[xx.name] = xx.id
     end
   end
@@ -102,9 +103,9 @@ canvas.get_student_group_categories = function(self)
 
   print("# Getting student group categories")
 
-  local group_cats = self:get_pages(true,canvas.course_prefix.."group_categories")
+  local group_cats = self:get_pages(true,self.course_prefix.."group_categories")
   local projgrp_hash = {}
-  for ii,vv in ipairs(group_cats) do
+  for _,vv in ipairs(group_cats) do
     projgrp_hash[vv.name] = vv.id
   end
 
@@ -115,3 +116,4 @@ canvas.get_student_group_categories = function(self)
 
 end
 
+return canvas

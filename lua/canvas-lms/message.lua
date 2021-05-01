@@ -1,6 +1,7 @@
 --- Canvas LMS in Lua: Messaging
 -- @submodule canvas
 
+local canvas = {}
 
 canvas.message_group_wfile = function(self,send_check,msg)
 
@@ -23,7 +24,7 @@ canvas.message_group_wfile = function(self,send_check,msg)
     local fileid = "attachment_ids[]="..attachfile[1].id
     local isgroup = "group_conversation=true"
 
-    opt = recipients.."&"..subject.."&"..body.."&"..fileid.."&"..isgroup
+    local opt = recipients.."&"..subject.."&"..body.."&"..fileid.."&"..isgroup
 
     if send_check=="y" then
       self:post("conversations",encode(opt))
@@ -57,8 +58,7 @@ canvas.message_user = function(self,send_check,msg)
   local recipients="recipients[]="..msg.canvasid
   local subject="subject="..encode(msg.subject)
   local body="body="..encode(msg.body)
-
-  opt = forcenew.."&"..recipients.."&"..subject.."&"..body
+  local opt = forcenew.."&"..recipients.."&"..subject.."&"..body
 
   if msg.context then
     opt = opt.."&context_code="..encode(msg.context)
@@ -77,4 +77,5 @@ canvas.message_user = function(self,send_check,msg)
 
 end
 
+return canvas
 

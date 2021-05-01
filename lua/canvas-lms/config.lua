@@ -2,6 +2,7 @@
 -- @submodule canvas
 
 local lfs    = require "lfs"
+local canvas = {}
 
 --- Set course ID, which defines course prefix.
 function canvas:set_course_id(str)
@@ -54,7 +55,8 @@ do
     break_length     = function(x) canvas:set_break_length(x) end,
     cache_dir        = function(x) canvas:set_cache_dir(x)    end,
   }
-  loadfile(canvas_config or 'canvas-config.lua', 't', shared)()
+  local canvas_config_file = _G["canvas_config"] or 'canvas-config.lua'
+  loadfile(canvas_config_file, 't', shared)()
 end
 
 canvas.sem_break_week    = canvas.sem_break_week   or {99,99}
@@ -75,3 +77,5 @@ canvas.defaults.assignment.open_days = nil
 canvas.defaults.assignment.late_days = nil
 canvas.defaults.discussion = {}
 canvas.defaults.discussion.discussion_type = "threaded"
+
+return canvas

@@ -1,8 +1,8 @@
 --- Canvas LMS in Lua: Discussion Boards
 -- @submodule canvas
 
-local binser = require("binser")
 local pretty = require("pl.pretty")
+local canvas = {}
 
 --- Get discussion topics and store their metadata and IDs.
 function canvas:get_discussion_topics()
@@ -10,7 +10,7 @@ function canvas:get_discussion_topics()
   local discuss_topics = self:get_pages(true,self.course_prefix.."discussion_topics")
 
   local hash = {}
-  for ii,vv in ipairs(discuss_topics) do
+  for _,vv in ipairs(discuss_topics) do
     hash[vv.title] = vv.id
   end
   self.discussion_topics = discuss_topics
@@ -38,8 +38,7 @@ function canvas:setup_discussion_topics(args)
 
   print("Disable students from creating their own topics?")
   print("Type y to do so:")
-  check = io.read()
-  if check == "y" then
+  if io.read() == "y" then
     self:put(self.course_prefix.."settings/",{allow_student_discussion_topics=false})
   end
 
@@ -48,7 +47,8 @@ function canvas:setup_discussion_topics(args)
   for ii,vv in ipairs(args) do
     discussion_topics[ii] = vv
     discussion_topics[ii].published = discussion_topics[ii].published or true
-    discussion_topics[ii].discussion_type = discussion_topics[ii].discussion_type or canvas.defaults.discussion.discussion_type
+    discussion_topics[ii].discussion_type = discussion_topics[ii].discussion_type or
+                                            canvas.defaults.discussion.discussion_type
     titles_lookup[vv.title] = true
   end
 
@@ -56,11 +56,11 @@ function canvas:setup_discussion_topics(args)
     self:get_discussion_topics()
   end
 
-  for ii,vv in ipairs(discussion_topics) do
+  for _,vv in ipairs(discussion_topics) do
     if self.discussion_topic_ids[vv.title] then
       self:put(self.course_prefix.."discussion_topics/"..self.discussion_topic_ids[vv.title],vv)
     else
-      xx = self:post(self.course_prefix.."discussion_topics",vv)
+      local xx = self:post(self.course_prefix.."discussion_topics",vv)
       self.discussion_topic_ids[xx.title] = xx.id
     end
   end
@@ -69,8 +69,7 @@ function canvas:setup_discussion_topics(args)
     if not(titles_lookup[tt]) then
       print("Discussion topic currently exists but not specified: '"..tt.. "'. Delete it?")
       print("Type y to do so:")
-      check = io.read()
-      if check == "y" then
+      if io.read() == "y" then
         self:delete(self.course_prefix.."discussion_topics/"..id)
       end
     end
@@ -82,4 +81,5 @@ function canvas:setup_discussion_topics(args)
 end
 
 
+return canvas
 

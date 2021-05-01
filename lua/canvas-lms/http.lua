@@ -8,6 +8,14 @@ local binser = require("binser")
 local mppost = require("multipart-post")
 local path   = require("pl.path")
 
+local canvas = {}
+
+--[[
+     For future reference. HTTP req syntax is:
+
+        body, code, headers, status = http.request
+
+--]]
 
 --- Paginated GET.
 -- @param download_bool true | false | "ask"
@@ -24,7 +32,7 @@ local path   = require("pl.path")
 --
 -- @usage canvas:get_pages(true,self.course_prefix.."assignments")
 
-function canvas:get_pages(download_bool,req,opt)
+function canvas:get_pages(download_bool,req,opt_arg)
 
   local cache_name = string.gsub(req,"/"," - ")
   local cache_file = self.cache_dir.."Pages - "..cache_name..".lua"
@@ -52,9 +60,9 @@ function canvas:get_pages(download_bool,req,opt)
     while has_data do
 
       data_page = data_page + 1
-      local opt = opt or {}
+      local opt = opt_arg or {}
       opt.page = data_page
-      canvas_data = self:get(req,opt)
+      local canvas_data = self:get(req,opt)
       for i=1,#canvas_data do
           if not(canvas_data[i].missing) then
             canvas_pages[#canvas_pages+1] = canvas_data[i]
@@ -84,28 +92,33 @@ end
 -- @tparam table arg   List of additional arguments
 -- Custom argument: `download` = `true` | `false` | `"ask"`
 -- Other args are passed through as REST arguments.
-function canvas:define_getter(field_name,index_name)
-  self["get_"..field_name] = function(self,arg)
+function canvas:define_getter(field_name,index_name_arg)
+  self["get_"..field_name] = function(self_,opt_arg)
 
-    local index_name = index_name or "name"
-    local arg = arg or {}
+    local index_name = index_name_arg or "name"
+    local arg = opt_arg or {}
     local download = arg.download or false
-    if self[field_name] == nil then
+    if self_[field_name] == nil then
       download = true
     end
     arg.download = nil
     local opt = arg or {}
 
     print("# Getting "..field_name.." data currently in Canvas")
-    local all_items = self:get_pages(download,self.course_prefix..field_name,opt)
+    local all_items = self_:get_pages(download,self_.course_prefix..field_name,opt)
     local items_by_name = {}
-    for ii,vv in ipairs(all_items) do
+    local id_lookup = {}
+    for _,vv in ipairs(all_items) do
       items_by_name[vv[index_name]] = vv
+      id_lookup[vv[index_name]] = vv.id
     end
-    self[field_name] = items_by_name
+    self_[field_name] = items_by_name
+    self_["id_"..field_name] = id_lookup
 
   end
 end
+canvas.define_getter(canvas,"assignments")
+canvas.define_getter(canvas,"files","filename")
 
 
 --- Wrapper for GET.
@@ -178,7 +191,7 @@ function canvas:getpostput_str(param,req,opt)
     print("HTTP "..param.." REQUEST: " .. httpreq )
 
     local res = {}
-    local body, code, headers, status = http.request{
+    http.request{
         url = httpreq,
         method = param,
         headers = {
@@ -188,10 +201,7 @@ function canvas:getpostput_str(param,req,opt)
         sink = ltn12.sink.table(res),
     }
 
-    res = table.concat(res)
-    canvas_data = json:decode(res)
-
-    return canvas_data
+    return json:decode(table.concat(res))
 
 end
 
@@ -202,7 +212,7 @@ function canvas:getpostput_json(param,req,opt)
     print("JSON: " .. opt )
 
     local res = {}
-    local body, code, headers, status = http.request{
+    http.request{
         url = httpreq,
         method = param,
         headers = {
@@ -214,10 +224,7 @@ function canvas:getpostput_json(param,req,opt)
         sink   = ltn12.sink.table(res),
     }
 
-    res = table.concat(res)
-    canvas_data = json:decode(res)
-
-    return canvas_data
+    return json:decode(table.concat(res))
 
 end
 
@@ -248,7 +255,7 @@ function canvas:file_upload(opt)
   local args_json = json:encode(args)
 
   -- Step 1: Telling Canvas about the file upload and getting a token
-  local body, code, headers, status = http.request {
+  http.request {
       url = self.url .. "api/v1/" .. self.course_prefix .. "files/",
       method = "POST",
       headers = {
@@ -272,11 +279,11 @@ function canvas:file_upload(opt)
   }
   rq.url  = res.upload_url
   rq.sink = ltn12.sink.table(res2)
-  local body, code, headers, status = http.request(rq)
+  http.request(rq)
   res2 = json:decode(table.concat(res2))
 
   -- Step 3: Confirm the upload's success
-  local body, code, headers, status = http.request {
+  http.request {
       url = res2.location,
       method = "POST",
       headers = {
@@ -291,4 +298,5 @@ function canvas:file_upload(opt)
 end
 
 
+return canvas
 

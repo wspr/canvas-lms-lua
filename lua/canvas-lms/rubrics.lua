@@ -5,6 +5,7 @@ local pretty = require("pl.pretty")
 local csv    = require("csv")
 local path   = require("pl.path")
 
+local canvas = {}
 
 --- Get all course rubrics and store their metadata.
 canvas.get_rubrics = function(self)
@@ -13,7 +14,7 @@ canvas.get_rubrics = function(self)
 
   local all_rubrics = self:get_pages(true,self.course_prefix.."rubrics")
   local rubrics_hash = {}
-  for ii,vv in ipairs(all_rubrics) do
+  for _,vv in ipairs(all_rubrics) do
     rubrics_hash[vv.title] = vv.id
   end
 
@@ -48,8 +49,7 @@ canvas.send_rubric = function(self,rubric)
     print("This will DELETE all comments made against any marked assignments.")
     print("  ")
     print("Type y to overwrite and delete comments:")
-    dl_check = io.read()
-    if dl_check == "y" then
+    if io.read() == "y" then
       canvas_rubric = self:put(canvas.course_prefix.."rubrics/"..rubric_id,{rubric = rubric})
     end
   else
@@ -75,17 +75,15 @@ canvas.assoc_rubric = function(self,args)
           purpose = "grading" ,
         }
       }
-  a = self:post(canvas.course_prefix.."rubric_associations",rassoc)
+  return self:post(canvas.course_prefix.."rubric_associations",rassoc)
 
-  return a
 end
 
 
 
 --- Read in a carefully structure CSV file and convert it into a rubric.
--- @param self
 -- @tparam string csvfile
-canvas.rubric_from_csv = function(self,csvfile)
+function canvas:rubric_from_csv(csvfile)
 
   if not(path.exists(csvfile)) then
     error("File '"..csvfile.."' not found.")
@@ -101,10 +99,13 @@ canvas.rubric_from_csv = function(self,csvfile)
   local row_cell_descrs = {}
   local row_cell_points = {}
 
+  local rtitle
+  local rdesc
+
   for fields in f:lines() do
-    if fields[1] == "" then
-      -- skip empty rows
-    elseif fields[1] == "TITLE" then
+    -- skip empty rows
+    --    if fields[1] == "" then
+    if fields[1] == "TITLE" then
       rtitle = fields[2]
     elseif fields[1] == "DESCRIPTION" then
       rdesc = fields[2]
@@ -182,6 +183,9 @@ canvas.rubric_from_csv = function(self,csvfile)
                    criteria = criteria ,
                  }
 
+  self.rubric_csv = self.rubric_csv or {}
+  self.rubric_csv[rtitle] = rubric -- currently unused
+
   return rubric
 
 end
@@ -203,7 +207,7 @@ canvas.setup_csv_rubrics = function(self,args)
     self:get_rubrics()
   end
 
-  for ii,vv in ipairs(args.csv) do
+  for _,vv in ipairs(args.csv) do
     local rubric  = self:rubric_from_csv(args.prefix..vv..args.suffix)
     local crubric = self:send_rubric(rubric)
     if crubric.error_report_id then
@@ -219,3 +223,5 @@ canvas.setup_csv_rubrics = function(self,args)
 
 end
 
+
+return canvas

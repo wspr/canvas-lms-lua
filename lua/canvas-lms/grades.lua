@@ -2,8 +2,8 @@
 -- @submodule canvas
 
 local tablex   = require("pl.tablex")
-local pretty   = require("pl.pretty")
 
+local canvas = {}
 
 --- Retrieve and store the names and IDs of any added custom gradebook columns
 function canvas:get_grade_columns()
@@ -13,7 +13,7 @@ function canvas:get_grade_columns()
 
   self.custom_gradebook_column_ids = self.custom_gradebook_column_ids or {}
 
-  for i,j in ipairs(self.custom_gradebook_columns) do
+  for _,j in ipairs(self.custom_gradebook_columns) do
     self.custom_gradebook_column_ids[j.title] = j.id
   end
 
@@ -27,7 +27,7 @@ function canvas:setup_grade_columns(columns)
   self:get_grade_columns()
 
   local curr_cols = {}
-  for i,j in ipairs(self.custom_gradebook_columns) do
+  for _,j in ipairs(self.custom_gradebook_columns) do
     curr_cols[j.title] = true
   end
 
@@ -35,7 +35,7 @@ function canvas:setup_grade_columns(columns)
     local column = j
     column.position = i
     if curr_cols[column.title] == nil then
-      xx = self:post(self.course_prefix.."custom_gradebook_columns",{column=column})
+      self:post(self.course_prefix.."custom_gradebook_columns",{column=column})
     end
   end
 
@@ -48,7 +48,7 @@ function canvas:delete_grade_columns()
   print("About to delete all custom gradebook columns, are you sure? Type y to do so:")
   if io.read() == "y" then
     self:get_grade_columns()
-    for i,j in ipairs(self.custom_gradebook_columns) do
+    for _,j in ipairs(self.custom_gradebook_columns) do
       self:delete(self.course_prefix.."custom_gradebook_columns/"..j.id)
     end
   end
@@ -59,10 +59,10 @@ end
 --- Retrieve and store grades from specified assignments
 function canvas:get_assign_grades(opt)
 
-  get_switch = opt.download or "ask"
-  assign_names = opt.assignments
+  local get_switch = opt.download or "ask"
+  local assign_names = opt.assignments
 
-  for i,assign_name in ipairs(assign_names) do
+  for _,assign_name in ipairs(assign_names) do
     local download_check = "y"
     if get_switch == "ask" then
       print("Download grades for assignment '"..assign_name.."'? Type y to do so:")
@@ -71,7 +71,7 @@ function canvas:get_assign_grades(opt)
       download_check = "n"
     end
     local assign = self:get_assignment_ungrouped(download_check=="y",assign_name)
-    for i,j in pairs(assign) do
+    for _,j in pairs(assign) do
       if self.students_cid[j.user_id] then
         self.students_cid[j.user_id].grades = self.students_cid[j.user_id].grades or {}
         self.students_cid[j.user_id].grades[assign_name] = j.grade
@@ -100,23 +100,23 @@ function canvas:write_grades(gfile,assign_names)
   io.output(gfile)
 
   io.write("Name,ID,")
-  for i,assign_name in ipairs(assign_names) do
+  for _,assign_name in ipairs(assign_names) do
     io.write(assign_name..",")
   end
   io.write("\n")
 
   io.write("Max Points,,")
-  for i,v in ipairs(assign_names) do
+  for _,v in ipairs(assign_names) do
     if self.assignments[v] then
       io.write(self.assignments[v].points_possible..",")
     end
   end
   io.write("\n")
 
-  for k,student_cid in tablex.sort(students_by_name) do
+  for _,student_cid in tablex.sort(students_by_name) do
     io.write('"'..self.students_cid[student_cid].sortable_name..'",')
     io.write(self.students_cid[student_cid].sis_user_id..",")
-    for i,assign_name in ipairs(assign_names) do
+    for _,assign_name in ipairs(assign_names) do
       if self.students_cid[student_cid].grades then
         io.write((self.students_cid[student_cid].grades[assign_name] or "")..",")
       end

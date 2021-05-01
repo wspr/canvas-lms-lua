@@ -1,4 +1,4 @@
-package = "canvas-lms-lua"
+package = "canvas-lms"
 version = "dev-1"
 source = {
    url = "git+ssh://git@github.com/wspr/canvas-lms-lua.git"

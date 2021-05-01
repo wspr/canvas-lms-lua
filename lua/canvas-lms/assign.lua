@@ -7,7 +7,7 @@ local date   = require("pl.date")
 local path   = require("pl.path")
 local markdown = require("markdown")
 
-canvas:define_getter("assignments")
+local canvas = {}
 
 --- Get assignment groups IDs.
 -- Gets details of each assignment group and stores their IDs for later lookup. Data stored in |self.assignment_groups|.
@@ -15,7 +15,7 @@ function canvas:get_assignment_groups()
 
   local assign_grps = self:get_pages(true,self.course_prefix.."assignment_groups")
   local grp_hash = {}
-  for ii,vv in ipairs(assign_grps) do
+  for _,vv in ipairs(assign_grps) do
     grp_hash[vv.name] = vv.id
   end
   self.assignment_groups = grp_hash
@@ -48,11 +48,11 @@ function canvas:setup_assignment_groups(args)
     self:get_assignment_groups()
   end
 
-  for ii,vv in ipairs(assign_groups) do
+  for _,vv in ipairs(assign_groups) do
     if self.assignment_groups[vv.name] then
       self:put(self.course_prefix.."assignment_groups/"..self.assignment_groups[vv.name],vv)
     else
-      xx = self:post(self.course_prefix.."assignment_groups",vv)
+      local xx = self:post(self.course_prefix.."assignment_groups",vv)
       self.assignment_groups[xx.name] = xx.id
     end
   end
@@ -61,7 +61,7 @@ function canvas:setup_assignment_groups(args)
   pretty.dump(self.assignment_groups)
 
   local Nmarks = 0
-  for ii,vv in ipairs(assign_groups) do
+  for _,vv in ipairs(assign_groups) do
     Nmarks = Nmarks + vv.group_weight
   end
   print("TOTAL MARKS: "..Nmarks)
@@ -85,15 +85,15 @@ function canvas:get_assignment_ungrouped(use_cache_bool,assign_name,assign_opts)
   return self:get_assignment_generic(use_cache_bool,assign_name,assign_opts,"Assign "..assign_name.." Ungrouped")
 end
 
-function canvas:get_assignment_generic(use_cache_bool,assign_name,assign_opts,cache_name)
+function canvas:get_assignment_generic(use_cache_bool,assign_name,assign_opts,cache_name_arg)
 
-  local cache_name = cache_name or assign_name
+  local cache_name = cache_name_arg or assign_name
   local cache_file = canvas.cache_dir..cache_name..".lua"
 
   if use_cache_bool then
 
-    canvas_data = self:get(self.course_prefix .. "assignments","search_term=" .. assign_name)
-    assign_id = canvas_data[1]["id"]
+    local canvas_data = self:get(self.course_prefix .. "assignments","search_term=" .. assign_name)
+    local assign_id = canvas_data[1]["id"]
     local final_grader_id = canvas_data[1]["final_grader_id"]
 
     local moderator_reset = false
@@ -117,7 +117,8 @@ function canvas:get_assignment_generic(use_cache_bool,assign_name,assign_opts,ca
     print('ASSIGNMENT NAME: '..assign_name)
     print('ASSIGNMENT ID:   '..assign_id)
     print('GETTING SUBMISSIONS:')
-    local canvas_sub = self:get_pages(true,self.course_prefix .. "assignments/" .. assign_id .. "/submissions",assign_opts)
+    local stub = self.course_prefix .. "assignments/" .. assign_id .. "/submissions"
+    local canvas_sub = self:get_pages(true,stub,assign_opts)
 
     if moderator_reset then
         print('Resetting "moderator"')
@@ -234,15 +235,18 @@ canvas.defaults.assignment.day = 0
     end
   end
 
-  local argtypes_allowed = {"online_quiz","none","on_paper","discussion_topic","external_tool","online_upload","online_text_entry","online_url","media_recording"}
+  local argtypes_allowed = {
+    "online_quiz","none","on_paper","discussion_topic","external_tool","online_upload",
+    "online_text_entry","online_url","media_recording"
+  }
   args.assign_type = args.assign_type or "online_upload"
   if type(args.assign_type) == "string" then
     args.assign_type = {args.assign_type}
   end
   do
     local arg_bad = true
-    for iii,vvv in ipairs(args.assign_type) do
-      for ii,vv in ipairs(argtypes_allowed) do
+    for _,vvv in ipairs(args.assign_type) do
+      for _,vv in ipairs(argtypes_allowed) do
         if vvv == vv then arg_bad = false end
       end
     end
@@ -281,7 +285,7 @@ canvas.defaults.assignment.day = 0
   end
 
 
-  local duediff    =  0
+--  local duediff    =  0
   local lockdiff   = -1
   local unlockdiff =  0
   -- these are set up so that an assignment with no due date will be queried but not aborted
@@ -321,12 +325,12 @@ canvas.defaults.assignment.day = 0
     local datef = date.Format 'yyyy-mm-dd'
 
     local today_date    = date{}
-    local todaystr      = datef:tostring(today_date)
+--    local todaystr      = datef:tostring(today_date)
     local dayoffset     = argday+7*(wkoffset-1)
 
     local duedate       = date(self.sem_first_monday[sem]):add{day=dayoffset}
     local duedatestr    = datef:tostring(duedate).."T"..duetime
-    duediff       = today_date.time - duedate.time
+--    local duediff       = today_date.time - duedate.time
     new_assign.assignment.due_at    = duedatestr
 
     if args.open_days then
@@ -357,8 +361,8 @@ canvas.defaults.assignment.day = 0
      error("Assignment description already specified.")
     end
 
-    local descr = nil
-    local descr_html = nil
+    local descr
+    local descr_html
     if not(path.isfile(descr_filename)) then
       descr_filename = "assign_details/"..descr_filename
       if not(path.isfile(descr_filename)) then
@@ -371,7 +375,7 @@ canvas.defaults.assignment.day = 0
       f:close()
     end
     do
-      local fname,fext = path.splitext(descr_filename)
+      local _,fext = path.splitext(descr_filename)
       if fext == ".html" then
         descr_html = descr
       elseif fext == ".md" then
@@ -459,30 +463,35 @@ function canvas:check_assignments()
     self:get_assignments()
   end
 
-  local assign_def = {}
-  for kk in pairs(self.assignment_ids) do
-    assign_def[kk] = "true"
-  end
-  for kk in pairs(self.assignment_setup) do
-    assign_def[kk] = nil
-  end
-  for kk in pairs(assign_def) do
-    print("Assignment exists in Canvas but not defined: "..kk)
+  do
+    local assign_def = {}
+    for kk in pairs(self.assignment_ids) do
+      assign_def[kk] = "true"
+    end
+    for kk in pairs(self.assignment_setup) do
+      assign_def[kk] = nil
+    end
+    for kk in pairs(assign_def) do
+      print("Assignment exists in Canvas but not defined: "..kk)
+    end
   end
 
-  local assign_def = {}
-  for kk in pairs(self.assignment_setup) do
-    assign_def[kk] = "true"
-  end
-  for kk in pairs(self.assignment_ids) do
-    assign_def[kk] = nil
-  end
-  for kk in pairs(assign_def) do
-    print("Assignment defined but does not exist in Canvas: "..kk)
+  do
+    local assign_def = {}
+    for kk in pairs(self.assignment_setup) do
+      assign_def[kk] = "true"
+    end
+    for kk in pairs(self.assignment_ids) do
+      assign_def[kk] = nil
+    end
+    for kk in pairs(assign_def) do
+      print("Assignment defined but does not exist in Canvas: "..kk)
+    end
   end
 
 end
 
 
 
+return canvas
 

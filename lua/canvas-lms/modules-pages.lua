@@ -1,15 +1,14 @@
 --- Canvas LMS in Lua: Modules and pages
 -- @submodule canvas
 
-local binser = require("binser")
-local pretty = require("pl.pretty")
+local canvas = {}
 
 --- Get all Canvas modules and store their metadata.
-function canvas:get_modules(args)
+function canvas:get_modules()
 
   local modules = self:get_pages(true,self.course_prefix.."modules",{include={"items"}})
   local hash = {}
-  for ii,vv in ipairs(modules) do
+  for _,vv in ipairs(modules) do
     modules[vv.name] = vv.id
     hash[vv.name] = vv.id
   end
@@ -20,7 +19,8 @@ end
 
 --- Create/edit all modules.
 -- @tparam table modules   List of ordered module names to create.
--- If names are different than the modules currently defined, new ones are created and/or current modules are re-ordered.
+-- If names are different than the modules currently defined, new ones are created and/or
+-- current modules are re-ordered.
 -- If modules exist that aren't specified, the function will offer to delete them (case-by-case).
 function canvas:setup_modules(modules)
 
@@ -30,14 +30,14 @@ function canvas:setup_modules(modules)
 
   for i,j in ipairs(modules) do
     if canvas.modules[j] == nil then
-      xx = self:post(self.course_prefix.."modules",{module={name=j,position=i}})
+      local xx = self:post(self.course_prefix.."modules",{module={name=j,position=i}})
       modules[j] = xx.id
     end
   end
 
-  for i,j in ipairs(self.modules) do
+  for _,j in ipairs(self.modules) do
     local isfound = false
-    for ii,jj in ipairs(modules) do
+    for _,jj in ipairs(modules) do
       if j.name == jj then
         isfound = true
         break
@@ -46,8 +46,7 @@ function canvas:setup_modules(modules)
     if not(isfound) then
       print("Module exists but not specified: "..j.name.. ". Delete it?")
       print("Type y to do so:")
-      check = io.read()
-      if check == "y" then
+      if io.read() == "y" then
         self:delete(self.course_prefix.."modules/"..j.id)
       end
     end
@@ -57,7 +56,7 @@ function canvas:setup_modules(modules)
   while not(ifokay) do
     ifokay = true
     for i,j in ipairs(modules) do
-      for ii,jj in ipairs(canvas.modules) do
+      for _,jj in ipairs(canvas.modules) do
         if jj.name == j then
           if jj.position ~= i then
             print("Updating position of "..jj.name)
@@ -102,13 +101,12 @@ function canvas:update_module(module_name,ask,items)
   local curr_items = self:get_pages(true,module_url)
 
   local curr_items_lookup = {}
-  for i,this_item in ipairs(curr_items) do
+  for _,this_item in ipairs(curr_items) do
     curr_items_lookup[this_item.title] = this_item.id
   end
 
   -- setup
   local items_lookup = {}
-  local items = items
   for i,j in ipairs(items) do
 
       local this_item = j
@@ -163,8 +161,7 @@ function canvas:update_module(module_name,ask,items)
     if not(items_lookup[k]) then
       print("Module '"..module_name.."': item currently exists but not specified: '"..k.. "'. Delete it?")
       print("Type y to do so:")
-      check = io.read()
-      if check == "y" then
+      if io.read() == "y" then
         self:delete(module_url.."/"..id)
       end
     end
@@ -185,12 +182,12 @@ function canvas:check_modules()
     self:get_modules()
   end
 
-  for ii,jj in ipairs(self.modules) do
+  for _,jj in ipairs(self.modules) do
 
     if jj.published then
 
       local any_published = false
-      for iii,jjj in ipairs(jj.items) do
+      for _,jjj in ipairs(jj.items) do
         if jjj.published then
           any_published = true
         end
@@ -206,7 +203,7 @@ function canvas:check_modules()
     else
 
       local any_published = false
-      for iii,jjj in ipairs(jj.items) do
+      for _,jjj in ipairs(jj.items) do
         if jjj.published then
           any_published = true
         end
@@ -224,5 +221,6 @@ function canvas:check_modules()
 
 end
 
+return canvas
 
 
