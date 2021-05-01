@@ -9,6 +9,11 @@ local markdown = require("markdown")
 
 local canvas = {}
 
+--- Get assignments
+-- @function get_assignments
+-- Data stored in: `.assignments` and `.id_assignments`. Both tables are indexed by assignment `name`.
+-- Code for this function uses the generic `define_getter` function in the HTTP submodule.
+
 --- Get assignment groups IDs.
 -- Gets details of each assignment group and stores their IDs for later lookup. Data stored in |self.assignment_groups|.
 function canvas:get_assignment_groups()
