@@ -96,7 +96,7 @@ function canvas:define_getter(field_name,index_name_arg,opt_default)
     local index_name = index_name_arg or "name"
     local arg = opt_default or {}
     for i,v in ipairs(opt_arg) do
-       arg[i] = v 
+       arg[i] = v
     end
     local download = arg.download or false
     if self_[field_name] == nil then
