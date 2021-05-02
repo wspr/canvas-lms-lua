@@ -4,19 +4,10 @@
 local canvas = {}
 
 --- Get all Canvas modules and store their metadata.
-function canvas:get_modules()
-
-  local modules = self:get_pages(true,self.course_prefix.."modules",{include={"items"}})
-  local hash = {}
-  for _,vv in ipairs(modules) do
-    modules[vv.name] = vv.id
-    hash[vv.name] = vv.id
-  end
-  self.modules = modules
-  self.module_ids = hash
-
-end
-
+-- Data stored in `.modules` table, indexed by module `name`.
+-- @function get_modules
+-- Code for this function uses the generic `define_getter` function in the HTTP submodule.
+--
 --- Create/edit all modules.
 -- @tparam table modules   List of ordered module names to create.
 -- If names are different than the modules currently defined, new ones are created and/or

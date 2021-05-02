@@ -90,11 +90,14 @@ end
 -- @string field_name  Name of REST field to store item data
 -- @string index_name_arg  Name of metadata field to reference item data (default: `"name"`)
 -- Custom argument: `download` = `true` | `false` | `"ask"`
-function canvas:define_getter(field_name,index_name_arg)
+function canvas:define_getter(field_name,index_name_arg,opt_default)
   self["get_"..field_name] = function(self_,opt_arg)
 
     local index_name = index_name_arg or "name"
-    local arg = opt_arg or {}
+    local arg = opt_default or {}
+    for i,v in ipairs(opt_arg) do
+       arg[i] = v 
+    end
     local download = arg.download or false
     if self_[field_name] == nil then
       download = true
@@ -105,18 +108,15 @@ function canvas:define_getter(field_name,index_name_arg)
     print("# Getting "..field_name.." data currently in Canvas")
     local all_items = self_:get_pages(download,self_.course_prefix..field_name,opt)
     local items_by_name = {}
-    local id_lookup = {}
     for _,vv in ipairs(all_items) do
       items_by_name[vv[index_name]] = vv
-      id_lookup[vv[index_name]] = vv.id
     end
     self_[field_name] = items_by_name
-    self_["id_"..field_name] = id_lookup
-
   end
 end
 canvas.define_getter(canvas,"assignments")
 canvas.define_getter(canvas,"files","filename")
+canvas.define_getter(canvas,"modules","name",{include={"items"}})
 
 
 --- Wrapper for GET.
