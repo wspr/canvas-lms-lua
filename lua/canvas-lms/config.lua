@@ -71,10 +71,11 @@ lfs.mkdir(canvas.cache_dir)
 --[[ DEFAULTS --]]
 
 canvas.defaults = {}
-canvas.defaults.assignment = {}
-canvas.defaults.assignment.day = nil
-canvas.defaults.assignment.open_days = nil
-canvas.defaults.assignment.late_days = nil
+canvas.defaults.assignments = {}
+canvas.defaults.assignments.day  = nil
+canvas.defaults.assignments.hour = nil
+canvas.defaults.assignments.open_days = nil
+canvas.defaults.assignments.late_days = nil
 canvas.defaults.discussion = {}
 canvas.defaults.discussion.discussion_type = "threaded"
 

@@ -95,7 +95,7 @@ function canvas:define_getter(field_name,index_name_arg,opt_default)
 
     local index_name = index_name_arg or "name"
     local arg = opt_default or {}
-    for i,v in ipairs(opt_arg) do
+    for i,v in ipairs(opt_arg or {}) do
        arg[i] = v
     end
     local download = arg.download or false
@@ -114,9 +114,10 @@ function canvas:define_getter(field_name,index_name_arg,opt_default)
     self_[field_name] = items_by_name
   end
 end
-canvas.define_getter(canvas,"assignments")
+canvas.define_getter(canvas,"assignments","name")
 canvas.define_getter(canvas,"files","filename")
 canvas.define_getter(canvas,"modules","name",{include={"items"}})
+canvas.define_getter(canvas,"rubrics","title")
 
 
 --- Wrapper for GET.

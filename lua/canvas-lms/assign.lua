@@ -156,28 +156,6 @@ end
 
 
 
---- Simple lookup table to allow string arguments to specify days of the week
-local function day_string_to_num(argday)
-  if type(argday) == "string" then
-    if argday == "mon"       then argday =   0 end
-    if argday == "tue"       then argday =   1 end
-    if argday == "tues"      then argday =   1 end
-    if argday == "wed"       then argday =   2 end
-    if argday == "thu"       then argday =   3 end
-    if argday == "fri"       then argday =   4 end
-    if argday == "sat"       then argday =   5 end
-    if argday == "sun"       then argday =   6 end
-    if argday == "mon-next"  then argday = 7+0 end
-    if argday == "tue-next"  then argday = 7+1 end
-    if argday == "tues-next" then argday = 7+1 end
-    if argday == "wed-next"  then argday = 7+2 end
-    if argday == "thu-next"  then argday = 7+3 end
-    if argday == "fri-next"  then argday = 7+4 end
-    if argday == "sat-next"  then argday = 7+5 end
-    if argday == "sun-next"  then argday = 7+6 end
-  end
-  return argday
-end
 
 
 --- Create a Canvas assignment.
@@ -192,7 +170,8 @@ canvas.create_assignment = function(self,args)
     open_days
     late_days
     unlockhr / unlocktime
-    duehr / unlocktime
+    hour
+    min
     lockhr / unlocktime
     published
     sem
@@ -202,13 +181,11 @@ canvas.create_assignment = function(self,args)
 	description
 }
 --]]
---[[
-canvas.defaults.assignment.day = 0
---]]
 
 
   local assign_out
   local ask = args.ask or ""
+  args.due.sem = args.due.sem or 1
 
   self.assignment_setup = self.assignment_setup or {}
   self.assignment_setup[args.name] = args
@@ -228,8 +205,6 @@ canvas.defaults.assignment.day = 0
     self:get_student_group_categories()
   end
 
-  local sem = args.sem or 1
-
   local group_proj_id = nil
   if args.student_group_category then
     group_proj_id = self.student_group_category[args.student_group_category]
@@ -244,7 +219,7 @@ canvas.defaults.assignment.day = 0
     "online_quiz","none","on_paper","discussion_topic","external_tool","online_upload",
     "online_text_entry","online_url","media_recording"
   }
-  args.assign_type = args.assign_type or "online_upload"
+  args.assign_type = args.assign_type or {"online_upload"}
   if type(args.assign_type) == "string" then
     args.assign_type = {args.assign_type}
   end
@@ -276,8 +251,10 @@ canvas.defaults.assignment.day = 0
                   }
   }
 
-  if args.assign_type == "online_upload" then
-    new_assign.assignment.allowed_extensions = arg.ext or "pdf"
+  for _,v in ipairs(args.assign_type) do
+    if v == "online_upload" then
+      new_assign.assignment.allowed_extensions = arg.ext or "pdf"
+    end
   end
   if args.rubric then
     new_assign.assignment.use_rubric_for_grading = "true"
@@ -295,63 +272,68 @@ canvas.defaults.assignment.day = 0
   local unlockdiff =  0
   -- these are set up so that an assignment with no due date will be queried but not aborted
 
-  if args.week then
+  local today_date    = date{}
+  local dateformat = date.Format('yyyy-mm-ddTHH:MM:SS')
 
-    local argday = args.day or canvas.defaults.assignment.day or 4 -- friday
-    argday = day_string_to_num(argday)
+  -- compatibility with "flattened" due date variables
+  if args.week then args.due = {} end
+  args.due.sem  = args.due.sem  or args.sem or 1
+  args.due.week = args.due.week or args.week
+  args.due.day  = args.due.day  or args.day or self.defaults.assignments.day
+  args.due.hour = args.due.hour or args.hr  or self.defaults.assignments.hour
+  args.due.min  = args.due.min  or args.min
 
-    args.open_days = args.open_days or canvas.defaults.assignment.open_days
-    args.late_days = args.late_days or canvas.defaults.assignment.late_days
+  args.open_days = args.open_days or self.defaults.assignments.open_days
+  args.late_days = args.late_days or self.defaults.assignments.late_days
+  if args.open_days then
+    args.unlock = args.unlock or {}
+    args.unlock.before_days = args.open_days
+  end
+  if args.late_days then
+    args.lock = args.lock or {}
+    args.lock.after_days = args.late_days
+  end
 
-    local duehr       = args.duehr    or "15"
-    local lockhr      = args.lockhr   or "17"
-    local unlockhr    = args.unlockhr or "08"
-    local duetime     = duehr..":00:00"
-    local unlocktime  = unlockhr..":00:00"
-    local locktime    = lockhr..":00:00"
+  if args.due then
+    local duedate = self:datetime{
+        sem  = args.due.sem  ,
+        week = args.due.week ,
+        day  = args.due.day  ,
+        hour = args.due.hour ,
+        min  = args.due.min  ,
+      }
+    print("Assignment due at: "..dateformat:tostring(duedate))
+    new_assign.assignment.due_at = dateformat:tostring(duedate)
+  end
 
-    if duehr == "24" then
-      duetime = "23:59:00"
-    end
-    if unlockhr == "24" then
-      unlocktime = "23:59:00"
-    end
-    if lockhr == "24" then
-      locktime = "23:59:00"
-    end
+  if args.unlock then
+    args.unlock.before_days = args.unlock.before_days or 0
 
-    local wkoffset = args.week
-    if self.sem_break_week[sem] > 0 and self.sem_break_length[sem] > 0 then
-      if wkoffset > self.sem_break_week[sem] then
-        wkoffset = wkoffset + self.sem_break_length[sem]
-      end
-    end
+    local unlockdate = self:datetime{
+        sem  = args.unlock.sem  or args.due.sem  ,
+        week = args.unlock.week or args.due.week ,
+        day  = args.unlock.day  or args.due.day  ,
+        hour = args.unlock.hour or args.due.hour ,
+        min  = args.unlock.min  or args.due.min  ,
+      }
+    unlockdate:add{day=-args.unlock.before_days}
+    unlockdiff    = today_date.time - unlockdate.time
+    new_assign.assignment.unlock_at = dateformat:tostring(unlockdate)
+  end
 
-    local datef = date.Format 'yyyy-mm-dd'
+  if args.lock then
+    args.lock.after_days = args.lock.after_days or 0
 
-    local today_date    = date{}
---    local todaystr      = datef:tostring(today_date)
-    local dayoffset     = argday+7*(wkoffset-1)
-
-    local duedate       = date(self.sem_first_monday[sem]):add{day=dayoffset}
-    local duedatestr    = datef:tostring(duedate).."T"..duetime
---    local duediff       = today_date.time - duedate.time
-    new_assign.assignment.due_at    = duedatestr
-
-    if args.open_days then
-      local unlockdate    = date(self.sem_first_monday[sem]):add{day=dayoffset-args.open_days}
-      local unlockdatestr = datef:tostring(unlockdate).."T"..unlocktime
-      unlockdiff    = today_date.time - unlockdate.time
-      new_assign.assignment.unlock_at = unlockdatestr
-    end
-
-    if args.late_days then
-      local lockdate      = date(self.sem_first_monday[sem]):add{day=dayoffset+args.late_days}
-      local lockdatestr   = datef:tostring(lockdate).."T"..locktime
-      lockdiff      = today_date.time - lockdate.time
-      new_assign.assignment.lock_at   = lockdatestr
-    end
-
+    local lockdate = self:datetime{
+        sem  = args.lock.sem  or args.due.sem  ,
+        week = args.lock.week or args.due.week ,
+        day  = args.lock.day  or args.due.day  ,
+        hour = args.lock.hour or args.due.hour ,
+        min  = args.lock.min  or args.due.min  ,
+      }
+    lockdate:add{day=args.lock.after_days}
+    lockdiff      = today_date.time - lockdate.time
+    new_assign.assignment.lock_at   = dateformat:tostring(lockdate)
   end
 
   if args.description then
@@ -412,17 +394,15 @@ canvas.defaults.assignment.day = 0
   end
 
   if diffcontinue then
-    if self.assignment_ids == nil then
-      self:get_assignments()
-    end
-    local assign_id = self.assignment_ids[args.name]
+    self:get_assignments()
+    local assign_id = self.assignments[args.name].id
     print("## "..args.name)
     local a
     if assign_id then
       a = self:put(self.course_prefix.."assignments/"..assign_id,new_assign)
     else
       a = self:post(self.course_prefix.."assignments",new_assign)
-      self.assignment_ids[args.name] = a.id
+      self.assignments[args.name] = a
     end
     if a.errors then
       pretty.dump(a)
@@ -432,15 +412,13 @@ canvas.defaults.assignment.day = 0
 
     -- RUBRIC
     if args.rubric then
-      if self.rubric_ids == nil then
-        self:get_rubrics()
-      end
+      self:get_rubrics()
       print("ASSIGN RUBRIC: "..args.rubric)
-      local rubric_id = self.rubric_ids[args.rubric]
+      local rubric_id = self.rubrics[args.rubric].id
       if rubric_id then
         self:assoc_rubric{rubric_id = rubric_id, assign_id = assign_id}
       else
-        pretty.dump(self.rubric_ids)
+        pretty.dump(self.rubrics)
         error("Assoc rubric failed; no rubric '"..args.rubric.."'")
       end
     end
@@ -448,10 +426,8 @@ canvas.defaults.assignment.day = 0
 
   else
 
-    if self.assignment_ids == nil then
-      self:get_assignments()
-    end
-    assign_out = {id = self.assignment_ids[args.name]}
+    self:get_assignments()
+    assign_out = self.assignments[args.name]
 
   end
 

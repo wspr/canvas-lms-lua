@@ -48,7 +48,7 @@ function canvas:setup_discussion_topics(args)
     discussion_topics[ii] = vv
     discussion_topics[ii].published = discussion_topics[ii].published or true
     discussion_topics[ii].discussion_type = discussion_topics[ii].discussion_type or
-                                            canvas.defaults.discussion.discussion_type
+                                            self.defaults.discussion.discussion_type
     titles_lookup[vv.title] = true
   end
 

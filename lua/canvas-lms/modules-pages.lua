@@ -7,7 +7,8 @@ local canvas = {}
 -- Data stored in `.modules` table, indexed by module `name`.
 -- @function get_modules
 -- Code for this function uses the generic `define_getter` function in the HTTP submodule.
---
+
+
 --- Create/edit all modules.
 -- @tparam table modules   List of ordered module names to create.
 -- If names are different than the modules currently defined, new ones are created and/or
@@ -15,12 +16,10 @@ local canvas = {}
 -- If modules exist that aren't specified, the function will offer to delete them (case-by-case).
 function canvas:setup_modules(modules)
 
-  if self.modules == nil then
-    self:get_modules()
-  end
+  self:get_modules{ download = true }
 
   for i,j in ipairs(modules) do
-    if canvas.modules[j] == nil then
+    if self.modules[j] == nil then
       local xx = self:post(self.course_prefix.."modules",{module={name=j,position=i}})
       modules[j] = xx.id
     end
@@ -47,7 +46,7 @@ function canvas:setup_modules(modules)
   while not(ifokay) do
     ifokay = true
     for i,j in ipairs(modules) do
-      for _,jj in ipairs(canvas.modules) do
+      for _,jj in ipairs(self.modules) do
         if jj.name == j then
           if jj.position ~= i then
             print("Updating position of "..jj.name)
@@ -61,8 +60,6 @@ function canvas:setup_modules(modules)
     end
   end
 
-  self:get_modules()
-
 end
 
 --- Create/edit contents of an individual module.
@@ -72,9 +69,7 @@ end
 -- Table of module items has some shorthand definitions defined in the code. TODO: document these properly.
 function canvas:update_module(module_name,ask,items)
 
-  if self.modules == nil then
-    self:get_modules()
-  end
+  self:get_modules{ download = false }
 
   if self.modules[module_name] == nil then
     error("Unknown module: "..module_name)
@@ -169,9 +164,7 @@ end
 -- * More to come…
 function canvas:check_modules()
 
-  if self.modules == nil then
-    self:get_modules()
-  end
+  self:get_modules{ download = false }
 
   for _,jj in ipairs(self.modules) do
 
@@ -184,7 +177,7 @@ function canvas:check_modules()
         end
       end
       if not(any_published) then
-        print("Module '"..jj.name.."' it published but has no published items. Un-publish now?")
+        print("Module '"..jj.name.."' is published but has no published items. Un-publish now?")
         print("Type y to do so:")
         if io.read() == "y" then
           self:put(self.course_prefix.."modules/"..jj.id,{module={published=false}})
@@ -200,7 +193,7 @@ function canvas:check_modules()
         end
       end
       if any_published then
-        print("Module '"..jj.name.."' it not published but has published items. Publish now?")
+        print("Module '"..jj.name.."' is not published but has published items. Publish now?")
         print("Type y to do so:")
         if io.read() == "y" then
           self:put(self.course_prefix.."modules/"..jj.id,{module={published=true}})

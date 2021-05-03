@@ -8,6 +8,7 @@ file = {
   "lua/canvas-lms/init.lua",
   "lua/canvas-lms/config.lua",
   "lua/canvas-lms/http.lua",
+  "lua/canvas-lms/datetime.lua",
   "lua/canvas-lms/announcements.lua",
   "lua/canvas-lms/assign.lua",
   "lua/canvas-lms/discuss.lua",

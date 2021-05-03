@@ -16,8 +16,9 @@ local function copy_functions(name)
   end
 end
 
- copy_functions("canvas-lms.config")
+copy_functions("canvas-lms.config")
 copy_functions("canvas-lms.http")
+copy_functions("canvas-lms.datetime")
 copy_functions("canvas-lms.students")
 copy_functions("canvas-lms.assign")
 copy_functions("canvas-lms.rubrics")
@@ -27,5 +28,6 @@ copy_functions("canvas-lms.announcements")
 copy_functions("canvas-lms.modules-pages")
 copy_functions("canvas-lms.discuss")
 copy_functions("canvas-lms.files")
+
 
 return canvas

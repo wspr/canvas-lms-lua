@@ -8,25 +8,9 @@ local path   = require("pl.path")
 local canvas = {}
 
 --- Get all course rubrics and store their metadata.
-canvas.get_rubrics = function(self)
-
-  print("# Getting rubrics currently in Canvas")
-
-  local all_rubrics = self:get_pages(true,self.course_prefix.."rubrics")
-  local rubrics_hash = {}
-  for _,vv in ipairs(all_rubrics) do
-    rubrics_hash[vv.title] = vv.id
-  end
-
-  self.rubrics = all_rubrics
-  self.rubric_ids = rubrics_hash
-
-  print("## RUBRICS - .rubric_ids ")
-  pretty.dump(self.rubric_ids)
-
-end
-
-
+-- Data stored in: `.rubrics` table indexed by `title` of the rubric.
+-- @function get_rubrics
+-- Code for this function uses the generic `define_getter` function in the HTTP submodule.
 
 
 --- Send a rubric to Canvas.
@@ -36,12 +20,10 @@ end
 -- @tparam table rubric definition
 canvas.send_rubric = function(self,rubric)
 
-  local canvas_rubric
+  self:get_rubrics{ download = false }
 
-  if self.rubrics == nil then
-    self:get_rubrics()
-  end
-  local rubric_id = self.rubric_ids[rubric.title]
+  local canvas_rubric
+  local rubric_id = self.rubrics[rubric.title].id
 
   if rubric_id then
     print("RUBRIC SEND: "..rubric.title)
@@ -50,10 +32,10 @@ canvas.send_rubric = function(self,rubric)
     print("  ")
     print("Type y to overwrite and delete comments:")
     if io.read() == "y" then
-      canvas_rubric = self:put(canvas.course_prefix.."rubrics/"..rubric_id,{rubric = rubric})
+      canvas_rubric = self:put(self.course_prefix.."rubrics/"..rubric_id,{rubric = rubric})
     end
   else
-    canvas_rubric = self:post(canvas.course_prefix.."rubrics",{rubric = rubric})
+    canvas_rubric = self:post(self.course_prefix.."rubrics",{rubric = rubric})
   end
 
   return canvas_rubric or {}
@@ -75,7 +57,7 @@ canvas.assoc_rubric = function(self,args)
           purpose = "grading" ,
         }
       }
-  return self:post(canvas.course_prefix.."rubric_associations",rassoc)
+  return self:post(self.course_prefix.."rubric_associations",rassoc)
 
 end
 
@@ -203,9 +185,7 @@ canvas.setup_csv_rubrics = function(self,args)
 
   print("# Sending CSV rubrics")
 
-  if self.rubrics == nil then
-    self:get_rubrics()
-  end
+  self:get_rubrics{ download = false }
 
   for _,vv in ipairs(args.csv) do
     local rubric  = self:rubric_from_csv(args.prefix..vv..args.suffix)
@@ -213,13 +193,13 @@ canvas.setup_csv_rubrics = function(self,args)
     if crubric.error_report_id then
       error("Rubric create/update failed :(")
     elseif crubric.rubric then
-      self.rubric_ids[rubric.title] = crubric.rubric.id
+      self.rubrics[rubric.title] = crubric.rubric
     end
 
   end
 
-  print("## RUBRICS - .rubric_ids ")
-  pretty.dump(self.rubric_ids)
+  print("## RUBRICS - .rubrics ")
+  pretty.dump(self.rubrics)
 
 end
 
