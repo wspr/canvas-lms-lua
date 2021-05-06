@@ -35,8 +35,8 @@ end
 -- @table @{assign_group_args}
 
 --- Set up assignment groups.
--- @table args list of tables with fields defined by @{assign_group_args}
 -- If any assignment group weightings are specified, the course setting to enable assignment weightings is enabled.
+-- @tparam table args list of tables with fields defined by @{assign_group_args}
 function canvas:setup_assignment_groups(args)
 
   print("# Setting up assignment groups")
@@ -164,32 +164,23 @@ end
 
 
 
-
+--- Create assignment arguments
+-- @field ask
+-- @field student_group_category (implies a group submission)
+-- @field omit_from_final_grade
+-- @field assign_type one of {"online_quiz","none","on_paper","discussion_topic","external_tool"}
+-- @field due
+-- @field unlock
+-- @field lock
+-- @field published
+-- @field description
+-- @field descr_file
+-- @field rubric
+-- @table create_assignment_args
 
 --- Create a Canvas assignment.
--- @param self
--- @tparam table args arguments
-canvas.create_assignment = function(self,args)
---[[
-    ARGS:
-    ask
-    student_group_category -- implies a group submission
-    day
-    open_days
-    late_days
-    unlockhr / unlocktime
-    hour
-    min
-    lockhr / unlocktime
-    published
-    sem
-    assign_type = one of {"online_quiz","none","on_paper","discussion_topic","external_tool"}
-    omit_from_final_grade
-	descr
-	description
-}
---]]
-
+-- @tparam table args arguments (see `create_assignment_args`)
+function canvas:create_assignment(args)
 
   local assign_out
   local ask = args.ask or ""
@@ -350,7 +341,7 @@ canvas.create_assignment = function(self,args)
     new_assign.assignment.description = descr_html
   end
 
-  local descr_filename = args.descr
+  local descr_filename = args.descr_file or args.descr
   if descr_filename then
     if new_assign.assignment.description then
      error("Assignment description already specified.")
