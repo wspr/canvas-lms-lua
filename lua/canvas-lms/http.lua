@@ -89,6 +89,7 @@ end
 --- Define getter function to retrieve and store item metadata.
 -- @string field_name  Name of REST field to store item data
 -- @string index_name_arg  Name of metadata field to reference item data (default: `"name"`)
+-- @table opt_default Default options to pass to REST call
 -- Custom argument: `download` = `true` | `false` | `"ask"`
 function canvas:define_getter(field_name,index_name_arg,opt_default)
   self["get_"..field_name] = function(self_,opt_arg)
