@@ -97,7 +97,7 @@
 	<td class="summary">Paginated GET.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#opt_default">opt_default</a></td>
+	<td class="name" nowrap><a href="#define_getter">define_getter (field_name, index_name_arg, opt_default)</a></td>
 	<td class="summary">Define getter function to retrieve and store item metadata.</td>
 	</tr>
 	<tr>
@@ -143,10 +143,10 @@
 	<tr>
 	<td class="name" nowrap><a href="#assign_group_args">assign_group_args</a></td>
 	<td class="summary">Setup assignment group arguments
- The function <code>canvas:setup_assignment_groups</code> takes a single table of arguments.</td>
+ The function <a href="index.html#setup_assignment_groups">canvas:setup_assignment_groups</a> takes a single table of arguments.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#args">args</a></td>
+	<td class="name" nowrap><a href="#setup_assignment_groups">setup_assignment_groups (args)</a></td>
 	<td class="summary">Set up assignment groups.</td>
 	</tr>
 	<tr>
@@ -154,7 +154,11 @@
 	<td class="summary">Get full details of a single assignment</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#create_assignment">create_assignment (self, args)</a></td>
+	<td class="name" nowrap><a href="#create_assignment_args">create_assignment_args</a></td>
+	<td class="summary">Create assignment arguments</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#create_assignment">create_assignment (args)</a></td>
 	<td class="summary">Create a Canvas assignment.</td>
 	</tr>
 	<tr>
@@ -446,14 +450,14 @@
 
 </dd>
     <dt>
-    <a name = "opt_default"></a>
-    <strong>opt_default</strong>
+    <a name = "define_getter"></a>
+    <strong>define_getter (field_name, index_name_arg, opt_default)</strong>
     </dt>
     <dd>
     Define getter function to retrieve and store item metadata.
 
 
-    <h3>Fields:</h3>
+    <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">field_name</span>
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
@@ -462,6 +466,11 @@
         <li><span class="parameter">index_name_arg</span>
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
           Name of metadata field to reference item data (default: <code>&quot;name&quot;</code>)
+        </li>
+        <li><span class="parameter">opt_default</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         Default options to pass to REST call
+ Custom argument: <code>download</code> = <code>true</code> | <code>false</code> | <code>&quot;ask&quot;</code>
         </li>
     </ul>
 
@@ -681,7 +690,7 @@
     </dt>
     <dd>
     Setup assignment group arguments
- The function <code>canvas:setup_assignment_groups</code> takes a single table of arguments.
+ The function <a href="index.html#setup_assignment_groups">canvas:setup_assignment_groups</a> takes a single table of arguments.
  The table should be an ordered list
 
 
@@ -698,13 +707,21 @@
 
 </dd>
     <dt>
-    <a name = "args"></a>
-    <strong>args</strong>
+    <a name = "setup_assignment_groups"></a>
+    <strong>setup_assignment_groups (args)</strong>
     </dt>
     <dd>
     Set up assignment groups.
+ If any assignment group weightings are specified, the course setting to enable assignment weightings is enabled.
 
 
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         list of tables with fields defined by <a href="index.html#assign_group_args">assign_group_args</a>
+        </li>
+    </ul>
 
 
 
@@ -741,8 +758,76 @@
 
 </dd>
     <dt>
+    <a name = "create_assignment_args"></a>
+    <strong>create_assignment_args</strong>
+    </dt>
+    <dd>
+    Create assignment arguments
+
+
+    <h3>Fields:</h3>
+    <ul>
+        <li><span class="parameter">ask</span>
+
+
+
+        </li>
+        <li><span class="parameter">student_group_category</span>
+         (implies a group submission)
+        </li>
+        <li><span class="parameter">omit_from_final_grade</span>
+
+
+
+        </li>
+        <li><span class="parameter">assign_type</span>
+         one of {"online<em>quiz","none","on</em>paper","discussion<em>topic","external</em>tool"}
+        </li>
+        <li><span class="parameter">due</span>
+
+
+
+        </li>
+        <li><span class="parameter">unlock</span>
+
+
+
+        </li>
+        <li><span class="parameter">lock</span>
+
+
+
+        </li>
+        <li><span class="parameter">published</span>
+
+
+
+        </li>
+        <li><span class="parameter">description</span>
+
+
+
+        </li>
+        <li><span class="parameter">descr_file</span>
+
+
+
+        </li>
+        <li><span class="parameter">rubric</span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
     <a name = "create_assignment"></a>
-    <strong>create_assignment (self, args)</strong>
+    <strong>create_assignment (args)</strong>
     </dt>
     <dd>
     Create a Canvas assignment.
@@ -750,14 +835,9 @@
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">self</span>
-
-
-
-        </li>
         <li><span class="parameter">args</span>
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
-         arguments
+         arguments (see <a href="index.html#create_assignment_args">create_assignment_args</a>)
         </li>
     </ul>
 
@@ -1147,7 +1227,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2021-05-06 13:14:41 </i>
+<i style="float:right;">Last updated 2021-05-06 13:42:48 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
