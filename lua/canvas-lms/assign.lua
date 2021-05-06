@@ -29,14 +29,14 @@ end
 
 --- Setup assignment group arguments
 -- The function `canvas:setup_assignment_groups` takes a single table of arguments.
--- The table should be an ordered list 
+-- The table should be an ordered list
 -- @field name The name of the assignment
 -- @field.weight The weighting of the assignment group
 -- @table @{assign_group_args}
 
 --- Set up assignment groups.
 -- @table args list of tables with fields defined by @{assign_group_args}
--- If any assignment group weightings are specified, the course setting to enable assignment weightings is enabled. 
+-- If any assignment group weightings are specified, the course setting to enable assignment weightings is enabled.
 function canvas:setup_assignment_groups(args)
 
   print("# Setting up assignment groups")
