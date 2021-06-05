@@ -94,7 +94,7 @@ end
 function canvas:define_getter(field_name,index_name_arg,opt_default)
   self["get_"..field_name] = function(self_,opt_arg)
 
-    local index_name = index_name_arg or "name"
+    local index_name = index_name_arg
     local arg = opt_default or {}
     for i,v in ipairs(opt_arg or {}) do
        arg[i] = v
