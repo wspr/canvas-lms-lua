@@ -101,13 +101,24 @@ end
 function canvas:get_assignment_generic(use_cache_bool,assign_name,assign_opts,cache_name_arg)
 
   local cache_name = cache_name_arg or assign_name
-  local cache_file = canvas.cache_dir..cache_name..".lua"
+  local cache_file = self.cache_dir..cache_name..".lua"
+
+  self:get_assignments{download=false}
 
   if use_cache_bool then
 
-    local canvas_data = self:get(self.course_prefix .. "assignments","search_term=" .. assign_name)
-    local assign_id = canvas_data[1]["id"]
-    local final_grader_id = canvas_data[1]["final_grader_id"]
+    if self.assignments[assign_name] == nil then
+      print("Assignment names:")
+      for _,j in pairs(self.assignments) do
+        print("  • '"..j.name.."'")
+      end
+      error("Requested assignment name ('"..assign_name.."') not found.")
+    end
+    local canv_assign_id = self.assignments[assign_name].id
+    local canv_assign = self:get(self.course_prefix .. "assignments/"..canv_assign_id)
+
+    local assign_id = canv_assign["id"]
+    local final_grader_id = canv_assign["final_grader_id"]
 
     local moderator_reset = false
 

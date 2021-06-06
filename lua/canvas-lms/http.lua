@@ -101,7 +101,10 @@ function canvas:define_getter(field_name,index_name_arg,opt_default)
     end
     local download = arg.download or false
     if self_[field_name] == nil then
-      download = true
+--      download = true
+--[[
+this is not nuanced enough. first need to check if there is data cached through get_pages and only THEN force it if nothing available
+]]
     end
     arg.download = nil
     local opt = arg or {}
