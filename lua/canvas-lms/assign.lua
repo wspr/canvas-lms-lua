@@ -31,7 +31,7 @@ end
 -- The function `canvas:setup_assignment_groups` takes a single table of arguments.
 -- The table should be an ordered list
 -- @field name The name of the assignment
--- @field.weight The weighting of the assignment group
+-- @field weight The weighting of the assignment group
 -- @table @{assign_group_args}
 
 --- Set up assignment groups.

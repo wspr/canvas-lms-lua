@@ -78,6 +78,18 @@ writing your own custom applications for your own sole use.
 Currently the Lua interfaces do not provide a means to connect via OAuth but with time permitting
 I would like to add somoething. (Doing it cross-platform could be tricky?)
 
+## Developer details
+
+(I.e., notes to myself.)
+
+### Documentation
+
+Uses `ldoc`, automated deployment using a Github Action.
+
+### Code checking
+
+* Automated checking with `luacheck` using Github Action.
+* `luacheck lua` in the top directory to run manually.
 
 
 ## Licence and copyright
