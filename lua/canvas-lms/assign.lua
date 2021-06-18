@@ -248,7 +248,7 @@ function canvas:create_assignment(args)
   end
 
   if args.published == nil then
-     args.published = "true"
+     args.published = true
   end
 
   local new_assign = {
@@ -267,7 +267,7 @@ function canvas:create_assignment(args)
     end
   end
   if args.rubric then
-    new_assign.assignment.use_rubric_for_grading = "true"
+    new_assign.assignment.use_rubric_for_grading = true
   end
   if group_proj_id then
     new_assign.assignment.group_category_id = group_proj_id
