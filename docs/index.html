@@ -35,6 +35,7 @@
 <li><a href="#canvas_lms_assign_Functions">canvas-lms.assign Functions</a></li>
 <li><a href="#canvas_lms_discuss_Functions">canvas-lms.discuss Functions</a></li>
 <li><a href="#canvas_lms_grades_Functions">canvas-lms.grades Functions</a></li>
+<li><a href="#canvas_lms_message_Functions">canvas-lms.message Functions</a></li>
 <li><a href="#canvas_lms_modules_pages_Functions">canvas-lms.modules-pages Functions</a></li>
 <li><a href="#canvas_lms_rubrics_Functions">canvas-lms.rubrics Functions</a></li>
 </ul>
@@ -61,6 +62,15 @@
 
 <h2><a href="#canvas_lms_config_Functions">canvas-lms.config Functions</a></h2>
 <table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#set_debug">set_debug (bool)</a></td>
+	<td class="summary">Set debug status, which disables interaction with the live Canvas API</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#set_verbose">set_verbose (num)</a></td>
+	<td class="summary">Set verbose status, which echoes all interaction with the Canvas API
+ Default = 0, which hides most things</td>
+	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#set_course_id">set_course_id (str)</a></td>
 	<td class="summary">Set course ID, which defines course prefix.</td>
@@ -197,6 +207,17 @@
 	<td class="summary">Write grades to CSV from specified assignments</td>
 	</tr>
 </table>
+<h2><a href="#canvas_lms_message_Functions">canvas-lms.message Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#message_user_args">message_user_args</a></td>
+	<td class="summary">Message user table arguments.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#message_user">message_user (send_check, msg)</a></td>
+	<td class="summary">Message a specific Canvas user.</td>
+	</tr>
+</table>
 <h2><a href="#canvas_lms_modules_pages_Functions">canvas-lms.modules-pages Functions</a></h2>
 <table class="function_list">
 	<tr>
@@ -247,6 +268,51 @@
     <h2 class="section-header "><a name="canvas_lms_config_Functions"></a>canvas-lms.config Functions</h2>
 
     <dl class="function">
+    <dt>
+    <a name = "set_debug"></a>
+    <strong>set_debug (bool)</strong>
+    </dt>
+    <dd>
+    Set debug status, which disables interaction with the live Canvas API
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">bool</span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "set_verbose"></a>
+    <strong>set_verbose (num)</strong>
+    </dt>
+    <dd>
+    Set verbose status, which echoes all interaction with the Canvas API
+ Default = 0, which hides most things
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">num</span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
     <dt>
     <a name = "set_course_id"></a>
     <strong>set_course_id (str)</strong>
@@ -699,6 +765,9 @@
         <li><span class="parameter">name</span>
          The name of the assignment
         </li>
+        <li><span class="parameter">weight</span>
+         The weighting of the assignment group
+        </li>
     </ul>
 
 
@@ -1004,6 +1073,69 @@
 
 </dd>
 </dl>
+    <h2 class="section-header "><a name="canvas_lms_message_Functions"></a>canvas-lms.message Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "message_user_args"></a>
+    <strong>message_user_args</strong>
+    </dt>
+    <dd>
+    Message user table arguments.
+ The function <a href="index.html#message_user">canvas:message_user</a> takes a table of arguments to define the message to send.
+ The table may consist of the following
+
+
+    <h3>Fields:</h3>
+    <ul>
+        <li><span class="parameter">canvasid</span>
+         The Canvas ID of the recipient (reqd)
+        </li>
+        <li><span class="parameter">subject</span>
+          The subject of the message to send
+        </li>
+        <li><span class="parameter">body</span>
+
+<pre><code> The body text of the message to send
+</code></pre>
+
+        </li>
+        <li><span class="parameter">course</span>
+           The Canvas course ID to send from (defaults to defined course)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "message_user"></a>
+    <strong>message_user (send_check, msg)</strong>
+    </dt>
+    <dd>
+    Message a specific Canvas user.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">send_check</span>
+            <span class="types"><span class="type">bool</span></span>
+         Toggle whether to truly send the message or just to pretty print it to the screen
+        </li>
+        <li><span class="parameter">msg</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         table with entries to define message according to <a href="index.html#message_user_args">message_user_args</a>
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
     <h2 class="section-header "><a name="canvas_lms_modules_pages_Functions"></a>canvas-lms.modules-pages Functions</h2>
 
     <dl class="function">
@@ -1227,7 +1359,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2021-05-22 12:03:08 </i>
+<i style="float:right;">Last updated 2021-06-22 07:36:27 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
