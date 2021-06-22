@@ -72,7 +72,7 @@ function canvas:get_pages(download_bool,req,opt_arg)
       if #canvas_data == 0 then
         has_data = false
       else
-        print("Retrieved page "..data_page)
+        self:print("Retrieved page "..data_page)
       end
 
     end
@@ -189,7 +189,7 @@ function canvas:getpostput_str(param,req,opt)
     end
 
     local httpreq = self.url .. "api/v1/" .. req .. opt
-    print("HTTP "..param.." REQUEST: " .. httpreq )
+    self:print("HTTP "..param.." REQUEST: " .. httpreq )
 
     local res = {}
     http.request{
@@ -209,8 +209,8 @@ end
 function canvas:getpostput_json(param,req,opt)
 
     local httpreq = self.url .. "api/v1/" .. req
-    print("HTTP "..param.." REQUEST: " .. httpreq )
-    print("JSON: " .. opt )
+    self:print("HTTP "..param.." REQUEST: " .. httpreq )
+    self:print("JSON: " .. opt )
 
     local res = {}
     http.request{

@@ -4,6 +4,19 @@
 local lfs    = require "lfs"
 local canvas = {}
 
+--- Set debug status, which disables interaction with the live Canvas API
+function canvas:set_debug(bool)
+  self.debug = bool
+end
+canvas:set_debug(false)
+
+--- Set verbose status, which echoes all interaction with the Canvas API
+-- Default = 0, which hides most things
+function canvas:set_verbose(num)
+  self.verbose = num
+end
+canvas:set_verbose(0)
+
 --- Set course ID, which defines course prefix.
 function canvas:set_course_id(str)
   self.courseid = str
@@ -54,6 +67,8 @@ do
     break_after_week = function(x) canvas:set_break_week(x)   end,
     break_length     = function(x) canvas:set_break_length(x) end,
     cache_dir        = function(x) canvas:set_cache_dir(x)    end,
+    debug            = function(x) canvas:set_debug(x)        end,
+    verbose          = function(x) canvas:set_verbose(x)      end,
   }
   local canvas_config_file = _G["canvas_config"] or 'canvas-config.lua'
   loadfile(canvas_config_file, 't', shared)()
@@ -78,5 +93,13 @@ canvas.defaults.assignments.open_days = nil
 canvas.defaults.assignments.late_days = nil
 canvas.defaults.discussion = {}
 canvas.defaults.discussion.discussion_type = "threaded"
+
+--[[ HELPER FUNCTIONS --]]
+
+function canvas:print(str)
+  if self.verbose > 0 then
+    print(str)
+  end
+end
 
 return canvas
