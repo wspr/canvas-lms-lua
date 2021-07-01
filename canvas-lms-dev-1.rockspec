@@ -12,8 +12,8 @@ build = {
    modules = {} -- auto detected within "lua/"
 }
 dependencies = {
-  "luasec",
-  "luasocket",
+  -- "luasec",     -- these are of course actual dependencies, but nix installs them separately
+  -- "luasocket",  -- these are of course actual dependencies, but nix installs them separately
   "json-lua",
   "penlight",
   "binser",

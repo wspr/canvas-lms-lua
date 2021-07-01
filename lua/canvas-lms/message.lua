@@ -1,8 +1,9 @@
 --- Canvas LMS in Lua: Messaging
 -- @submodule canvas
 
-local canvas = {}
+local pretty = require("pl.pretty")
 
+local canvas = {}
 
 function canvas:message_group_wfile(send_check,msg)
 
@@ -66,30 +67,54 @@ function canvas:message_user(send_check,msg)
 	  return str
 	end
 
-  local forcenew="bulk_message=true&force_new=true"
-  local recipients="recipients[]="..msg.canvasid
-  local subject="subject="..encode(msg.subject)
-  local body="body="..encode(msg.body)
-  local opt = forcenew.."&"..recipients.."&"..subject.."&"..body
-
-  if msg.context then
-    opt = opt.."&context_code="..encode(msg.context)
-  elseif msg.course then
-    opt = opt.."&context_code=course_"..msg.course
-  else
-    opt = opt.."&context_code=course_"..self.courseid
+  if msg.subject==nil then
+    error("Should not send a message without a subject.")
+  end
+  if msg.body==nil then
+    error("Cannot send a message without a body.")
   end
 
+  local recip = msg.recipients or msg.canvasid
+  if not(type(recip)=="table") then
+    recip = {recip}
+  end
+  local opt = {
+    bulk_message = true,
+    force_new = true,
+    subject = msg.subject,
+    body = msg.body,
+    recipients = recip,
+  }
+
+  if msg.context then
+    opt.context_code=msg.context
+  elseif msg.course then
+    opt.context_code="course_"..msg.course
+  else
+    opt.context_code="course_"..self.courseid
+  end
+
+  local post_return
   if send_check then
-    self:post("conversations",opt)
+    post_return = self:post("conversations",opt)
+    if post_return.errors then
+      error("POST error: "..post_return.errors[1].error_code..": "..post_return.errors[1].message)
+    else
+      print("=========== FACSIMILE OF MESSAGE SENT ===========")
+      print("Subject: "..msg.subject.."\n")
+      print("=================================================")
+      print(msg.body)
+      print("=================== END MESSAGE =====================")
+    end
   else
     print("=========== FACSIMILE OF MESSAGE NOT SENT ===========")
     print("Subject: "..msg.subject.."\n")
     print("=====================================================")
     print(msg.body)
+    print("=================== END MESSAGE =====================")
   end
 
-
+  return post_return
 end
 
 return canvas
