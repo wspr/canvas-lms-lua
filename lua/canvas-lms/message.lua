@@ -1,8 +1,6 @@
 --- Canvas LMS in Lua: Messaging
 -- @submodule canvas
 
-local pretty = require("pl.pretty")
-
 local canvas = {}
 
 function canvas:message_group_wfile(send_check,msg)
@@ -57,15 +55,6 @@ end
 -- @tparam bool send_check Toggle whether to truly send the message or just to pretty print it to the screen
 -- @tparam table msg table with entries to define message according to @{message_user_args}
 function canvas:message_user(send_check,msg)
-
-  local function encode(str)
-		str = string.gsub (str, "\n", "\r\n")
-    str = string.gsub(str, "([^%w _ %- . ~])",
-      function (c) return string.format ("%%%02X", string.byte(c)) end
-    )
-    str = string.gsub (str, " ", "+")
-	  return str
-	end
 
   if msg.subject==nil then
     error("Should not send a message without a subject.")
