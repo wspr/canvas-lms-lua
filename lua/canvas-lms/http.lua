@@ -72,7 +72,7 @@ function canvas:get_pages(download_bool,req,opt_arg)
       if #canvas_data == 0 then
         has_data = false
       else
-        self:print("Retrieved page "..data_page)
+        print("Retrieved page "..data_page)
       end
 
     end
