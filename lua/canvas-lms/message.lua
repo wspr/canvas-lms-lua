@@ -45,10 +45,11 @@ end
 --- Message user table arguments.
 -- The function `canvas:message_user` takes a table of arguments to define the message to send.
 -- The table may consist of the following
--- @field canvasid The Canvas ID of the recipient (reqd)
+-- @field canvasid The Canvas ID(s) of the recipient (reqd)
 -- @field subject  The subject of the message to send
 -- @field body     The body text of the message to send
 -- @field course   The Canvas course ID to send from (defaults to defined course)
+-- @field group_conversation   Whether a group message is sent (true, default) or multiple individual messages are sent (false) if multiple IDs are included
 -- @table @{message_user_args}
 
 --- Message a specific Canvas user.
@@ -73,6 +74,7 @@ function canvas:message_user(send_check,msg)
     subject = msg.subject,
     body = msg.body,
     recipients = recip,
+    group_conversation = msg.group_conversation or true,
   }
 
   if msg.context then
