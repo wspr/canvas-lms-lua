@@ -2,6 +2,7 @@
 -- @submodule canvas
 
 local canvas = {}
+local dump = require "pl.pretty".dump
 
 --- Get all Canvas modules and store their metadata.
 -- Data stored in `.modules` table, indexed by module `name`.
@@ -19,9 +20,23 @@ function canvas:setup_modules(modules)
   self:get_modules{ download = true }
 
   for i,j in ipairs(modules) do
-    if self.modules[j] == nil then
-      local xx = self:post(self.course_prefix.."modules",{module={name=j,position=i}})
+    if not(type(j)=="table") then
+      modules[i] = {name=j}
+    end
+    modules[i].position = i
+    if j.published == nil then
+      modules[i].published = true
+    end
+  end
+
+  for _,j in ipairs(modules) do
+    if self.modules[j.name] == nil then
+      print("Module "..j.name.." does not yet exist.")
+      local xx = self:post(self.course_prefix.."modules",{module=j})
       modules[j] = xx.id
+    else
+      print("Module "..j.name.." update.")
+      self:put(self.course_prefix.."modules/"..self.modules[j.name].id,{module=j})
     end
   end
 
@@ -83,75 +98,103 @@ function canvas:update_module(module_name,ask,items)
 
   if ask == "y" then
 
-  local module_url = self.course_prefix.."modules/"..self.modules[module_name].."/items"
-  local curr_items = self:get_pages(true,module_url)
+    local mod = self.modules[module_name].id
+    local module_url = self.course_prefix.."modules/"..mod.."/items"
+    local curr_items = self:get_pages(true,module_url)
 
-  local curr_items_lookup = {}
-  for _,this_item in ipairs(curr_items) do
-    curr_items_lookup[this_item.title] = this_item.id
-  end
+    local curr_items_lookup = {}
+    for _,this_item in ipairs(curr_items) do
+      curr_items_lookup[this_item.title] = this_item.id
+    end
 
-  -- setup
-  local items_lookup = {}
-  for i,j in ipairs(items) do
+    -- setup
+    local items_lookup = {}
+    for i,j in ipairs(items) do
 
-      local this_item = j
-      this_item.position = i
+        local this_item = j
+        this_item.position = i
 
-      if not(this_item.heading==nil) then
-        this_item.type = "SubHeader"
-        this_item.title = this_item.heading
-        this_item.heading = nil
-      end
-
-      if not(this_item.url==nil) then
-        this_item.type = "ExternalUrl"
-        this_item.external_url = this_item.url
-        this_item.new_tab = true
-        this_item.url = nil
-      end
-
-      if not(this_item.page==nil) then
-        this_item.type = "Page"
-        this_item.page_url = this_item.page
-        this_item.page = nil
-      end
-
-      if not(this_item.filename==nil) then
-        this_item.type = "File"
-        local tmp = self:get(self.course_prefix.."files/",{search_term=this_item.filename})
-        if tmp[1].id==nil then
-          error("File '"..this_item.filename.."' not found.")
-        else
-          this_item.content_id = tmp[1].id
+        if not(this_item.heading==nil) then
+          this_item.type = "SubHeader"
+          this_item.title = this_item.heading
+          this_item.heading = nil
+          print("Heading:"..this_item.title)
         end
-        this_item.filename = nil
-      end
 
-      if not(this_item.echo==nil) then
-        this_item.type = "ExternalTool"
-        this_item.external_url = "https://echo360.org.au/lti/5444fea8-33ce-4784-934a-2e9f0cb5a200"
-        this_item.echo = nil
-      end
+        if not(this_item.url==nil) then
+          this_item.type = "ExternalUrl"
+          this_item.external_url = this_item.url
+          this_item.new_tab = true
+          this_item.url = nil
+          print("URL:"..this_item.title)
+        end
 
-      if not(curr_items_lookup[this_item.title]==nil) then
-        self:put(module_url.."/"..curr_items_lookup[this_item.title],{module_item=this_item})
-      else
-        self:post(module_url,{module_item=this_item})
-      end
+        if not(this_item.page==nil) then
+          this_item.type = "Page"
+          this_item.page_url = this_item.page
+          this_item.page = nil
+          print("Page:"..this_item.title)
+        end
 
-      items_lookup[this_item.title] = true
-  end
+        if not(this_item.filename==nil) then
+          print("Heading:"..this_item.title)
+          dump(this_item)
+          this_item.type = "File"
+          local tmp = self:get(self.course_prefix.."files/",{search_term=this_item.filename})
+          if #tmp == 0 or tmp[1].id==nil then
+            print("WARNING: File '"..this_item.filename.."' not found.")
+          else
+            this_item.content_id = tmp[1].id
+          end
+          this_item.filename = nil
+        end
 
-  for k,id in pairs(curr_items_lookup) do
-    if not(items_lookup[k]) then
-      print("Module '"..module_name.."': item currently exists but not specified: '"..k.. "'. Delete it?")
-      print("Type y to do so:")
-      if io.read() == "y" then
-        self:delete(module_url.."/"..id)
+        if not(this_item.echo==nil) then
+          if type(this_item.echo)=="string" then
+            this_item.title = this_item.echo
+          end
+          this_item.type = "ExternalTool"
+          this_item.external_url = "https://echo360.net.au/lti/5444fea8-33ce-4784-934a-2e9f0cb5a200"
+          this_item.echo = nil
+        end
+
+        if not(this_item.assignment==nil) then
+          self:get_assignments{download=false}
+          this_item.type = "Assignment"
+          this_item.title = this_item.assignment
+          if self.assignments[this_item.assignment] == nil then
+            error("Assignment '"..this_item.assignment.."' does not exist")
+          end
+          this_item.content_id = self.assignments[this_item.assignment].id
+          this_item.assignment = nil
+        end
+
+        if this_item.published == nil then
+          this_item.published = true
+        end
+
+        if not(curr_items_lookup[this_item.title]==nil) then
+          self:put(module_url.."/"..curr_items_lookup[this_item.title],{module_item=this_item})
+        else
+          self:post(module_url,{module_item=this_item})
+        end
+
+        if this_item.title == nil then
+          dump(this_item)
+          error("No title: something wrong")
+        end
+        items_lookup[this_item.title] = true
+    end
+
+    for k,id in pairs(curr_items_lookup) do
+      if not(items_lookup[k]) then
+        print("Module '"..module_name.."': item currently exists but not specified: '"..k.. "'. Delete it?")
+        print("Type y to do so:")
+        if io.read() == "y" then
+          self:delete(module_url.."/"..id)
+        end
       end
     end
-  end
 
   end
 

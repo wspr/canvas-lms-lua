@@ -1,7 +1,7 @@
 --- Canvas LMS in Lua: Rubrics
 -- @submodule canvas
 
-local pretty = require("pl.pretty")
+local dump = require("pl.pretty").dump
 local csv    = require("csv")
 local path   = require("pl.path")
 
@@ -20,7 +20,8 @@ local canvas = {}
 -- @tparam table rubric definition
 canvas.send_rubric = function(self,rubric)
 
-  self:get_rubrics{ download = false }
+  self:get_rubrics{ download = true }
+  self.rubrics[rubric.title] = self.rubrics[rubric.title] or {}
 
   local canvas_rubric
   local rubric_id = self.rubrics[rubric.title].id
@@ -33,6 +34,7 @@ canvas.send_rubric = function(self,rubric)
     print("Type y to overwrite and delete comments:")
     if io.read() == "y" then
       canvas_rubric = self:put(self.course_prefix.."rubrics/"..rubric_id,{rubric = rubric})
+      self.rubrics[rubric.title].id = canvas_rubric.id
     end
   else
     canvas_rubric = self:post(self.course_prefix.."rubrics",{rubric = rubric})
@@ -63,7 +65,7 @@ end
 
 
 
---- Read in a carefully structure CSV file and convert it into a rubric.
+--- Read in a carefully structured CSV file and convert it into a rubric.
 -- @tparam string csvfile
 function canvas:rubric_from_csv(csvfile)
 
@@ -84,10 +86,13 @@ function canvas:rubric_from_csv(csvfile)
   local rtitle
   local rdesc
 
+  local function noop() end
+
   for fields in f:lines() do
     -- skip empty rows
-    --    if fields[1] == "" then
-    if fields[1] == "TITLE" then
+    if fields[1] == "" then
+      noop()
+    elseif fields[1] == "TITLE" then
       rtitle = fields[2]
     elseif fields[1] == "DESCRIPTION" then
       rdesc = fields[2]
@@ -185,10 +190,12 @@ canvas.setup_csv_rubrics = function(self,args)
 
   print("# Sending CSV rubrics")
 
-  self:get_rubrics{ download = false }
+  self:get_rubrics{ download = true }
 
   for _,vv in ipairs(args.csv) do
-    local rubric  = self:rubric_from_csv(args.prefix..vv..args.suffix)
+    local csvfile = args.prefix..vv..args.suffix
+    print("Processing rubric from file: "..csvfile)
+    local rubric  = self:rubric_from_csv(csvfile)
     local crubric = self:send_rubric(rubric)
     if crubric.error_report_id then
       error("Rubric create/update failed :(")
@@ -198,10 +205,22 @@ canvas.setup_csv_rubrics = function(self,args)
 
   end
 
-  print("## RUBRICS - .rubrics ")
-  pretty.dump(self.rubrics)
+  print("## RUBRICS")
+  for kk,vv in pairs(self.rubrics) do
+    print( "   • "..vv.id.."  -  "..kk)
+  end
 
 end
 
+
+function canvas:delete_all_rubrics()
+
+  self:get_rubrics{ download = true }
+  for _,j in pairs(self.rubrics) do
+    local xx = self:delete( self.course_prefix.."rubrics/"..j.id)
+    dump(xx)
+  end
+
+end
 
 return canvas

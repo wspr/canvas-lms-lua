@@ -7,6 +7,7 @@ local json   = require("json")
 local binser = require("binser")
 local mppost = require("multipart-post")
 local path   = require("pl.path")
+-- local dump   = require("pl.pretty").dump
 
 local canvas = {}
 
@@ -33,6 +34,10 @@ local canvas = {}
 -- @usage canvas:get_pages(true,self.course_prefix.."assignments")
 
 function canvas:get_pages(download_bool,req,opt_arg)
+  if self.verbose > 1 then
+    print("REQ: "..req)
+    print("BOOL: "..(download_bool and "true" or "false"))
+  end
 
   local cache_name = string.gsub(req,"/"," - ")
   local cache_file = self.cache_dir.."Pages - "..cache_name..".lua"
@@ -72,7 +77,9 @@ function canvas:get_pages(download_bool,req,opt_arg)
       if #canvas_data == 0 then
         has_data = false
       else
-        print("Retrieved page "..data_page)
+        if data_page > 1 then
+          print("Retrieved page "..data_page)
+        end
       end
 
     end
@@ -96,32 +103,40 @@ function canvas:define_getter(field_name,index_name_arg,opt_default)
 
     local index_name = index_name_arg
     local arg = opt_default or {}
-    for i,v in ipairs(opt_arg or {}) do
+    for i,v in pairs(opt_arg or {}) do
        arg[i] = v
     end
     local download = arg.download or false
     arg.download = nil
+    if download == nil then
+      error("DOWNLOAD should not be NIL")
+    end
 --[[
     -- this is not nuanced enough. first need to check if there is data cached through get_pages and only THEN force it if nothing available
+--]]
     if self_[field_name] == nil then
       download = true
     end
---]]
     local opt = arg or {}
 
-    print("# Getting "..field_name.." data currently in Canvas")
+    if self_.verbose > 0 then
+      print("# Getting "..field_name.." data currently in Canvas")
+    end
     local all_items = self_:get_pages(download,self_.course_prefix..field_name,opt)
     local items_by_name = {}
     for _,vv in ipairs(all_items) do
+      if self_.verbose > 0 then
+        print(vv.id .. "  " .. vv[index_name])
+      end
       items_by_name[vv[index_name]] = vv
     end
     self_[field_name] = items_by_name
   end
 end
-canvas.define_getter(canvas,"assignments","name")
-canvas.define_getter(canvas,"files","filename")
-canvas.define_getter(canvas,"modules","name",{include={"items"}})
-canvas.define_getter(canvas,"rubrics","title")
+canvas:define_getter("assignments","name")
+canvas:define_getter("files","filename")
+canvas:define_getter("modules","name",{include={"items"}})
+canvas:define_getter("rubrics","title")
 
 
 --- Wrapper for GET.

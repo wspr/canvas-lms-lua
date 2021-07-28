@@ -74,9 +74,14 @@ do
   loadfile(canvas_config_file, 't', shared)()
 end
 
-canvas.sem_break_week    = canvas.sem_break_week   or {99,99}
-canvas.sem_break_length  = canvas.sem_break_length or {2,2}
-if #canvas.sem_break_length == 1 then
+if #canvas.sem_break_week == 0 then
+  canvas.sem_break_week    = {99,99}
+elseif #canvas.sem_break_week == 1 then
+  canvas.sem_break_week    = {canvas.sem_break_week[1],canvas.sem_break_week[1]}
+end
+if #canvas.sem_break_length == 0 then
+  canvas.sem_break_length  = {2,2}
+elseif #canvas.sem_break_length == 1 then
   canvas.sem_break_length = {canvas.sem_break_length[1],canvas.sem_break_length[1]}
 end
 

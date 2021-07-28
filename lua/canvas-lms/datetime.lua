@@ -2,29 +2,39 @@
 -- @submodule canvas
 
 local date   = require("pl.date")
---local pretty = require("pl.pretty")
+-- local dump = require("pl.pretty").dump
 
 local canvas = {}
+
+local dateformat = date.Format('yyyy-mm-ddTHH:MM:SS')
 
 --- Simple lookup table to allow string arguments to specify days of the week
 local function day_string_to_num(argday)
   if type(argday) == "string" then
-    if argday == "mon"       then argday =   0 end
-    if argday == "tue"       then argday =   1 end
-    if argday == "tues"      then argday =   1 end
-    if argday == "wed"       then argday =   2 end
-    if argday == "thu"       then argday =   3 end
-    if argday == "fri"       then argday =   4 end
-    if argday == "sat"       then argday =   5 end
-    if argday == "sun"       then argday =   6 end
-    if argday == "mon-next"  then argday = 7+0 end
-    if argday == "tue-next"  then argday = 7+1 end
-    if argday == "tues-next" then argday = 7+1 end
-    if argday == "wed-next"  then argday = 7+2 end
-    if argday == "thu-next"  then argday = 7+3 end
-    if argday == "fri-next"  then argday = 7+4 end
-    if argday == "sat-next"  then argday = 7+5 end
-    if argday == "sun-next"  then argday = 7+6 end
+    if argday == "mon"       then argday =    0 end
+    if argday == "tue"       then argday =    1 end
+    if argday == "tues"      then argday =    1 end
+    if argday == "wed"       then argday =    2 end
+    if argday == "thu"       then argday =    3 end
+    if argday == "fri"       then argday =    4 end
+    if argday == "sat"       then argday =    5 end
+    if argday == "sun"       then argday =    6 end
+    if argday == "mon-prev"  then argday = -7+0 end
+    if argday == "tue-prev"  then argday = -7+1 end
+    if argday == "tues-prev" then argday = -7+1 end
+    if argday == "wed-prev"  then argday = -7+2 end
+    if argday == "thu-prev"  then argday = -7+3 end
+    if argday == "fri-prev"  then argday = -7+4 end
+    if argday == "sat-prev"  then argday = -7+5 end
+    if argday == "sun-prev"  then argday = -7+6 end
+    if argday == "mon-next"  then argday =  7+0 end
+    if argday == "tue-next"  then argday =  7+1 end
+    if argday == "tues-next" then argday =  7+1 end
+    if argday == "wed-next"  then argday =  7+2 end
+    if argday == "thu-next"  then argday =  7+3 end
+    if argday == "fri-next"  then argday =  7+4 end
+    if argday == "sat-next"  then argday =  7+5 end
+    if argday == "sun-next"  then argday =  7+6 end
   end
   return argday
 end
@@ -61,7 +71,8 @@ function canvas:datetime(args)
   duedate:min(arg_min)
   date_offset(duedate,arg_offset)
 
-  return duedate
+  return duedate,dateformat:tostring(duedate)
 end
+
 
 return canvas

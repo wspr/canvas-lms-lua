@@ -2,7 +2,7 @@
 -- @submodule canvas
 
 local binser = require("binser")
-local pretty = require("pl.pretty")
+local dump = require("pl.pretty").dump
 local date   = require("pl.date")
 local path   = require("pl.path")
 local markdown = require("markdown")
@@ -71,7 +71,7 @@ function canvas:setup_assignment_groups(args)
   end
 
   print("## ASSIGNMENT GROUPS")
-  pretty.dump(self.assignment_groups)
+  dump(self.assignment_groups)
 
   local Nmarks = 0
   for _,vv in ipairs(assign_groups) do
@@ -195,6 +195,7 @@ function canvas:create_assignment(args)
 
   local assign_out
   local ask = args.ask or ""
+  args.due = args.due or {}
   args.due.sem = args.due.sem or 1
 
   self.assignment_setup = self.assignment_setup or {}
@@ -242,7 +243,7 @@ function canvas:create_assignment(args)
     end
     if arg_bad then
       print("The 'assign_type' option for creating assignments can be any of:")
-      pretty.dump(argtypes_allowed)
+      dump(argtypes_allowed)
       error("Bad argument for 'assign_type'.")
     end
   end
@@ -255,11 +256,13 @@ function canvas:create_assignment(args)
     assignment =  {
                               name = args.name                                 ,
                          published = args.published                            ,
-                   points_possible = args.points or "0"                        ,
                   submission_types = args.assign_type                          ,
                assignment_group_id = self.assignment_groups[args.assign_group] ,
                   }
   }
+  if args.points then
+    new_assign.assignment.points_possible = arg.points
+  end
 
   for _,v in ipairs(args.assign_type) do
     if v == "online_upload" then
@@ -304,7 +307,7 @@ function canvas:create_assignment(args)
     args.lock.after_days = args.late_days
   end
 
-  if args.due then
+  if args.due and args.due.day then
     local duedate = self:datetime{
         sem  = args.due.sem  ,
         week = args.due.week ,
@@ -388,7 +391,7 @@ function canvas:create_assignment(args)
 
 
   print("ASSIGNMENT DETAILS FOR CREATION/UPDATE:")
-  pretty.dump(new_assign)
+  dump(new_assign)
 
   local diffcontinue = true
   if lockdiff >= 0 then
@@ -405,6 +408,7 @@ function canvas:create_assignment(args)
 
   if diffcontinue then
     self:get_assignments()
+    self.assignments[args.name] = self.assignments[args.name] or {}
     local assign_id = self.assignments[args.name].id
     print("## "..args.name)
     local a
@@ -413,9 +417,10 @@ function canvas:create_assignment(args)
     else
       a = self:post(self.course_prefix.."assignments",new_assign)
       self.assignments[args.name] = a
+      assign_id = a.id
     end
     if a.errors then
-      pretty.dump(a)
+      dump(a)
       error("Create/update assignment failed")
     end
     assign_out = a
@@ -423,13 +428,14 @@ function canvas:create_assignment(args)
     -- RUBRIC
     if args.rubric then
       self:get_rubrics()
-      print("ASSIGN RUBRIC: "..args.rubric)
+      print("ASSIGN RUBRIC: '"..args.rubric.."'")
+      if self.rubrics[args.rubric] == nil then
+        dump(self.rubrics)
+        error("Assoc rubric failed; no rubric '"..args.rubric.."'")
+      end
       local rubric_id = self.rubrics[args.rubric].id
       if rubric_id then
         self:assoc_rubric{rubric_id = rubric_id, assign_id = assign_id}
-      else
-        pretty.dump(self.rubrics)
-        error("Assoc rubric failed; no rubric '"..args.rubric.."'")
       end
     end
   end
