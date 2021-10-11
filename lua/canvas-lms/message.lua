@@ -76,6 +76,13 @@ function canvas:message_user(send_check,msg)
     recipients = recip,
     group_conversation = msg.group_conversation or true,
   }
+  if msg.attach then
+    local attachments = msg.attach
+    if not(type(attachments)=="table") then
+      attachments = {attachments}
+    end
+    opt.attachment_ids = attachments
+  end
 
   if msg.context then
     opt.context_code=msg.context
