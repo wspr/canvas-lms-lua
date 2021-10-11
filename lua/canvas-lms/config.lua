@@ -88,6 +88,8 @@ end
 canvas.cache_dir = canvas.cache_dir or "./cache/"
 lfs.mkdir(canvas.cache_dir)
 
+canvas.mobius_url = "https://adelaide.mobius.cloud:443/lti/"
+
 --[[ DEFAULTS --]]
 
 canvas.defaults = {}

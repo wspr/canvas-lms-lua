@@ -187,6 +187,7 @@ end
 -- @field description
 -- @field descr_file
 -- @field rubric
+-- @field external_tool
 -- @table create_assignment_args
 
 --- Create a Canvas assignment.
@@ -226,11 +227,22 @@ function canvas:create_assignment(args)
     end
   end
 
+  if args.mobius then
+    args.external_tool = {
+           new_tab = true,
+           url = self.mobius_url,
+                         }
+  end
+
   local argtypes_allowed = {
     "online_quiz","none","on_paper","discussion_topic","external_tool","online_upload",
     "online_text_entry","online_url","media_recording"
   }
-  args.assign_type = args.assign_type or {"online_upload"}
+  if args.external_tool then
+    args.assign_type = "external_tool"
+  else
+    args.assign_type = args.assign_type or {"online_upload"}
+  end
   if type(args.assign_type) == "string" then
     args.assign_type = {args.assign_type}
   end
@@ -261,12 +273,12 @@ function canvas:create_assignment(args)
                   }
   }
   if args.points then
-    new_assign.assignment.points_possible = arg.points
+    new_assign.assignment.points_possible = args.points
   end
 
   for _,v in ipairs(args.assign_type) do
     if v == "online_upload" then
-      new_assign.assignment.allowed_extensions = arg.ext or "pdf"
+      new_assign.assignment.allowed_extensions = args.ext or "pdf"
     end
   end
   if args.rubric then
@@ -275,10 +287,12 @@ function canvas:create_assignment(args)
   if group_proj_id then
     new_assign.assignment.group_category_id = group_proj_id
   end
-  if arg.omit_from_final_grade then
-    new_assign.assignment.omit_from_final_grade = arg.omit_from_final_grade
+  if args.omit_from_final_grade then
+    new_assign.assignment.omit_from_final_grade = args.omit_from_final_grade
   end
-
+  if args.external_tool then
+    new_assign.assignment.external_tool_tag_attributes = args.external_tool
+  end
 
 --  local duediff    =  0
   local lockdiff   = -1
