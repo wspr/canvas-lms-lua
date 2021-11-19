@@ -3,45 +3,6 @@
 
 local canvas = {}
 
-function canvas:message_group_wfile(send_check,msg)
-
-  local function encode(str)
-		str = string.gsub (str, "\n", "\r\n")
-    str = string.gsub(str, "([^%w _ %- . ~])",
-      function (c) return string.format ("%%%02X", string.byte(c)) end
-    )
-    str = string.gsub (str, " ", "+")
-	  return str
-	end
-
-
-  local recipients="recipients[]=group_"..msg.canvasid
-  local subject="subject="..msg.subject
-  local body="body="..msg.body
-
-  local attachfile = self:get("users/self/files","search_term="..msg.filestub)
-  if #attachfile > 0 then
-    local fileid = "attachment_ids[]="..attachfile[1].id
-    local isgroup = "group_conversation=true"
-
-    local opt = recipients.."&"..subject.."&"..body.."&"..fileid.."&"..isgroup
-
-    if send_check=="y" then
-      self:post("conversations",encode(opt))
-    else
-      print("MESSAGE:")
-      print(opt)
-      print("AFTER ENCODING:")
-      print(encode(opt))
-      print("NOT SENT ACCORDING TO USER INSTRUCTIONS")
-    end
-  else
-    error("No file found")
-  end
-
-
-end
-
 --- Message user table arguments.
 -- The function `canvas:message_user` takes a table of arguments to define the message to send.
 -- The table may consist of the following
@@ -74,8 +35,11 @@ function canvas:message_user(send_check,msg)
     subject = msg.subject,
     body = msg.body,
     recipients = recip,
-    group_conversation = msg.group_conversation or true,
+    group_conversation = true,
   }
+  if not(msg.group_conversation == nil) then
+    opt.group_conversation = msg.group_conversation
+  end
   if msg.attach then
     local attachments = msg.attach
     if not(type(attachments)=="table") then
