@@ -184,9 +184,21 @@ end
 canvas.setup_csv_rubrics = function(self,args)
 
   args = args or {}
-  args.prefix = args.prefix or ""
-  args.suffix = args.suffix or ""
-  args.csv = args.csv or {}
+  if type(args) == "string" then
+    local arg_str = args
+    args = {}
+    args.prefix = ""
+    args.suffix = ""
+    args.csv = arg_str
+  else
+    args.prefix = args.prefix or "rubrics/"
+    args.suffix = args.suffix or ".csv"
+    args.csv = args.csv or {}
+  end
+
+  if type(args.csv) == "string" then
+    args.csv = {args.csv}
+  end
 
   print("# Sending CSV rubrics")
 
