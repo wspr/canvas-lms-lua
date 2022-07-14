@@ -10,4 +10,19 @@ local canvas = {}
 -- Code for this function uses the generic `define_getter` function in the HTTP submodule.
 
 
+function canvas:update_file(filename,opt)
+
+  if(self.files==nil) then
+    self:get_files()
+  end
+
+  local id = self.files[filename].id
+  if id == nil then
+    error("Filename '"..filename"' not found.")
+  end
+
+  self:put("files/"..id,opt)
+
+end
+
 return canvas

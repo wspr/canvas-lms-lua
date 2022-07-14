@@ -9,6 +9,21 @@ local dump = require "pl.pretty".dump
 -- @function get_modules
 -- Code for this function uses the generic `define_getter` function in the HTTP submodule.
 
+--- Update metadata for a single module.
+function canvas:update_module(modname,opt)
+
+  if(self.modules==nil) then
+    self:get_modules()
+  end
+
+  local id = self.modules[modname].id
+  if id == nil then
+    error("Module '"..modname"' not found.")
+  end
+
+  self:put(self.course_prefix.."modules/"..id,{module=opt})
+
+end
 
 --- Create/edit all modules.
 -- @tparam table modules   List of ordered module names to create.
@@ -82,7 +97,7 @@ end
 -- @tparam string ask of whether to proceed — *empty* asks, or |"y"| does, or *anything else* does not
 -- @tparam table items (see [Canvas API documentation](https://canvas.instructure.com/doc/api/modules.html#method.context_module_items_api.create) for raw syntax)
 -- Table of module items has some shorthand definitions defined in the code. TODO: document these properly.
-function canvas:update_module(module_name,ask,items)
+function canvas:update_module_contents(module_name,ask,items)
 
   self:get_modules{ download = false }
 
