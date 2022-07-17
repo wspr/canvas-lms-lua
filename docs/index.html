@@ -38,6 +38,7 @@
 <li><a href="#canvas_lms_grades_Functions">canvas-lms.grades Functions</a></li>
 <li><a href="#canvas_lms_message_Functions">canvas-lms.message Functions</a></li>
 <li><a href="#canvas_lms_modules_pages_Functions">canvas-lms.modules-pages Functions</a></li>
+<li><a href="#canvas_lms_students_Functions">canvas-lms.students Functions</a></li>
 <li><a href="#canvas_lms_rubrics_Functions">canvas-lms.rubrics Functions</a></li>
 </ul>
 
@@ -103,11 +104,11 @@
 <h2><a href="#canvas_lms_http_Functions">canvas-lms.http Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#get_paginated">get_paginated (download_bool, req, opt_arg)</a></td>
+	<td class="name" nowrap><a href="#get_paginated">get_paginated (download_flag, req, opt_arg)</a></td>
 	<td class="summary">Paginated GET.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#define_getter">define_getter (field_name, index_name_arg, opt_default)</a></td>
+	<td class="name" nowrap><a href="#define_getter">define_getter (var_name, field_name, index_name_arg, opt_default)</a></td>
 	<td class="summary">Define getter function to retrieve and store item metadata.</td>
 	</tr>
 	<tr>
@@ -140,10 +141,6 @@
 </table>
 <h2><a href="#canvas_lms_announcements_Functions">canvas-lms.announcements Functions</a></h2>
 <table class="function_list">
-	<tr>
-	<td class="name" nowrap><a href="#get_announcements">get_announcements (self)</a></td>
-	<td class="summary">Get all announcements.</td>
-	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#update_announcement">update_announcement (title, opt)</a></td>
 	<td class="summary">Update metadata for a single announcement.</td>
@@ -258,6 +255,29 @@
 	<tr>
 	<td class="name" nowrap><a href="#check_modules">check_modules ()</a></td>
 	<td class="summary">Suite of sanity checks for all Canvas modules.</td>
+	</tr>
+</table>
+<h2><a href="#canvas_lms_students_Functions">canvas-lms.students Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#find_user">find_user (str)</a></td>
+	<td class="summary">Find a single user by name or ID.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#get_students">get_students (opt)</a></td>
+	<td class="summary">Get all enrolled students.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#get_groups">get_groups (use_cache_bool, group_category_name)</a></td>
+	<td class="summary">Get groups.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setup_group_categories">setup_group_categories (categories)</a></td>
+	<td class="summary">Creating group categories.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#get_student_group_categories">get_student_group_categories ()</a></td>
+	<td class="summary">Get all group categories.</td>
 	</tr>
 </table>
 <h2><a href="#canvas_lms_rubrics_Functions">canvas-lms.rubrics Functions</a></h2>
@@ -500,7 +520,7 @@
     <dl class="function">
     <dt>
     <a name = "get_paginated"></a>
-    <strong>get_paginated (download_bool, req, opt_arg)</strong>
+    <strong>get_paginated (download_flag, req, opt_arg)</strong>
     </dt>
     <dd>
     Paginated GET.
@@ -508,8 +528,8 @@
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">download_bool</span>
-         true | false | "ask"
+        <li><span class="parameter">download_flag</span>
+         true | false | "ask" | "cache"
         </li>
         <li><span class="parameter">req</span>
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
@@ -544,7 +564,7 @@
 </dd>
     <dt>
     <a name = "define_getter"></a>
-    <strong>define_getter (field_name, index_name_arg, opt_default)</strong>
+    <strong>define_getter (var_name, field_name, index_name_arg, opt_default)</strong>
     </dt>
     <dd>
     Define getter function to retrieve and store item metadata.
@@ -552,9 +572,16 @@
 
     <h3>Parameters:</h3>
     <ul>
+        <li><span class="parameter">var_name</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+
+<pre><code>Name of Lua table field to store item data
+</code></pre>
+
+        </li>
         <li><span class="parameter">field_name</span>
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
-          Name of REST field to store item data
+          Name of REST field to retrieve item data from (nil -> use <code>var_name</code>`)
         </li>
         <li><span class="parameter">index_name_arg</span>
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
@@ -747,28 +774,6 @@
     <h2 class="section-header "><a name="canvas_lms_announcements_Functions"></a>canvas-lms.announcements Functions</h2>
 
     <dl class="function">
-    <dt>
-    <a name = "get_announcements"></a>
-    <strong>get_announcements (self)</strong>
-    </dt>
-    <dd>
-    Get all announcements.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">self</span>
-
-
-
-        </li>
-    </ul>
-
-
-
-
-
-</dd>
     <dt>
     <a name = "update_announcement"></a>
     <strong>update_announcement (title, opt)</strong>
@@ -1429,6 +1434,117 @@
 
 </dd>
 </dl>
+    <h2 class="section-header "><a name="canvas_lms_students_Functions"></a>canvas-lms.students Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "find_user"></a>
+    <strong>find_user (str)</strong>
+    </dt>
+    <dd>
+    Find a single user by name or ID.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">str</span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "get_students"></a>
+    <strong>get_students (opt)</strong>
+    </dt>
+    <dd>
+    Get all enrolled students.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">opt</span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "get_groups"></a>
+    <strong>get_groups (use_cache_bool, group_category_name)</strong>
+    </dt>
+    <dd>
+    Get groups.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">use_cache_bool</span>
+
+
+
+        </li>
+        <li><span class="parameter">group_category_name</span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setup_group_categories"></a>
+    <strong>setup_group_categories (categories)</strong>
+    </dt>
+    <dd>
+    Creating group categories.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">categories</span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "get_student_group_categories"></a>
+    <strong>get_student_group_categories ()</strong>
+    </dt>
+    <dd>
+    Get all group categories.
+
+
+
+
+
+
+
+</dd>
+</dl>
     <h2 class="section-header "><a name="canvas_lms_rubrics_Functions"></a>canvas-lms.rubrics Functions</h2>
 
     <dl class="function">
@@ -1576,7 +1692,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2022-07-17 09:22:25 </i>
+<i style="float:right;">Last updated 2022-07-17 12:14:57 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
