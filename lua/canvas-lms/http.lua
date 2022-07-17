@@ -107,12 +107,18 @@ end
 
 
 --- Define getter function to retrieve and store item metadata.
--- @string field_name  Name of REST field to store item data
+-- @string var_name    Name of Lua table field to store item data
+-- @string field_name  Name of REST field to retrieve item data from (nil -> use `var_name``)
 -- @string index_name_arg  Name of metadata field to reference item data (default: `"name"`)
 -- @tparam table opt_default Default options to pass to REST call
 -- Custom argument: `download` = `true` | `false` | `"ask"`
-function canvas:define_getter(field_name,index_name_arg,opt_default)
-  self["get_"..field_name] = function(self_,opt_arg)
+function canvas:define_getter(var_name,field_name,index_name_arg,opt_default)
+
+  if field_name == nil then
+    field_name = var_name
+  end
+
+  self["get_"..var_name] = function(self_,opt_arg)
 
     local index_name = index_name_arg
     local arg = opt_default or {}
@@ -121,13 +127,13 @@ function canvas:define_getter(field_name,index_name_arg,opt_default)
     end
     local download_flag = arg.download or false
     arg.download = nil
-    if self_[field_name] == nil then
+    if self_[var_name] == nil then
       download_flag = "cache"
     end
     local opt = arg or {}
 
     if self_.verbose > 0 then
-      print("# Getting "..field_name.." data currently in Canvas")
+      print("# Getting "..var_name.." data currently in Canvas")
     end
     local all_items = self_:get_paginated(download_flag,self_.course_prefix..field_name,opt)
     local items_by_name = {}
@@ -140,17 +146,19 @@ function canvas:define_getter(field_name,index_name_arg,opt_default)
       end
       items_by_name[vv[index_name]] = vv
     end
-    self_[field_name] = items_by_name
+    self_[var_name] = items_by_name
+
   end
 end
 
-canvas:define_getter("assignments","name")
-canvas:define_getter("files","filename")
-canvas:define_getter("modules","name",{include={"items"}})
-canvas:define_getter("rubrics","title")
-canvas:define_getter("quizzes","title")
-canvas:define_getter("pages","title")
-
+canvas:define_getter("announcements","discussion_topics",
+                     "title",{only_announcements=true})
+canvas:define_getter("assignments",nil,"name")
+canvas:define_getter("files",nil,"filename")
+canvas:define_getter("modules",nil,"name",{include={"items"}})
+canvas:define_getter("rubrics",nil,"title")
+canvas:define_getter("quizzes",nil,"title")
+canvas:define_getter("pages",nil,"title")
 
 --- Wrapper for GET.
 -- @tparam string req URL stub to GET from
