@@ -6,8 +6,8 @@ local dump = require "pl.pretty".dump
 
 --- Get all Canvas modules and store their metadata.
 -- Data stored in `.modules` table, indexed by module `name`.
--- @function get_modules
 -- Code for this function uses the generic `define_getter` function in the HTTP submodule.
+-- @function get_modules
 
 --- Update metadata for a single module.
 function canvas:update_module(modname,opt)

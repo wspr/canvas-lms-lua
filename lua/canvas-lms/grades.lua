@@ -5,7 +5,7 @@ local tablex   = require("pl.tablex")
 
 local canvas = {}
 
---- Retrieve and store the names and IDs of any added custom gradebook columns
+--- Retrieve and store the names and IDs of any added custom gradebook columns.
 function canvas:get_grade_columns()
 
   local xx = self:get_paginated(true,self.course_prefix .. "custom_gradebook_columns")
@@ -20,7 +20,7 @@ function canvas:get_grade_columns()
 end
 
 
---- Create custom gradebook columns
+--- Create custom gradebook columns.
 -- Currently this function only creates, not updates!
 function canvas:setup_grade_columns(columns)
 
@@ -42,7 +42,7 @@ function canvas:setup_grade_columns(columns)
 end
 
 
---- Delete all custom gradebook columns -- warning!
+--- Delete all custom gradebook columns -- warning!.
 function canvas:delete_grade_columns()
 
   print("About to delete all custom gradebook columns, are you sure? Type y to do so:")
@@ -56,7 +56,7 @@ function canvas:delete_grade_columns()
 end
 
 
---- Retrieve and store grades from specified assignments
+--- Retrieve and store grades from specified assignments.
 function canvas:get_assign_grades(opt)
 
   local get_switch = opt.download or "ask"
@@ -85,7 +85,7 @@ function canvas:get_assign_grades(opt)
 end
 
 
---- Write grades to CSV from specified assignments
+--- Write grades to CSV from specified assignments.
 function canvas:write_grades(gfile,assign_names)
 
   self.get_assignments{force=false}

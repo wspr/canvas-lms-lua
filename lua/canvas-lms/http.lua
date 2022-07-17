@@ -252,7 +252,7 @@ end
 
 
 
---- Upload a file to a Canvas course
+--- Upload a file to a Canvas course.
 -- The process for uploading files to Canvas is [documented here](https://canvas.instructure.com/doc/api/file.file_uploads.html#method.file_uploads.post).
 -- @tparam table opt
 -- Required argument `opt.filename` specifies filename to upload.

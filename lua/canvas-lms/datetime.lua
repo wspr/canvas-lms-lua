@@ -8,7 +8,7 @@ local canvas = {}
 
 local dateformat = date.Format('yyyy-mm-ddTHH:MM:SS')
 
---- Simple lookup table to allow string arguments to specify days of the week
+--- Simple lookup table to allow string arguments to specify days of the week.
 local function day_string_to_num(argday)
   if type(argday) == "string" then
     if argday == "mon"       then argday =     0 end

@@ -9,10 +9,10 @@ local markdown = require("markdown")
 
 local canvas = {}
 
---- Get assignments
+--- Get assignments.
 -- Data stored in `.assignments` table, indexed by assignment `name`.
--- @function get_assignments
 -- Code for this function uses the generic `define_getter` function in the HTTP submodule.
+-- @function get_assignments
 
 --- Get assignment groups IDs.
 -- Gets details of each assignment group and stores their IDs for later lookup. Data stored in |self.assignment_groups|.
@@ -27,7 +27,7 @@ function canvas:get_assignment_groups()
 
 end
 
---- Setup assignment group arguments
+--- Setup assignment group arguments.
 -- The function `canvas:setup_assignment_groups` takes a single table of arguments.
 -- The table should be an ordered list
 -- @field name The name of the assignment
@@ -88,7 +88,7 @@ end
 
 
 
---- Get full details of a single assignment
+--- Get full details of a single assignment.
 -- @tparam bool use_cache_bool Don't download if cache available?
 -- @tparam string assign_name Name of the assignment
 -- @tparam table assign_opts Additional REST arguments (link)
@@ -177,7 +177,7 @@ end
 
 
 
---- Create assignment arguments
+--- Create assignment arguments.
 -- @field ask
 -- @field student_group_category (implies a group submission)
 -- @field omit_from_final_grade

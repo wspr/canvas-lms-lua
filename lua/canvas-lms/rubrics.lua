@@ -9,8 +9,8 @@ local canvas = {}
 
 --- Get all course rubrics and store their metadata.
 -- Data stored in: `.rubrics` table indexed by `title` of the rubric.
--- @function get_rubrics
 -- Code for this function uses the generic `define_getter` function in the HTTP submodule.
+-- @function get_rubrics
 
 
 --- Send a rubric to Canvas.

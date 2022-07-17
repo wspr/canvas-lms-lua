@@ -22,3 +22,4 @@ file = {
 topics = {"docs_topics/01-introduction.md"}
 format = "markdown"
 use_markdown_titles = true
+not_luadoc = true

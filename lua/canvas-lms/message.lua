@@ -13,9 +13,11 @@ local canvas = {}
 -- @field group_conversation   Whether a group message is sent (true, default) or multiple individual messages are sent (false) if multiple IDs are included
 -- @table @{message_user_args}
 
+
+
 --- Message a specific Canvas user.
--- @tparam bool send_check Toggle whether to truly send the message or just to pretty print it to the screen
--- @tparam table msg table with entries to define message according to @{message_user_args}
+-- @tparam bool send_check  Toggle whether to truly send the message or just to pretty print it to the screen
+-- @tparam table msg        Table with entries to define message according to @{message_user_args}
 function canvas:message_user(send_check,msg)
 
   if msg.subject==nil then

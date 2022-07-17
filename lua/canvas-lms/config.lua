@@ -4,13 +4,13 @@
 local lfs    = require "lfs"
 local canvas = {}
 
---- Set debug status, which disables interaction with the live Canvas API
+--- Set debug status, which disables interaction with the live Canvas API.
 function canvas:set_debug(bool)
   self.debug = bool
 end
 canvas:set_debug(false)
 
---- Set verbose status, which echoes all interaction with the Canvas API
+--- Set verbose status, which echoes all interaction with the Canvas API.
 -- Default = 0, which hides most things
 function canvas:set_verbose(num)
   self.verbose = num
