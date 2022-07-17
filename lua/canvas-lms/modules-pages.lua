@@ -51,7 +51,7 @@ function canvas:setup_modules(modules)
   self:get_modules{ download = true }
 
   for i,j in ipairs(modules) do
-    if not(type(j)=="table") then
+    if type(j)~="table" then
       modules[i] = {name=j}
     end
     modules[i].position = i
@@ -145,14 +145,14 @@ function canvas:update_module_contents(module_name,ask,items)
         local this_item = j
         this_item.position = i
 
-        if not(this_item.heading==nil) then
+        if this_item.heading~=nil then
           this_item.type = "SubHeader"
           this_item.title = this_item.heading
           this_item.heading = nil
           print("Heading:"..this_item.title)
         end
 
-        if not(this_item.url==nil) then
+        if this_item.url~=nil then
           this_item.type = "ExternalUrl"
           this_item.external_url = this_item.url
           this_item.new_tab = true
@@ -160,14 +160,14 @@ function canvas:update_module_contents(module_name,ask,items)
           print("URL:"..this_item.title)
         end
 
-        if not(this_item.page==nil) then
+        if this_item.page~=nil then
           this_item.type = "Page"
           this_item.page_url = this_item.page
           this_item.page = nil
           print("Page:"..this_item.title)
         end
 
-        if not(this_item.filename==nil) then
+        if this_item.filename~=nil then
           print("Heading:"..this_item.title)
           dump(this_item)
           this_item.type = "File"
@@ -180,7 +180,7 @@ function canvas:update_module_contents(module_name,ask,items)
           this_item.filename = nil
         end
 
-        if not(this_item.echo==nil) then
+        if this_item.echo~=nil then
           if type(this_item.echo)=="string" then
             this_item.title = this_item.echo
           end
@@ -189,7 +189,7 @@ function canvas:update_module_contents(module_name,ask,items)
           this_item.echo = nil
         end
 
-        if not(this_item.assignment==nil) then
+        if this_item.assignment~=nil then
           self:get_assignments{download=false}
           this_item.type = "Assignment"
           this_item.title = this_item.assignment
@@ -204,7 +204,7 @@ function canvas:update_module_contents(module_name,ask,items)
           this_item.published = true
         end
 
-        if not(curr_items_lookup[this_item.title]==nil) then
+        if curr_items_lookup[this_item.title]~=nil then
           self:put(module_url.."/"..curr_items_lookup[this_item.title],{module_item=this_item})
         else
           self:post(module_url,{module_item=this_item})

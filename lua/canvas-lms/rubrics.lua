@@ -115,21 +115,21 @@ function canvas:rubric_from_csv(csvfile)
     elseif fields[1] == "CELL TITLES" then
       row_cell_titles[Nrow] = {}
       for ii = 2,#fields do
-        if not(fields[ii] == "") then
+        if fields[ii] ~= "" then
           row_cell_titles[Nrow][ii-1] = fields[ii]
         end
       end
     elseif fields[1] == "CELL DESCRIPTIONS" then
       row_cell_descrs[Nrow] = {}
       for ii = 2,#fields do
-        if not(fields[ii] == "") then
+        if fields[ii] ~= "" then
           row_cell_descrs[Nrow][ii-1] = fields[ii]
         end
       end
     elseif fields[1] == "CELL POINTS" then
       row_cell_points[Nrow] = {}
       for ii = 2,#fields do
-        if not(fields[ii] == "") then
+        if fields[ii] ~= "" then
           row_cell_points[Nrow][ii-1] = fields[ii]
         end
       end

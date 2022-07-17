@@ -28,7 +28,7 @@ function canvas:message_user(send_check,msg)
   end
 
   local recip = msg.recipients or msg.canvasid
-  if not(type(recip)=="table") then
+  if type(recip)~="table" then
     recip = {recip}
   end
   local opt = {
@@ -39,12 +39,12 @@ function canvas:message_user(send_check,msg)
     recipients = recip,
     group_conversation = true,
   }
-  if not(msg.group_conversation == nil) then
+  if msg.group_conversation ~= nil then
     opt.group_conversation = msg.group_conversation
   end
   if msg.attach then
     local attachments = msg.attach
-    if not(type(attachments)=="table") then
+    if type(attachments) ~= "table" then
       attachments = {attachments}
     end
     opt.attachment_ids = attachments

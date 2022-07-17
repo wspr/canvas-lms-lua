@@ -203,7 +203,7 @@ end
 
 function canvas:getpostput_str(param,req,opt)
 
-    if not(opt == "") then
+    if opt ~= "" then
       opt = "?"..opt
       opt = opt:gsub(" ","+")
       opt = opt:gsub("–","%%E2%%80%%93")
