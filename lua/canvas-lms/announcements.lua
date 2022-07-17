@@ -20,9 +20,7 @@ end
 --- Update metadata for a single announcement.
 function canvas:update_announcement(title,opt)
 
-  if(self.announcements==nil) then
-    self:get_announcements()
-  end
+  self:get_announcements{download="cache"}
 
   local id = self.announcements[title].id
   if id == nil then
