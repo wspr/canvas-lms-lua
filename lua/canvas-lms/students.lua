@@ -6,7 +6,8 @@ local pretty = require("pl.pretty")
 
 local canvas = {}
 
-canvas.find_user = function(self,str)
+--- Find a single user by name or ID.
+function: canvas:find_user(str)
 
   local user_data = self:get(self.course_prefix.."users",{search_term=str})
 
@@ -14,8 +15,8 @@ canvas.find_user = function(self,str)
 
 end
 
-
-canvas.get_students = function(self,opt)
+--- Get all enrolled students.
+function canvas:get_students(opt)
 
   local optv = opt or {}
   local download_bool = optv.download or false
@@ -39,10 +40,8 @@ canvas.get_students = function(self,opt)
 end
 
 
-
-
-
-canvas.get_groups = function(self,use_cache_bool,group_category_name)
+--- Get groups.
+function canvas:get_groups(use_cache_bool,group_category_name)
 
   local cache_path = self.cache_dir.."Group - "..group_category_name..".lua"
 
@@ -74,8 +73,8 @@ canvas.get_groups = function(self,use_cache_bool,group_category_name)
 
 end
 
-
-canvas.setup_group_categories = function(self,categories)
+--- Creating group categories.
+function canvas:setup_group_categories(categories)
 
   print("# Setting up student group categories")
 
@@ -99,7 +98,8 @@ canvas.setup_group_categories = function(self,categories)
 
 end
 
-canvas.get_student_group_categories = function(self)
+--- Get all group categories.
+function canvas:get_student_group_categories()
 
   print("# Getting student group categories")
 
