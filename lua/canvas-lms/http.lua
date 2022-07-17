@@ -19,7 +19,7 @@ local canvas = {}
 --]]
 
 --- Paginated GET.
--- @param download_bool true | false | "ask"
+-- @param download_flag true | false | "ask" | "cache"
 -- @string req URL stub to GET from
 -- @param opt_arg table of optional parameters
 -- @treturn table REST result
@@ -33,31 +33,44 @@ local canvas = {}
 --
 -- @usage canvas:get_paginated(true,self.course_prefix.."assignments")
 
-function canvas:get_paginated(download_bool,req,opt_arg)
+function canvas:get_paginated(download_flag,req,opt_arg)
   if self.verbose > 1 then
     print("REQ: "..req)
-    print("BOOL: "..(download_bool and "true" or "false"))
+    print("BOOL: "..(download_flag and "true" or "false"))
   end
 
   local cache_name = string.gsub(req,"/"," - ")
   local cache_file = self.cache_dir.."Pages - "..cache_name..".lua"
 
-  if download_bool == false and not(path.exists(cache_file)) then
-    print("Cache file for requested GET ["..req.."] does not exist; forcing Canvas download.")
-    download_bool = true
+  if download_flag == "false" then
+    download_flag = false
   end
 
-  if download_bool == "ask" then
+  if download_flag == false and not(path.exists(cache_file)) then
+    print("Cache file for requested GET ["..req.."] does not exist; forcing Canvas download.")
+    download_flag = true
+  end
+
+  if download_flag == "cache" then
     if path.exists(cache_file) then
-      print("Download all pages for requested GET ["..req.."] ?")
-      print("Type y to do so:")
-      download_bool = io.read() == "y"
+      download_flag = false
     else
-      download_bool = true
+      print("Cache file for requested GET ["..req.."] does not exist; forcing Canvas download.")
+      download_flag = true
     end
   end
 
-  if download_bool then
+  if download_flag == "ask" then
+    if path.exists(cache_file) then
+      print("Download all pages for requested GET ["..req.."] ?")
+      print("Type y to do so, or anything else to load from cache:")
+      download_flag = io.read() == "y"
+    else
+      download_flag = true
+    end
+  end
+
+  if download_flag then
     local canvas_pages = {}
     local has_data = true
     local data_page = 0
@@ -106,23 +119,17 @@ function canvas:define_getter(field_name,index_name_arg,opt_default)
     for i,v in pairs(opt_arg or {}) do
        arg[i] = v
     end
-    local download = arg.download or false
+    local download_flag = arg.download or false
     arg.download = nil
-    if download == nil then
-      error("DOWNLOAD should not be NIL")
-    end
---[[
-    -- this is not nuanced enough. first need to check if there is data cached through get_paginated and only THEN force it if nothing available
---]]
     if self_[field_name] == nil then
-      download = true
+      download_flag = "cache"
     end
     local opt = arg or {}
 
     if self_.verbose > 0 then
       print("# Getting "..field_name.." data currently in Canvas")
     end
-    local all_items = self_:get_paginated(download,self_.course_prefix..field_name,opt)
+    local all_items = self_:get_paginated(download_flag,self_.course_prefix..field_name,opt)
     local items_by_name = {}
     for _,vv in ipairs(all_items) do
       if vv.id == nil then
