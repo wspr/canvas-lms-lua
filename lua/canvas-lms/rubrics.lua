@@ -225,6 +225,8 @@ canvas.setup_csv_rubrics = function(self,args)
 end
 
 
+--- Delete all rubrics.
+-- This is sometimes needed when you create the same rubric over and over trying to get it right and you end up with many duplicates.
 function canvas:delete_all_rubrics()
 
   self:get_rubrics{ download = true }
