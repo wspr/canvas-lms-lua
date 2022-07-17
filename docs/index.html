@@ -32,6 +32,7 @@
 <li><a href="#canvas_lms_config_Functions">canvas-lms.config Functions</a></li>
 <li><a href="#canvas_lms_http_Functions">canvas-lms.http Functions</a></li>
 <li><a href="#canvas_lms_datetime_Functions">canvas-lms.datetime Functions</a></li>
+<li><a href="#canvas_lms_announcements_Functions">canvas-lms.announcements Functions</a></li>
 <li><a href="#canvas_lms_assign_Functions">canvas-lms.assign Functions</a></li>
 <li><a href="#canvas_lms_discuss_Functions">canvas-lms.discuss Functions</a></li>
 <li><a href="#canvas_lms_grades_Functions">canvas-lms.grades Functions</a></li>
@@ -64,12 +65,11 @@
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#set_debug">set_debug (bool)</a></td>
-	<td class="summary">Set debug status, which disables interaction with the live Canvas API</td>
+	<td class="summary">Set debug status, which disables interaction with the live Canvas API.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#set_verbose">set_verbose (num)</a></td>
-	<td class="summary">Set verbose status, which echoes all interaction with the Canvas API
- Default = 0, which hides most things</td>
+	<td class="summary">Set verbose status, which echoes all interaction with the Canvas API.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#set_course_id">set_course_id (str)</a></td>
@@ -103,7 +103,7 @@
 <h2><a href="#canvas_lms_http_Functions">canvas-lms.http Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#get_pages">get_pages (download_bool, req, opt_arg)</a></td>
+	<td class="name" nowrap><a href="#get_paginated">get_paginated (download_bool, req, opt_arg)</a></td>
 	<td class="summary">Paginated GET.</td>
 	</tr>
 	<tr>
@@ -128,8 +128,7 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#file_upload">file_upload (opt)</a></td>
-	<td class="summary">Upload a file to a Canvas course
- The process for uploading files to Canvas is <a href="https://canvas.instructure.com/doc/api/file.file_uploads.html#method.file_uploads.post">documented here</a>.</td>
+	<td class="summary">Upload a file to a Canvas course.</td>
 	</tr>
 </table>
 <h2><a href="#canvas_lms_datetime_Functions">canvas-lms.datetime Functions</a></h2>
@@ -139,12 +138,22 @@
 	<td class="summary">Calculate the datetime from a table of "logical" date and time declarations.</td>
 	</tr>
 </table>
+<h2><a href="#canvas_lms_announcements_Functions">canvas-lms.announcements Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#get_announcements">get_announcements (self)</a></td>
+	<td class="summary">Get all announcements.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#update_announcement">update_announcement (title, opt)</a></td>
+	<td class="summary">Update metadata for a single announcement.</td>
+	</tr>
+</table>
 <h2><a href="#canvas_lms_assign_Functions">canvas-lms.assign Functions</a></h2>
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#get_assignments">get_assignments ()</a></td>
-	<td class="summary">Get assignments
- Data stored in <code>.assignments</code> table, indexed by assignment <code>name</code>.</td>
+	<td class="summary">Get assignments.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#get_assignment_groups">get_assignment_groups ()</a></td>
@@ -152,8 +161,7 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#assign_group_args">assign_group_args</a></td>
-	<td class="summary">Setup assignment group arguments
- The function <a href="index.html#setup_assignment_groups">canvas:setup_assignment_groups</a> takes a single table of arguments.</td>
+	<td class="summary">Setup assignment group arguments.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#setup_assignment_groups">setup_assignment_groups (args)</a></td>
@@ -161,15 +169,23 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#get_assignment">get_assignment (use_cache_bool, assign_name, assign_opts)</a></td>
-	<td class="summary">Get full details of a single assignment</td>
+	<td class="summary">Get full details of a single assignment.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#create_assignment_args">create_assignment_args</a></td>
-	<td class="summary">Create assignment arguments</td>
+	<td class="summary">Create assignment arguments.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#create_assignment">create_assignment (args)</a></td>
 	<td class="summary">Create a Canvas assignment.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#update_assignment">update_assignment (assignname, opt)</a></td>
+	<td class="summary">Basic assignment metadata update function.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#update_quiz">update_quiz (assignname, opt)</a></td>
+	<td class="summary">Basic quiz metadata update function.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#check_assignments">check_assignments ()</a></td>
@@ -191,20 +207,19 @@
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#get_grade_columns">get_grade_columns ()</a></td>
-	<td class="summary">Retrieve and store the names and IDs of any added custom gradebook columns</td>
+	<td class="summary">Retrieve and store the names and IDs of any added custom gradebook columns.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#setup_grade_columns">setup_grade_columns (columns)</a></td>
-	<td class="summary">Create custom gradebook columns
- Currently this function only creates, not updates!</td>
+	<td class="summary">Create custom gradebook columns.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#get_assign_grades">get_assign_grades (opt)</a></td>
-	<td class="summary">Retrieve and store grades from specified assignments</td>
+	<td class="summary">Retrieve and store grades from specified assignments.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#write_grades">write_grades (gfile, assign_names)</a></td>
-	<td class="summary">Write grades to CSV from specified assignments</td>
+	<td class="summary">Write grades to CSV from specified assignments.</td>
 	</tr>
 </table>
 <h2><a href="#canvas_lms_message_Functions">canvas-lms.message Functions</a></h2>
@@ -225,11 +240,19 @@
 	<td class="summary">Get all Canvas modules and store their metadata.</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#update_module">update_module (modname, opt)</a></td>
+	<td class="summary">Update metadata for a single module.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#update_page">update_page (modname, opt)</a></td>
+	<td class="summary">Update metadata for a single page.</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#setup_modules">setup_modules (modules)</a></td>
 	<td class="summary">Create/edit all modules.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#update_module">update_module (module_name, ask, items)</a></td>
+	<td class="name" nowrap><a href="#update_module_contents">update_module_contents (module_name, ask, items)</a></td>
 	<td class="summary">Create/edit contents of an individual module.</td>
 	</tr>
 	<tr>
@@ -273,7 +296,7 @@
     <strong>set_debug (bool)</strong>
     </dt>
     <dd>
-    Set debug status, which disables interaction with the live Canvas API
+    Set debug status, which disables interaction with the live Canvas API.
 
 
     <h3>Parameters:</h3>
@@ -295,7 +318,7 @@
     <strong>set_verbose (num)</strong>
     </dt>
     <dd>
-    Set verbose status, which echoes all interaction with the Canvas API
+    Set verbose status, which echoes all interaction with the Canvas API.
  Default = 0, which hides most things
 
 
@@ -472,8 +495,8 @@
 
     <dl class="function">
     <dt>
-    <a name = "get_pages"></a>
-    <strong>get_pages (download_bool, req, opt_arg)</strong>
+    <a name = "get_paginated"></a>
+    <strong>get_paginated (download_bool, req, opt_arg)</strong>
     </dt>
     <dd>
     Paginated GET.
@@ -511,7 +534,7 @@
 
     <h3>Usage:</h3>
     <ul>
-        <pre class="example">canvas:get_pages(<span class="keyword">true</span>,self.course_prefix..<span class="string">"assignments"</span>)</pre>
+        <pre class="example">canvas:get_paginated(<span class="keyword">true</span>,self.course_prefix..<span class="string">"assignments"</span>)</pre>
     </ul>
 
 </dd>
@@ -670,7 +693,7 @@
     <strong>file_upload (opt)</strong>
     </dt>
     <dd>
-    Upload a file to a Canvas course
+    Upload a file to a Canvas course.
  The process for uploading files to Canvas is <a href="https://canvas.instructure.com/doc/api/file.file_uploads.html#method.file_uploads.post">documented here</a>.
 
 
@@ -717,6 +740,59 @@
 
 </dd>
 </dl>
+    <h2 class="section-header "><a name="canvas_lms_announcements_Functions"></a>canvas-lms.announcements Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "get_announcements"></a>
+    <strong>get_announcements (self)</strong>
+    </dt>
+    <dd>
+    Get all announcements.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">self</span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "update_announcement"></a>
+    <strong>update_announcement (title, opt)</strong>
+    </dt>
+    <dd>
+    Update metadata for a single announcement.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">title</span>
+
+
+
+        </li>
+        <li><span class="parameter">opt</span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
     <h2 class="section-header "><a name="canvas_lms_assign_Functions"></a>canvas-lms.assign Functions</h2>
 
     <dl class="function">
@@ -725,8 +801,9 @@
     <strong>get_assignments ()</strong>
     </dt>
     <dd>
-    Get assignments
+    Get assignments.
  Data stored in <code>.assignments</code> table, indexed by assignment <code>name</code>.
+ Code for this function uses the generic <a href="index.html#define_getter">define_getter</a> function in the HTTP submodule.
 
 
 
@@ -755,9 +832,9 @@
     <strong>assign_group_args</strong>
     </dt>
     <dd>
-    Setup assignment group arguments
+    Setup assignment group arguments.
  The function <a href="index.html#setup_assignment_groups">canvas:setup_assignment_groups</a> takes a single table of arguments.
- The table should be an ordered list
+ The table should be an ordered list}
 
 
     <h3>Fields:</h3>
@@ -802,7 +879,7 @@
     <strong>get_assignment (use_cache_bool, assign_name, assign_opts)</strong>
     </dt>
     <dd>
-    Get full details of a single assignment
+    Get full details of a single assignment.
 
 
     <h3>Parameters:</h3>
@@ -831,7 +908,7 @@
     <strong>create_assignment_args</strong>
     </dt>
     <dd>
-    Create assignment arguments
+    Create assignment arguments.
 
 
     <h3>Fields:</h3>
@@ -887,6 +964,11 @@
 
 
         </li>
+        <li><span class="parameter">external_tool</span>
+
+
+
+        </li>
     </ul>
 
 
@@ -907,6 +989,60 @@
         <li><span class="parameter">args</span>
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
          arguments (see <a href="index.html#create_assignment_args">create_assignment_args</a>)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "update_assignment"></a>
+    <strong>update_assignment (assignname, opt)</strong>
+    </dt>
+    <dd>
+    Basic assignment metadata update function.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">assignname</span>
+
+
+
+        </li>
+        <li><span class="parameter">opt</span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "update_quiz"></a>
+    <strong>update_quiz (assignname, opt)</strong>
+    </dt>
+    <dd>
+    Basic quiz metadata update function.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">assignname</span>
+
+
+
+        </li>
+        <li><span class="parameter">opt</span>
+
+
+
         </li>
     </ul>
 
@@ -991,7 +1127,7 @@
     <strong>get_grade_columns ()</strong>
     </dt>
     <dd>
-    Retrieve and store the names and IDs of any added custom gradebook columns
+    Retrieve and store the names and IDs of any added custom gradebook columns.
 
 
 
@@ -1005,7 +1141,7 @@
     <strong>setup_grade_columns (columns)</strong>
     </dt>
     <dd>
-    Create custom gradebook columns
+    Create custom gradebook columns.
  Currently this function only creates, not updates!
 
 
@@ -1028,7 +1164,7 @@
     <strong>get_assign_grades (opt)</strong>
     </dt>
     <dd>
-    Retrieve and store grades from specified assignments
+    Retrieve and store grades from specified assignments.
 
 
     <h3>Parameters:</h3>
@@ -1050,7 +1186,7 @@
     <strong>write_grades (gfile, assign_names)</strong>
     </dt>
     <dd>
-    Write grades to CSV from specified assignments
+    Write grades to CSV from specified assignments.
 
 
     <h3>Parameters:</h3>
@@ -1083,7 +1219,7 @@
     <dd>
     Message user table arguments.
  The function <a href="index.html#message_user">canvas:message_user</a> takes a table of arguments to define the message to send.
- The table may consist of the following
+ The table may consist of the following}
 
 
     <h3>Fields:</h3>
@@ -1125,11 +1261,14 @@
     <ul>
         <li><span class="parameter">send_check</span>
             <span class="types"><span class="type">bool</span></span>
-         Toggle whether to truly send the message or just to pretty print it to the screen
+          Toggle whether to truly send the message or just to pretty print it to the screen
         </li>
         <li><span class="parameter">msg</span>
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
-         table with entries to define message according to <a href="index.html#message_user_args">message_user_args</a>
+
+<pre><code>    Table with entries to define message according to &lt;a href="index.html#message_user_args"&gt;message\_user\_args&lt;/a&gt;
+</code></pre>
+
         </li>
     </ul>
 
@@ -1149,8 +1288,63 @@
     <dd>
     Get all Canvas modules and store their metadata.
  Data stored in <code>.modules</code> table, indexed by module <code>name</code>.
+ Code for this function uses the generic <a href="index.html#define_getter">define_getter</a> function in the HTTP submodule.
 
 
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "update_module"></a>
+    <strong>update_module (modname, opt)</strong>
+    </dt>
+    <dd>
+    Update metadata for a single module.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">modname</span>
+
+
+
+        </li>
+        <li><span class="parameter">opt</span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "update_page"></a>
+    <strong>update_page (modname, opt)</strong>
+    </dt>
+    <dd>
+    Update metadata for a single page.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">modname</span>
+
+
+
+        </li>
+        <li><span class="parameter">opt</span>
+
+
+
+        </li>
+    </ul>
 
 
 
@@ -1182,8 +1376,8 @@
 
 </dd>
     <dt>
-    <a name = "update_module"></a>
-    <strong>update_module (module_name, ask, items)</strong>
+    <a name = "update_module_contents"></a>
+    <strong>update_module_contents (module_name, ask, items)</strong>
     </dt>
     <dd>
     Create/edit contents of an individual module.
@@ -1241,6 +1435,7 @@
     <dd>
     Get all course rubrics and store their metadata.
  Data stored in: <code>.rubrics</code> table indexed by <code>title</code> of the rubric.
+ Code for this function uses the generic <a href="index.html#define_getter">define_getter</a> function in the HTTP submodule.
 
 
 
@@ -1362,7 +1557,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2021-07-28 07:13:43 </i>
+<i style="float:right;">Last updated 2022-07-17 08:21:22 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
