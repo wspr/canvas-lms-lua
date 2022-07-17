@@ -7,7 +7,7 @@ local pretty = require("pl.pretty")
 local canvas = {}
 
 --- Find a single user by name or ID.
-function: canvas:find_user(str)
+function canvas:find_user(str)
 
   local user_data = self:get(self.course_prefix.."users",{search_term=str})
 
