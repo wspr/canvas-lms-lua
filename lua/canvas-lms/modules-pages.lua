@@ -25,6 +25,22 @@ function canvas:update_module(modname,opt)
 
 end
 
+--- Update metadata for a single page.
+function canvas:update_page(modname,opt)
+
+  if(self.pages==nil) then
+    self:get_pages()
+  end
+
+  local id = self.pages[modname].id
+  if id == nil then
+    error("Page '"..modname"' not found.")
+  end
+
+  return self:put(self.course_prefix.."pages/"..id,{wiki_page=opt})
+
+end
+
 --- Create/edit all modules.
 -- @tparam table modules   List of ordered module names to create.
 -- If names are different than the modules currently defined, new ones are created and/or
@@ -115,7 +131,7 @@ function canvas:update_module_contents(module_name,ask,items)
 
     local mod = self.modules[module_name].id
     local module_url = self.course_prefix.."modules/"..mod.."/items"
-    local curr_items = self:get_pages(true,module_url)
+    local curr_items = self:get_paginated(true,module_url)
 
     local curr_items_lookup = {}
     for _,this_item in ipairs(curr_items) do

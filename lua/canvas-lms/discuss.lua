@@ -7,7 +7,7 @@ local canvas = {}
 --- Get discussion topics and store their metadata and IDs.
 function canvas:get_discussion_topics()
 
-  local discuss_topics = self:get_pages(true,self.course_prefix.."discussion_topics")
+  local discuss_topics = self:get_paginated(true,self.course_prefix.."discussion_topics")
 
   local hash = {}
   for _,vv in ipairs(discuss_topics) do

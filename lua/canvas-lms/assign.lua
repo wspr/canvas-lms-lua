@@ -18,7 +18,7 @@ local canvas = {}
 -- Gets details of each assignment group and stores their IDs for later lookup. Data stored in |self.assignment_groups|.
 function canvas:get_assignment_groups()
 
-  local assign_grps = self:get_pages(true,self.course_prefix.."assignment_groups")
+  local assign_grps = self:get_paginated(true,self.course_prefix.."assignment_groups")
   local grp_hash = {}
   for _,vv in ipairs(assign_grps) do
     grp_hash[vv.name] = vv.id
@@ -62,11 +62,13 @@ function canvas:setup_assignment_groups(args)
   end
 
   for _,vv in ipairs(assign_groups) do
-    if self.assignment_groups[vv.name] then
-      self:put(self.course_prefix.."assignment_groups/"..self.assignment_groups[vv.name],vv)
-    else
+    dump(self.assignment_groups)
+    if self.assignment_groups[vv.name]==nil then
       local xx = self:post(self.course_prefix.."assignment_groups",vv)
       self.assignment_groups[xx.name] = xx.id
+    else
+      self:put(self.course_prefix.."assignment_groups/"..
+               self.assignment_groups[vv.name],vv)
     end
   end
 
@@ -142,7 +144,7 @@ function canvas:get_assignment_generic(use_cache_bool,assign_name,assign_opts,ca
     print('ASSIGNMENT ID:   '..assign_id)
     print('GETTING SUBMISSIONS:')
     local stub = self.course_prefix .. "assignments/" .. assign_id .. "/submissions"
-    local canvas_sub = self:get_pages(true,stub,assign_opts)
+    local canvas_sub = self:get_paginated(true,stub,assign_opts)
 
     if moderator_reset then
         print('Resetting "moderator"')
@@ -465,6 +467,38 @@ function canvas:create_assignment(args)
 
 end
 
+
+--- Basic assignment metadata update function.
+function canvas:update_assignment(assignname,opt)
+
+  if(self.assignments==nil) then
+    self:get_assignments()
+  end
+
+  local id = self.assignments[assignname].id
+  if id == nil then
+    error("Assignment '"..assignname"' not found.")
+  end
+
+  self:put(self.course_prefix.."assignments/"..id,{assignment=opt})
+
+end
+
+--- Basic quiz metadata update function.
+function canvas:update_quiz(assignname,opt)
+
+  if(self.quizzes==nil) then
+    self:get_quizzes()
+  end
+
+  local id = self.quizzes[assignname].id
+  if id == nil then
+    error("Quiz '"..assignname"' not found.")
+  end
+
+  self:put(self.course_prefix.."quizzes/"..id,{quiz=opt})
+
+end
 
 
 --- Compare assignments in Canvas to what has been defined locally.

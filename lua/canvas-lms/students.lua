@@ -23,7 +23,7 @@ canvas.get_students = function(self,opt)
     download_bool = true
   end
 
-  local students = self:get_pages(download_bool,self.course_prefix.."users",{["enrollment_type[]"]="student"})
+  local students = self:get_paginated(download_bool,self.course_prefix.."users",{["enrollment_type[]"]="student"})
 
   local students_by_cid = {}
   local students_by_id = {}
@@ -56,7 +56,7 @@ canvas.get_groups = function(self,use_cache_bool,group_category_name)
     end
     if gcat_id == 0 then error("oops") end
     print('Group category id for "'..group_category_name..'" = '..gcat_id)
-    local canvas_data = self:get_pages(true, "group_categories/" .. gcat_id .. "/groups" )
+    local canvas_data = self:get_paginated(true, "group_categories/" .. gcat_id .. "/groups" )
     local groups = {}
     for _,j in ipairs(canvas_data) do
       local group_users = self:get( "groups/" .. j.id .. "/users" )
@@ -79,7 +79,7 @@ canvas.setup_group_categories = function(self,categories)
 
   print("# Setting up student group categories")
 
-  local group_cats = self:get_pages(true,self.course_prefix.."group_categories")
+  local group_cats = self:get_paginated(true,self.course_prefix.."group_categories")
   local projgrp_hash = {}
   for _,vv in ipairs(group_cats) do
     projgrp_hash[vv.name] = vv.id
@@ -103,7 +103,7 @@ canvas.get_student_group_categories = function(self)
 
   print("# Getting student group categories")
 
-  local group_cats = self:get_pages(true,self.course_prefix.."group_categories")
+  local group_cats = self:get_paginated(true,self.course_prefix.."group_categories")
   local projgrp_hash = {}
   for _,vv in ipairs(group_cats) do
     projgrp_hash[vv.name] = vv.id

@@ -8,7 +8,7 @@ local canvas = {}
 --- Retrieve and store the names and IDs of any added custom gradebook columns
 function canvas:get_grade_columns()
 
-  local xx = self:get_pages(true,self.course_prefix .. "custom_gradebook_columns")
+  local xx = self:get_paginated(true,self.course_prefix .. "custom_gradebook_columns")
   self.custom_gradebook_columns = xx
 
   self.custom_gradebook_column_ids = self.custom_gradebook_column_ids or {}

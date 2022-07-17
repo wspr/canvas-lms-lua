@@ -31,9 +31,9 @@ local canvas = {}
 -- the data to disk and if desired re-reads this cache instead of slowly requesting the data again.
 -- Where the cache is stored can be customised in the config file.
 --
--- @usage canvas:get_pages(true,self.course_prefix.."assignments")
+-- @usage canvas:get_paginated(true,self.course_prefix.."assignments")
 
-function canvas:get_pages(download_bool,req,opt_arg)
+function canvas:get_paginated(download_bool,req,opt_arg)
   if self.verbose > 1 then
     print("REQ: "..req)
     print("BOOL: "..(download_bool and "true" or "false"))
@@ -112,7 +112,7 @@ function canvas:define_getter(field_name,index_name_arg,opt_default)
       error("DOWNLOAD should not be NIL")
     end
 --[[
-    -- this is not nuanced enough. first need to check if there is data cached through get_pages and only THEN force it if nothing available
+    -- this is not nuanced enough. first need to check if there is data cached through get_paginated and only THEN force it if nothing available
 --]]
     if self_[field_name] == nil then
       download = true
@@ -122,9 +122,12 @@ function canvas:define_getter(field_name,index_name_arg,opt_default)
     if self_.verbose > 0 then
       print("# Getting "..field_name.." data currently in Canvas")
     end
-    local all_items = self_:get_pages(download,self_.course_prefix..field_name,opt)
+    local all_items = self_:get_paginated(download,self_.course_prefix..field_name,opt)
     local items_by_name = {}
     for _,vv in ipairs(all_items) do
+      if vv.id == nil then
+        vv.id = vv.page_id -- for "pages"
+      end
       if self_.verbose > 0 then
         print(vv.id .. "  " .. vv[index_name])
       end
@@ -133,10 +136,13 @@ function canvas:define_getter(field_name,index_name_arg,opt_default)
     self_[field_name] = items_by_name
   end
 end
+
 canvas:define_getter("assignments","name")
 canvas:define_getter("files","filename")
 canvas:define_getter("modules","name",{include={"items"}})
 canvas:define_getter("rubrics","title")
+canvas:define_getter("quizzes","title")
+canvas:define_getter("pages","title")
 
 
 --- Wrapper for GET.
