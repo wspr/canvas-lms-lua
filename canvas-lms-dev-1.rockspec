@@ -20,5 +20,5 @@ dependencies = {
   "csv",
   "luafilesystem",
   "markdown",
-  "multipart-post",
+  "multipart-post"
 }

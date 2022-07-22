@@ -5,7 +5,7 @@ local binser = require("binser")
 local dump = require("pl.pretty").dump
 local date   = require("pl.date")
 local path   = require("pl.path")
-local markdown = require("markdown")
+--local markdown = require("markdown")
 
 local canvas = {}
 

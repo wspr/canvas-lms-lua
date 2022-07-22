@@ -74,6 +74,12 @@ do
   loadfile(canvas_config_file, 't', shared)()
 end
 
+function canvas:print(str)
+  if self.verbose > 0 then
+    print(str)
+  end
+end
+
 if #canvas.sem_break_week == 0 then
   canvas.sem_break_week    = {99,99}
 elseif #canvas.sem_break_week == 1 then
@@ -86,6 +92,7 @@ elseif #canvas.sem_break_length == 1 then
 end
 
 canvas.cache_dir = canvas.cache_dir or "./cache/"
+canvas:print("Creating cache directory: "..canvas.cache_dir)
 lfs.mkdir(canvas.cache_dir)
 
 canvas.mobius_url = "https://adelaide.mobius.cloud:443/lti/"
@@ -101,12 +108,5 @@ canvas.defaults.assignments.late_days = nil
 canvas.defaults.discussion = {}
 canvas.defaults.discussion.discussion_type = "threaded"
 
---[[ HELPER FUNCTIONS --]]
-
-function canvas:print(str)
-  if self.verbose > 0 then
-    print(str)
-  end
-end
 
 return canvas
