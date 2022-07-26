@@ -159,6 +159,8 @@ canvas:define_getter("modules",nil,"name",{include={"items"}})
 canvas:define_getter("rubrics",nil,"title")
 canvas:define_getter("quizzes",nil,"title")
 canvas:define_getter("pages",nil,"title")
+canvas:define_getter("student_groups","groups","name")
+canvas:define_getter("student_group_categories","group_categories","name")
 
 --- Wrapper for GET.
 -- @tparam string req URL stub to GET from

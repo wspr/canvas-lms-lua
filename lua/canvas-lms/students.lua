@@ -6,6 +6,18 @@ local pretty = require("pl.pretty")
 
 local canvas = {}
 
+--- Get student groups.
+-- A single list of all student groups in all group categories.
+-- Data stored in: `.student_groups` table indexed by `name` of the student group.
+-- @function get_student_groups
+-- Code for this function uses the generic `define_getter` function in the HTTP submodule.
+
+--- Get student group categories.
+-- Data stored in: `.student_group_categories` table indexed by `name` of the student group category.
+-- @function get_student_group_categories
+-- Code for this function uses the generic `define_getter` function in the HTTP submodule.
+
+
 --- Find a single user by name or ID.
 function canvas:find_user(str)
 
@@ -40,8 +52,8 @@ function canvas:get_students(opt)
 end
 
 
---- Get groups.
-function canvas:get_groups(use_cache_bool,group_category_name)
+--- Get groups in a single category.
+function canvas:get_groups_by_cat(use_cache_bool,group_category_name)
 
   local cache_path = self.cache_dir.."Group - "..group_category_name..".lua"
 
@@ -98,22 +110,5 @@ function canvas:setup_group_categories(categories)
 
 end
 
---- Get all group categories.
-function canvas:get_student_group_categories()
-
-  print("# Getting student group categories")
-
-  local group_cats = self:get_paginated(true,self.course_prefix.."group_categories")
-  local projgrp_hash = {}
-  for _,vv in ipairs(group_cats) do
-    projgrp_hash[vv.name] = vv.id
-  end
-
-  self.student_group_category = projgrp_hash
-
-  print("## STUDENT GROUP CATEGORIES: .student_group_category =")
-  pretty.dump(self.student_group_category)
-
-end
 
 return canvas
