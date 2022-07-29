@@ -39,8 +39,10 @@ function canvas:get_paginated(download_flag,req,opt_arg)
     print("BOOL: "..(download_flag and "true" or "false"))
   end
 
-  local cache_name = string.gsub(req,"/"," - ")
-  local cache_file = self.cache_dir.."Pages - "..cache_name..".lua"
+  local cache_name = req
+  cache_name = string.gsub(cache_name,"/"," - ")
+  cache_name = string.gsub(cache_name,":"," -- ")
+  local cache_file = self.cache_dir.."http get - "..cache_name..".lua"
 
   if download_flag == "false" then
     download_flag = false
