@@ -11,6 +11,8 @@ local canvas = {}
 -- @field body     The body text of the message to send
 -- @field course   The Canvas course ID to send from (defaults to defined course)
 -- @field group_conversation   Whether a group message is sent (true, default) or multiple individual messages are sent (false) if multiple IDs are included
+-- @field bulk_message   Default: |false|. Not sure what this does really but needs to be |true| for 100+ recipients and when |true| forces individual messages
+-- @field force_new      Default: |false|. Not sure what this does really but when |true| forces individual messages
 -- @table @{message_user_args}
 
 
@@ -27,21 +29,25 @@ function canvas:message_user(send_check,msg)
     error("Cannot send a message without a body.")
   end
 
-  local recip = msg.recipients or msg.canvasid
-  if type(recip)~="table" then
-    recip = {recip}
-  end
+  if msg.bulk_message == nil       then msg.bulk_message = false      end
+  if msg.force_new == nil          then msg.force_new = false         end
+  if msg.group_conversation == nil then msg.group_conversation = true end
+
   local opt = {
-    bulk_message = true,
-    force_new = true,
     subject = msg.subject,
     body = msg.body,
-    recipients = recip,
-    group_conversation = true,
+    group_conversation = msg.group_conversation,
+    bulk_message = msg.bulk_message,
+    force_new = msg.force_new,
+    context_code="course_"..self.courseid,
   }
-  if msg.group_conversation ~= nil then
-    opt.group_conversation = msg.group_conversation
+
+  local recip = msg.recipients or msg.canvasid
+  if type(recip) ~= "table" then
+    recip = {recip}
   end
+  opt.recipients = recip
+
   if msg.attach then
     local attachments = msg.attach
     if type(attachments) ~= "table" then
@@ -50,12 +56,14 @@ function canvas:message_user(send_check,msg)
     opt.attachment_ids = attachments
   end
 
-  if msg.context then
-    opt.context_code=msg.context
-  elseif msg.course then
-    opt.context_code="course_"..msg.course
-  else
-    opt.context_code="course_"..self.courseid
+  if msg.groupid and msg.courseid then
+    error("Cannot send from both a COURSE and a GROUP")
+  end
+  if msg.groupid then
+    opt.context_code="group_"..msg.groupid
+  end
+  if msg.courseid then
+    opt.context_code="course_"..msg.courseid
   end
 
   local post_return
@@ -64,19 +72,20 @@ function canvas:message_user(send_check,msg)
     if post_return.errors then
       error("POST error: "..post_return.errors[1].error_code..": "..post_return.errors[1].message)
     else
-      print("=========== FACSIMILE OF MESSAGE SENT ===========")
-      print("Subject: "..msg.subject.."\n")
-      print("=================================================")
-      print(msg.body)
-      print("=================== END MESSAGE =====================")
+      print("=========== MESSAGE SENT ===========")
     end
   else
-    print("=========== FACSIMILE OF MESSAGE NOT SENT ===========")
-    print("Subject: "..msg.subject.."\n")
-    print("=====================================================")
-    print(msg.body)
-    print("=================== END MESSAGE =====================")
+    print("=========== FACSIMILE OF UNSENT MESSAGE ===========")
   end
+  print("Context: "..opt.context_code)
+  print("Subject: "..opt.subject)
+  print("=====================================================")
+  print("Bulk message? "..(opt.bulk_message and "Y" or "N"))
+  print("Force new?    "..(opt.force_new and "Y" or "N"))
+  print("Group convo?  "..(opt.group_conversation and "Y" or "N"))
+  print("=====================================================")
+  print(opt.body)
+  print("=================== END MESSAGE =====================")
 
   return post_return
 end
