@@ -14,7 +14,7 @@ build = {
 dependencies = {
   "luasec",     -- these are of course actual dependencies, but nix installs them separately
   "luasocket",  -- these are of course actual dependencies, but nix installs them separately
-  "json-lua",
+  "lunajson",
   "penlight",
   "binser",
   "csv",

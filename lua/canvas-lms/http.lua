@@ -3,7 +3,7 @@
 
 local http   = require("ssl.https")
 local ltn12  = require("ltn12")
-local json   = require("json")
+local json   = require("lunajson")
 local binser = require("binser")
 local mppost = require("multipart-post")
 local path   = require("pl.path")
@@ -206,7 +206,7 @@ function canvas:getpostput(param,req,opt_arg)
 
     if type(opt_arg) == "table" then
       use_json = true
-      opt_json = json:encode(opt_arg)
+      opt_json = json.encode(opt_arg)
     else
       opt_str = opt_arg or ""
     end
@@ -242,7 +242,7 @@ function canvas:getpostput_str(param,req,opt)
         sink = ltn12.sink.table(res),
     }
 
-    return json:decode(table.concat(res))
+    return json.decode(table.concat(res))
 
 end
 
@@ -265,7 +265,7 @@ function canvas:getpostput_json(param,req,opt)
         sink   = ltn12.sink.table(res),
     }
 
-    return json:decode(table.concat(res))
+    return json.decode(table.concat(res))
 
 end
 
@@ -307,7 +307,7 @@ function canvas:file_upload(opt)
       source = ltn12.source.string(args_json),
       sink   = ltn12.sink.table(res),
   }
-  res = json:decode(table.concat(res))
+  res = json.decode(table.concat(res))
 
   -- Step 1.5: Read file
   local file = io.open(file_full, "r")
@@ -321,7 +321,7 @@ function canvas:file_upload(opt)
   rq.url  = res.upload_url
   rq.sink = ltn12.sink.table(res2)
   http.request(rq)
-  res2 = json:decode(table.concat(res2))
+  res2 = json.decode(table.concat(res2))
 
   -- Step 3: Confirm the upload's success
   http.request {
@@ -332,7 +332,7 @@ function canvas:file_upload(opt)
       },
       sink   = ltn12.sink.table(res3),
   }
-  res3 = json:decode(table.concat(res3))
+  res3 = json.decode(table.concat(res3))
 
   return res3
 
