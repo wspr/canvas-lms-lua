@@ -32,7 +32,7 @@ Using [HomeBrew](https://brew.sh), this worked for me:
 
     brew install lua
     brew install openssl
-    luarocks install luasec OPENSSL_DIR=/usr/local/opt/openssl/
+    luarocks install luasec OPENSSL_DIR=/opt/homebrew/opt/openssl
 
 
 ## Getting started
