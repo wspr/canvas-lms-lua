@@ -55,15 +55,17 @@ end
 --- Calculate the datetime from a table of "logical" date and time declarations.
 function canvas:datetime(args)
 
-  local arg_sem    = args.sem or 1
+  local arg_sem    = args.sem    or 1
   local wk_offset  = args.week
-  local arg_day    = args.day or self.defaults.assignment.day
-  local arg_hr     = args.hour or 23
-  local arg_min    = args.min or nil
+  local arg_day    = args.day    or self.defaults.assignment.day
+  local arg_hr     = args.hour   or 24
+  local arg_min    = args.min    or 0
   local arg_offset = args.offset or {}
-  if arg_min == nil then
-    if arg_hr == 23 then arg_min = 59 else arg_min = 0 end
+  if arg_hr == 24 then
+    arg_hr  = 23
+    arg_min = 59
   end
+
 
   if self.sem_break_week[arg_sem] > 0 and self.sem_break_length[arg_sem] > 0 then
     if wk_offset > self.sem_break_week[arg_sem] then
