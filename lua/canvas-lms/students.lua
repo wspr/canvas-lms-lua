@@ -69,6 +69,7 @@ function canvas:get_groups_by_cat(use_cache_bool,group_category_name)
     print('Group category id for "'..group_category_name..'" = '..gcat_id)
     local canvas_data = self:get_paginated(true, "group_categories/" .. gcat_id .. "/groups" )
     local groups = {}
+    print("Getting all groups one-by-one (please be patient)...")
     for _,j in ipairs(canvas_data) do
       local group_users = self:get( "groups/" .. j.id .. "/users" )
       groups[j.name] = {
@@ -78,6 +79,7 @@ function canvas:get_groups_by_cat(use_cache_bool,group_category_name)
                        Nstudents  = #group_users ,
                      }
     end
+    print("...done.")
     binser.writeFile(cache_path,groups)
   end
 

@@ -28,6 +28,11 @@ function canvas:set_url(str)
   self.url = str
 end
 
+--- Set cohort (e.g., year+semester).
+function canvas:set_cohort(str)
+  self.cohort = str
+end
+
 --- Set user token for authenticated to API (keep this secret!).
 function canvas:set_token(str)
   self.token = str
@@ -69,6 +74,7 @@ do
     cache_dir        = function(x) canvas:set_cache_dir(x)    end,
     debug            = function(x) canvas:set_debug(x)        end,
     verbose          = function(x) canvas:set_verbose(x)      end,
+    cohort           = function(x) canvas:set_cohort(x)       end,
   }
   local canvas_config_file = _G["canvas_config"] or 'canvas-config.lua'
   loadfile(canvas_config_file, 't', shared)()
