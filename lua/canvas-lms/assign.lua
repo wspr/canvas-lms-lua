@@ -92,18 +92,24 @@ end
 -- @tparam bool use_cache_bool Don't download if cache available?
 -- @tparam string assign_name Name of the assignment
 -- @tparam table assign_opts Additional REST arguments (link)
-function canvas:get_assignment(use_cache_bool,assign_name,assign_opts)
-  return self:get_assignment_generic(use_cache_bool,assign_name,assign_opts,"Assign "..assign_name)
+function canvas:get_assignment(use_cache_bool,assign_name,assign_opts,args)
+  return self:get_assignment_generic(use_cache_bool,assign_name,assign_opts,"Assign "..assign_name,args)
 end
 
 function canvas:get_assignment_ungrouped(use_cache_bool,assign_name,assign_opts)
   return self:get_assignment_generic(use_cache_bool,assign_name,assign_opts,"Assign "..assign_name.." Ungrouped")
 end
 
-function canvas:get_assignment_generic(use_cache_bool,assign_name,assign_opts,cache_name_arg)
+function canvas:get_assignment_generic(use_cache_bool,assign_name,assign_opts,cache_name,args)
 
-  local cache_name = cache_name_arg or assign_name
+  cache_name = cache_name or assign_name
   local cache_file = self.cache_dir..cache_name..".lua"
+
+  args = args or {}
+  local only_submitted = args.only_submitted
+  if only_submitted == nil then
+    only_submitted = true
+  end
 
   self:get_assignments{download=false}
 
@@ -153,15 +159,29 @@ function canvas:get_assignment_generic(use_cache_bool,assign_name,assign_opts,ca
 
     print("(" .. #canvas_sub .. " submissions)")
 
-    local to_remove = {}
-    for i,j in ipairs(canvas_sub) do
-      if (j.attempt==nil or j.workflow_state == "unsubmitted") and (j.score==nil) then
-        print("Entry "..i.." to be removed ("..j.user.name..", ID: "..(j.user.sis_user_id or "unknown")..").")
-        table.insert(to_remove,i)
+    do
+      local to_remove = {}
+      for i,j in ipairs(canvas_sub) do
+        if (j.user.name=="Test Student") then
+          print("Entry "..i.." to be removed ("..j.user.name..", ID: "..(j.user.sis_user_id or "unknown")..").")
+          table.insert(to_remove,i)
+        end
+      end
+      for i = #to_remove, 1, -1 do -- backwards so that indices don't change!
+        table.remove(canvas_sub,to_remove[i])
       end
     end
-    for i = #to_remove, 1, -1 do -- backwards so that indices don't change!
-      table.remove(canvas_sub,to_remove[i])
+    if only_submitted then
+      local to_remove = {}
+      for i,j in ipairs(canvas_sub) do
+        if (j.attempt==nil or j.workflow_state == "unsubmitted") and (j.score==nil) then
+          print("Entry "..i.." to be removed ("..j.user.name..", ID: "..(j.user.sis_user_id or "unknown")..").")
+          table.insert(to_remove,i)
+        end
+      end
+      for i = #to_remove, 1, -1 do -- backwards so that indices don't change!
+        table.remove(canvas_sub,to_remove[i])
+      end
     end
 
     binser.writeFile(cache_file,canvas_sub)
