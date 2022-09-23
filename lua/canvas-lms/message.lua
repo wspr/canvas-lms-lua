@@ -79,6 +79,9 @@ function canvas:message_user(send_check,msg)
   end
   print("Context: "..opt.context_code)
   print("Subject: "..opt.subject)
+  for _,v in ipairs(opt.recipients) do
+    print("To: "..v)
+  end
 --  print("=====================================================")
 --  print("Bulk message? "..(opt.bulk_message and "Y" or "N"))
 --  print("Force new?    "..(opt.force_new and "Y" or "N"))

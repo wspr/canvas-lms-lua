@@ -103,6 +103,8 @@ end
 function canvas:get_assignment_generic(use_cache_bool,assign_name,assign_opts,cache_name,args)
 
   cache_name = cache_name or assign_name
+  cache_name = string.gsub(cache_name,"/"," - ")
+  cache_name = string.gsub(cache_name,":"," -- ")
   local cache_file = self.cache_dir..cache_name..".lua"
 
   args = args or {}
