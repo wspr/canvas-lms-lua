@@ -164,7 +164,7 @@ function canvas:get_assignment_generic(use_cache_bool,assign_name,assign_opts,ca
     do
       local to_remove = {}
       for i,j in ipairs(canvas_sub) do
-        if (j.user.name=="Test Student") then
+        if ( string.lower(j.user.name) == "test student") then
           print("Entry "..i.." to be removed ("..j.user.name..", ID: "..(j.user.sis_user_id or "unknown")..").")
           table.insert(to_remove,i)
         end

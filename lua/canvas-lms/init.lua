@@ -29,5 +29,4 @@ copy_functions("canvas-lms.modules-pages")
 copy_functions("canvas-lms.discuss")
 copy_functions("canvas-lms.files")
 
-
 return canvas
