@@ -86,7 +86,7 @@ function canvas:set_break_length(arg)
   self.sem_break_length[#self.sem_break_length+1] = arg
 end
 
-function canvas:load_config(configfile)
+function canvas:config(configfile)
   configfile = configfile or _G["canvas_config"] or 'canvas-config.lua'
   do
     local shared = {
@@ -104,30 +104,28 @@ function canvas:load_config(configfile)
     loadfile(configfile, 't', shared)()
   end
 
-  if #canvas.sem_break_week == 0 then
-    canvas.sem_break_week    = {99,99}
-  elseif #canvas.sem_break_week == 1 then
-    canvas.sem_break_week    = {canvas.sem_break_week[1],canvas.sem_break_week[1]}
+  if #self.sem_break_week == 0 then
+    self.sem_break_week    = {99,99}
+  elseif #self.sem_break_week == 1 then
+    self.sem_break_week    = {self.sem_break_week[1],self.sem_break_week[1]}
   end
-  if #canvas.sem_break_length == 0 then
-    canvas.sem_break_length  = {2,2}
-  elseif #canvas.sem_break_length == 1 then
-    canvas.sem_break_length = {canvas.sem_break_length[1],canvas.sem_break_length[1]}
+  if #self.sem_break_length == 0 then
+    self.sem_break_length  = {2,2}
+  elseif #self.sem_break_length == 1 then
+    self.sem_break_length = {self.sem_break_length[1],self.sem_break_length[1]}
   end
 
-  canvas.cache_dir = canvas.cache_dir or "./cache/"
-  canvas:print("Creating cache directory: "..canvas.cache_dir)
-  lfs.mkdir(canvas.cache_dir)
+  self.cache_dir = self.cache_dir or "./cache/"
+  self:print("Creating cache directory: "..self.cache_dir)
+  lfs.mkdir(self.cache_dir)
 end
-canvas:load_config()
 
 --[[ OO --]]
 
-function canvas:new(o)
-  o = o or {}
-  self.__index = self
-  setmetatable(o,self)
-  return o
+function canvas:new(cfg)
+  newcourse = setmetatable({},{__index = self})
+  newcourse:config(cfg)
+  return newcourse
 end
 
 return canvas
