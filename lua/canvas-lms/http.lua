@@ -33,15 +33,21 @@ local canvas = {}
 --
 -- @usage canvas:get_paginated(true,self.course_prefix.."assignments")
 
-function canvas:get_paginated(download_flag,req,opt_arg)
+function canvas:get_paginated(download_flag,req,opt,args)
   if self.verbose > 1 then
     print("REQ: "..req)
     print("BOOL: "..(download_flag and "true" or "false"))
   end
 
+  opt = opt or {}
+  args = args or {}
+
   local cache_name = req
   cache_name = string.gsub(cache_name,"/"," - ")
   cache_name = string.gsub(cache_name,":"," -- ")
+  if not(args.cache_name == nil) then
+    cache_name = cache_name .. " - " .. args.cache_name
+  end
   local cache_file = self.cache_dir.."http get - "..cache_name..".lua"
 
   if download_flag == "false" then
@@ -80,7 +86,6 @@ function canvas:get_paginated(download_flag,req,opt_arg)
     while has_data do
 
       data_page = data_page + 1
-      local opt = opt_arg or {}
       opt.page = data_page
       local canvas_data = self:get(req,opt)
       for i=1,#canvas_data do
@@ -116,8 +121,10 @@ end
 -- Custom argument: `download` = `true` | `false` | `"ask"`
 function canvas:define_getter(var_name,field_name,index_name_arg,opt_default)
 
-  if field_name == nil then
-    field_name = var_name
+  local cache_arg
+  field_name = field_name or var_name
+  if (var_name ~= field_name) then
+    cache_arg = {cache_name = var_name}
   end
 
   self["get_"..var_name] = function(self_,opt_arg)
@@ -137,7 +144,7 @@ function canvas:define_getter(var_name,field_name,index_name_arg,opt_default)
     if self_.verbose > 0 then
       print("# Getting "..var_name.." data currently in Canvas")
     end
-    local all_items = self_:get_paginated(download_flag,self_.course_prefix..field_name,opt)
+    local all_items = self_:get_paginated(download_flag,self_.course_prefix..field_name,opt,cache_arg)
     local items_by_name = {}
     for _,vv in ipairs(all_items) do
       if vv.id == nil then
@@ -161,6 +168,9 @@ canvas:define_getter("modules",nil,"name",{include={"items"}})
 canvas:define_getter("rubrics",nil,"title")
 canvas:define_getter("quizzes",nil,"title")
 canvas:define_getter("pages",nil,"title")
+canvas:define_getter("users",nil,"login_id")
+canvas:define_getter("students","users","login_id",{enrollment_type="student"})
+canvas:define_getter("staff","users","login_id",{enrollment_type="teacher"})
 canvas:define_getter("student_groups","groups","name")
 canvas:define_getter("student_group_categories","group_categories","name")
 
