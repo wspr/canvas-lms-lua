@@ -36,11 +36,20 @@ local canvas = {}
 function canvas:get_paginated(download_flag,req,opt,args)
   if self.verbose > 1 then
     print("REQ: "..req)
-    print("BOOL: "..(download_flag and "true" or "false"))
   end
 
   opt = opt or {}
   args = args or {}
+  if download_flag == nil then
+    download_flag = "cache"
+  end
+  if (type(download_flag) == "boolean") then
+    download_flag = (download_flag and "true" or "false")
+  end
+  if self.verbose > 1 then
+    print("DOWNLOAD FLAG: "..download_flag)
+  end
+  local download_bool = true
 
   local cache_name = req
   cache_name = string.gsub(cache_name,"/"," - ")
@@ -51,34 +60,46 @@ function canvas:get_paginated(download_flag,req,opt,args)
   local cache_file = self.cache_dir.."http get - "..cache_name..".lua"
 
   if download_flag == "false" then
-    download_flag = false
-  end
-
-  if download_flag == false and not(path.exists(cache_file)) then
-    print("Cache file for requested GET ["..req.."] does not exist; forcing Canvas download.")
-    download_flag = true
-  end
-
-  if download_flag == "cache" then
+    download_bool = false
+  elseif download_flag == "never" then
+    download_bool = false
+  elseif download_flag == "no" then
+    download_bool = false
+  elseif download_flag == "true" then
+    download_bool = true
+  elseif download_flag == "always" then
+    download_bool = true
+  elseif download_flag == "yes" then
+    download_bool = true
+  elseif download_flag == "cache" then
     if path.exists(cache_file) then
-      download_flag = false
+      download_bool = false
     else
       print("Cache file for requested GET ["..req.."] does not exist; forcing Canvas download.")
-      download_flag = true
+      download_bool = true
     end
-  end
-
-  if download_flag == "ask" then
+  elseif download_flag == "ask" then
     if path.exists(cache_file) then
       print("Download all pages for requested GET ["..req.."] ?")
       print("Type y to do so, or anything else to load from cache:")
-      download_flag = io.read() == "y"
+      download_bool = io.read() == "y"
     else
-      download_flag = true
+      download_bool = true
     end
+  else
+    error("Unknown download flag: "..download_flag)
   end
 
-  if download_flag then
+  if self.verbose > 1 then
+    print("DOWNLOAD BOOL: "..(download_bool and "true" or "false"))
+  end
+
+  if not(download_bool) and not(path.exists(cache_file)) then
+    print("Cache file for requested GET ["..req.."] does not exist; forcing Canvas download.")
+    download_bool = true
+  end
+
+  if download_bool then
     local canvas_pages = {}
     local has_data = true
     local data_page = 0
@@ -134,11 +155,8 @@ function canvas:define_getter(var_name,field_name,index_name_arg,opt_default)
     for i,v in pairs(opt_arg or {}) do
        arg[i] = v
     end
-    local download_flag = arg.download or false
+    local download_flag = arg.download
     arg.download = nil
-    if self_[var_name] == nil then
-      download_flag = "cache"
-    end
     local opt = arg or {}
 
     if self_.verbose > 0 then
