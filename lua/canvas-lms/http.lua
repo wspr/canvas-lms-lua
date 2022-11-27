@@ -312,6 +312,7 @@ function canvas:file_upload(opt)
   local res2 = {}
   local res3 = {}
 
+  opt.attachment = opt.attachment or false
   opt.filepath = opt.filepath or "."
   local file_full = opt.filepath.."/"..opt.filename
   if not(path.exists(file_full)) then
@@ -321,11 +322,19 @@ function canvas:file_upload(opt)
   local args = {}
   args.name = opt.filename
   args.parent_folder_path = opt.folder or "/"
-  local args_json = json:encode(args)
+
+  local url
+  if opt.attachment then
+    url = self.url .. "api/v1/users/self/files/"
+    args.parent_folder_path = "conversation attachments/"
+  else
+    url = self.url .. "api/v1/" .. self.course_prefix .. "files/"
+  end
 
   -- Step 1: Telling Canvas about the file upload and getting a token
+  local args_json = json.encode(args)
   http.request {
-      url = self.url .. "api/v1/" .. self.course_prefix .. "files/",
+      url = url,
       method = "POST",
       headers = {
         ["authorization"] = "Bearer " .. self.token ,
