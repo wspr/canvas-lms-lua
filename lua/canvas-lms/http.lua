@@ -188,7 +188,7 @@ canvas:define_getter("quizzes",nil,"title")
 canvas:define_getter("pages",nil,"title")
 canvas:define_getter("users",nil,"login_id")
 canvas:define_getter("students","users","login_id",{enrollment_type="student"})
-canvas:define_getter("staff","users","login_id",{enrollment_type="teacher"})
+canvas:define_getter("staff","users","login_id",{enrollment_type="teacher",include={"enrollments"}})
 canvas:define_getter("student_groups","groups","name")
 canvas:define_getter("student_group_categories","group_categories","name")
 
