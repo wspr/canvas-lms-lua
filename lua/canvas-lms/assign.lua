@@ -212,6 +212,8 @@ end
 -- @field descr_file
 -- @field rubric
 -- @field external_tool
+-- @field moderated_grading
+-- @field grader_count
 -- @table create_assignment_args
 
 --- Create a Canvas assignment.
@@ -219,6 +221,7 @@ end
 function canvas:create_assignment(args)
 
   local assign_out
+
   local ask = args.ask or ""
   args.due = args.due or {}
   args.due.sem = args.due.sem or 1
@@ -311,9 +314,14 @@ function canvas:create_assignment(args)
   if group_proj_id then
     new_assign.assignment.group_category_id = group_proj_id
   end
-  if args.omit_from_final_grade then
-    new_assign.assignment.omit_from_final_grade = args.omit_from_final_grade
+
+  local canvas_args = {"omit_from_final_grade","moderated_grading","grader_count","graders_anonymous_to_graders","grader_comments_visible_to_graders"}
+  for _,v in ipairs(canvas_args) do
+    if args[v] then
+      new_assign.assignment[v] = args[v]
+    end
   end
+
   if args.external_tool then
     new_assign.assignment.external_tool_tag_attributes = args.external_tool
   end
