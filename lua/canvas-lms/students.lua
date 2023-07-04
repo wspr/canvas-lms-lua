@@ -30,8 +30,8 @@ end
 --- Get all enrolled students.
 function canvas:get_students(opt)
 
-  local optv = opt or {}
-  local download_bool = optv.download or false
+  opt = opt or {}
+  local download_bool = opt.download or false
   if self.students_cid == false then
     download_bool = true
   end
@@ -41,8 +41,10 @@ function canvas:get_students(opt)
   local students_by_cid = {}
   local students_by_id = {}
   for _,v in pairs(students) do
-    students_by_cid[v.id] = v
-    students_by_id[v.sis_user_id] = v
+    if v.sis_user_id and v.id then
+      students_by_cid[v.id] = v
+      students_by_id[v.sis_user_id] = v
+    end
   end
 
   self.students_cid = students_by_cid
@@ -56,7 +58,7 @@ end
 function canvas:get_groups_by_cat(use_cache_bool,group_category_name)
 
   local cache_path = self.cache_dir.."Group - "..group_category_name..".lua"
-  
+
   if use_cache_bool then
     local gcats = self:get( self.course_prefix .. "group_categories" )
     local gcat_id = 0;
