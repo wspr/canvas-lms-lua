@@ -6,6 +6,7 @@ local dump     = require("pl.pretty").dump
 local date     = require("pl.date")
 local path     = require("pl.path")
 -- local markdown = require("markdown")
+local markdown = markdown or (function(x) return x end)
 
 local canvas = {}
 
