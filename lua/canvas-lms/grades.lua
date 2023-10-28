@@ -45,7 +45,7 @@ end
 --- Delete all custom gradebook columns -- warning!.
 function canvas:delete_grade_columns()
 
-  print("About to delete all custom gradebook columns, are you sure? Type y to do so:")
+  self:print("About to delete all custom gradebook columns, are you sure? Type y to do so:")
   if io.read() == "y" then
     self:get_grade_columns()
     for _,j in ipairs(self.custom_gradebook_columns) do
@@ -65,7 +65,7 @@ function canvas:get_assign_grades(opt)
   for _,assign_name in ipairs(assign_names) do
     local download_check = "y"
     if get_switch == "ask" then
-      print("Download grades for assignment '"..assign_name.."'? Type y to do so:")
+      self:print("Download grades for assignment '"..assign_name.."'? Type y to do so:")
       download_check = io.read()
     elseif get_switch == "never" then
       download_check = "n"
@@ -90,7 +90,7 @@ function canvas:write_grades(gfile,assign_names)
 
   self.get_assignments{force=false}
 
-  print("Writing gradebook data to file '"..gfile.."'")
+  self:print("Writing gradebook data to file '"..gfile.."'")
 
   local students_by_name = {}
   for k,v in pairs(self.students_cid) do

@@ -27,11 +27,11 @@ canvas.send_rubric = function(self,rubric)
   local rubric_id = self.rubrics[rubric.title].id
 
   if rubric_id then
-    print("RUBRIC SEND: "..rubric.title)
-    print("Rubric already exists in Canvas, are you sure you want to overwrite it?")
-    print("This will DELETE all comments made against any marked assignments.")
-    print("  ")
-    print("Type y to overwrite and delete comments:")
+    self:print("RUBRIC SEND: "..rubric.title)
+    self:print("Rubric already exists in Canvas, are you sure you want to overwrite it?")
+    self:print("This will DELETE all comments made against any marked assignments.")
+    self:print("  ")
+    self:print("Type y to overwrite and delete comments:")
     if io.read() == "y" then
       canvas_rubric = self:put(self.course_prefix.."rubrics/"..rubric_id,{rubric = rubric})
       self.rubrics[rubric.title].id = canvas_rubric.id
@@ -200,13 +200,13 @@ canvas.setup_csv_rubrics = function(self,args)
     args.csv = {args.csv}
   end
 
-  print("# Sending CSV rubrics")
+  self:print("# Sending CSV rubrics")
 
   self:get_rubrics{ download = true }
 
   for _,vv in ipairs(args.csv) do
     local csvfile = args.prefix..vv..args.suffix
-    print("Processing rubric from file: "..csvfile)
+    self:print("Processing rubric from file: "..csvfile)
     local rubric  = self:rubric_from_csv(csvfile)
     local crubric = self:send_rubric(rubric)
     if crubric.error_report_id then
@@ -217,9 +217,9 @@ canvas.setup_csv_rubrics = function(self,args)
 
   end
 
-  print("## RUBRICS")
+  self:print("## RUBRICS")
   for kk,vv in pairs(self.rubrics) do
-    print( "   • "..vv.id.."  -  "..kk)
+    self:print( "   • "..vv.id.."  -  "..kk)
   end
 
 end

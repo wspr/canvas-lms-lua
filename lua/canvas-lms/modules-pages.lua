@@ -62,11 +62,11 @@ function canvas:setup_modules(modules)
 
   for _,j in ipairs(modules) do
     if self.modules[j.name] == nil then
-      print("Module "..j.name.." does not yet exist.")
+      self:print("Module "..j.name.." does not yet exist.")
       local xx = self:post(self.course_prefix.."modules",{module=j})
       modules[j] = xx.id
     else
-      print("Module "..j.name.." update.")
+      self:print("Module "..j.name.." update.")
       self:put(self.course_prefix.."modules/"..self.modules[j.name].id,{module=j})
     end
   end
@@ -80,8 +80,8 @@ function canvas:setup_modules(modules)
       end
     end
     if not(isfound) then
-      print("Module exists but not specified: "..j.name.. ". Delete it?")
-      print("Type y to do so:")
+      self:print("Module exists but not specified: "..j.name.. ". Delete it?")
+      self:print("Type y to do so:")
       if io.read() == "y" then
         self:delete(self.course_prefix.."modules/"..j.id)
       end
@@ -95,7 +95,7 @@ function canvas:setup_modules(modules)
       for _,jj in ipairs(self.modules) do
         if jj.name == j then
           if jj.position ~= i then
-            print("Updating position of "..jj.name)
+            self:print("Updating position of "..jj.name)
             self:put(self.course_prefix.."modules/"..jj.id,{module={position=i}})
             self:get_modules()
             ifokay = false
@@ -122,8 +122,8 @@ function canvas:update_module_contents(module_name,ask,items)
   end
 
   if ask == "" then
-    print("Create/update items for module '"..module_name.."'?")
-    print("Type y to proceed:")
+    self:print("Create/update items for module '"..module_name.."'?")
+    self:print("Type y to proceed:")
     ask = io.read()
   end
 
@@ -149,7 +149,7 @@ function canvas:update_module_contents(module_name,ask,items)
           this_item.type = "SubHeader"
           this_item.title = this_item.heading
           this_item.heading = nil
-          print("Heading:"..this_item.title)
+          self:print("Heading:"..this_item.title)
         end
 
         if this_item.url~=nil then
@@ -157,23 +157,23 @@ function canvas:update_module_contents(module_name,ask,items)
           this_item.external_url = this_item.url
           this_item.new_tab = true
           this_item.url = nil
-          print("URL:"..this_item.title)
+          self:print("URL:"..this_item.title)
         end
 
         if this_item.page~=nil then
           this_item.type = "Page"
           this_item.page_url = this_item.page
           this_item.page = nil
-          print("Page:"..this_item.title)
+          self:print("Page:"..this_item.title)
         end
 
         if this_item.filename~=nil then
-          print("Heading:"..this_item.title)
+          self:print("Heading:"..this_item.title)
           dump(this_item)
           this_item.type = "File"
           local tmp = self:get(self.course_prefix.."files/",{search_term=this_item.filename})
           if #tmp == 0 or tmp[1].id==nil then
-            print("WARNING: File '"..this_item.filename.."' not found.")
+            self:print("WARNING: File '"..this_item.filename.."' not found.")
           else
             this_item.content_id = tmp[1].id
           end
@@ -219,8 +219,8 @@ function canvas:update_module_contents(module_name,ask,items)
 
     for k,id in pairs(curr_items_lookup) do
       if not(items_lookup[k]) then
-        print("Module '"..module_name.."': item currently exists but not specified: '"..k.. "'. Delete it?")
-        print("Type y to do so:")
+        self:print("Module '"..module_name.."': item currently exists but not specified: '"..k.. "'. Delete it?")
+        self:print("Type y to do so:")
         if io.read() == "y" then
           self:delete(module_url.."/"..id)
         end
@@ -251,8 +251,8 @@ function canvas:check_modules()
         end
       end
       if not(any_published) then
-        print("Module '"..jj.name.."' is published but has no published items. Un-publish now?")
-        print("Type y to do so:")
+        self:print("Module '"..jj.name.."' is published but has no published items. Un-publish now?")
+        self:print("Type y to do so:")
         if io.read() == "y" then
           self:put(self.course_prefix.."modules/"..jj.id,{module={published=false}})
         end
@@ -267,8 +267,8 @@ function canvas:check_modules()
         end
       end
       if any_published then
-        print("Module '"..jj.name.."' is not published but has published items. Publish now?")
-        print("Type y to do so:")
+        self:print("Module '"..jj.name.."' is not published but has published items. Publish now?")
+        self:print("Type y to do so:")
         if io.read() == "y" then
           self:put(self.course_prefix.."modules/"..jj.id,{module={published=true}})
         end

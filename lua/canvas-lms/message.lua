@@ -72,23 +72,23 @@ function canvas:message_user(send_check,msg)
     if post_return.errors then
       error("POST error: "..post_return.errors[1].error_code..": "..post_return.errors[1].message)
     else
-      print("=========== MESSAGE SENT ===========")
+      self:print("=========== MESSAGE SENT ===========")
     end
   else
-    print("=========== FACSIMILE OF UNSENT MESSAGE ===========")
+    self:print("=========== FACSIMILE OF UNSENT MESSAGE ===========")
   end
-  print("Context: "..opt.context_code)
-  print("Subject: "..opt.subject)
+  self:print("Context: "..opt.context_code)
+  self:print("Subject: "..opt.subject)
   for _,v in ipairs(opt.recipients) do
-    print("To: "..v)
+    self:print("To: "..v)
   end
---  print("=====================================================")
---  print("Bulk message? "..(opt.bulk_message and "Y" or "N"))
---  print("Force new?    "..(opt.force_new and "Y" or "N"))
---  print("Group convo?  "..(opt.group_conversation and "Y" or "N"))
-  print("=====================================================")
-  print(opt.body)
-  print("=================== END MESSAGE =====================")
+--  self:print("=====================================================")
+--  self:print("Bulk message? "..(opt.bulk_message and "Y" or "N"))
+--  self:print("Force new?    "..(opt.force_new and "Y" or "N"))
+--  self:print("Group convo?  "..(opt.group_conversation and "Y" or "N"))
+  self:print("=====================================================")
+  self:print(opt.body)
+  self:print("=================== END MESSAGE =====================")
 
   return post_return
 end

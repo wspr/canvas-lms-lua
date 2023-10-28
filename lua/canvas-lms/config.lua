@@ -34,10 +34,13 @@ function canvas:set_verbose(num)
 end
 canvas:set_verbose(0)
 
+local f = assert(io.open("_proj_log.md", "w"))
+
 function canvas:print(str)
   if self.verbose > 0 then
-    print(str)
+    self:print(str)
   end
+  f:write(str,"\n")
 end
 
 --- Set course ID, which defines course prefix.

@@ -35,7 +35,7 @@ local canvas = {}
 
 function canvas:get_paginated(download_flag,req,opt,args)
   if self.verbose > 1 then
-    print("REQ: "..req)
+    self:print("REQ: "..req)
   end
 
   opt = opt or {}
@@ -47,7 +47,7 @@ function canvas:get_paginated(download_flag,req,opt,args)
     download_flag = (download_flag and "true" or "false")
   end
   if self.verbose > 1 then
-    print("DOWNLOAD FLAG: "..download_flag)
+    self:print("DOWNLOAD FLAG: "..download_flag)
   end
   local download_bool = true
 
@@ -75,13 +75,13 @@ function canvas:get_paginated(download_flag,req,opt,args)
     if path.exists(cache_file) then
       download_bool = false
     else
-      print("Cache file for requested GET ["..req.."] does not exist; forcing Canvas download.")
+      self:print("Cache file for requested GET ["..req.."] does not exist; forcing Canvas download.")
       download_bool = true
     end
   elseif download_flag == "ask" then
     if path.exists(cache_file) then
-      print("Download all pages for requested GET ["..req.."] ?")
-      print("Type y to do so, or anything else to load from cache:")
+      self:print("Download all pages for requested GET ["..req.."] ?")
+      self:print("Type y to do so, or anything else to load from cache:")
       download_bool = io.read() == "y"
     else
       download_bool = true
@@ -91,11 +91,11 @@ function canvas:get_paginated(download_flag,req,opt,args)
   end
 
   if self.verbose > 1 then
-    print("DOWNLOAD BOOL: "..(download_bool and "true" or "false"))
+    self:print("DOWNLOAD BOOL: "..(download_bool and "true" or "false"))
   end
 
   if not(download_bool) and not(path.exists(cache_file)) then
-    print("Cache file for requested GET ["..req.."] does not exist; forcing Canvas download.")
+    self:print("Cache file for requested GET ["..req.."] does not exist; forcing Canvas download.")
     download_bool = true
   end
 
@@ -119,7 +119,7 @@ function canvas:get_paginated(download_flag,req,opt,args)
         has_data = false
       else
         if data_page > 1 then
-          print("Retrieved page "..data_page)
+          self:print("Retrieved page "..data_page)
         end
       end
 
@@ -160,7 +160,7 @@ function canvas:define_getter(var_name,field_name,index_name_arg,opt_default)
     local opt = arg or {}
 
     if self_.verbose > 0 then
-      print("# Getting "..var_name.." data currently in Canvas")
+      self:print("# Getting "..var_name.." data currently in Canvas")
     end
     local all_items = self_:get_paginated(download_flag,self_.course_prefix..field_name,opt,cache_arg)
     local items_by_name = {}
@@ -169,7 +169,7 @@ function canvas:define_getter(var_name,field_name,index_name_arg,opt_default)
         vv.id = vv.page_id -- for "pages"
       end
       if self_.verbose > 0 then
-        print(vv.id .. "  " .. vv[index_name])
+        self:print(vv.id .. "  " .. vv[index_name])
       end
       items_by_name[vv[index_name]] = vv
     end

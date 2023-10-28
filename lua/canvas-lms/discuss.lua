@@ -34,10 +34,10 @@ end
 --     }
 function canvas:setup_discussion_topics(args)
 
-  print("# Setting up discussion topics")
+  self:print("# Setting up discussion topics")
 
-  print("Disable students from creating their own topics?")
-  print("Type y to do so:")
+  self:print("Disable students from creating their own topics?")
+  self:print("Type y to do so:")
   if io.read() == "y" then
     self:put(self.course_prefix.."settings/",{allow_student_discussion_topics=false})
   end
@@ -67,15 +67,15 @@ function canvas:setup_discussion_topics(args)
 
   for tt,id in pairs(self.discussion_topic_ids) do
     if not(titles_lookup[tt]) then
-      print("Discussion topic currently exists but not specified: '"..tt.. "'. Delete it?")
-      print("Type y to do so:")
+      self:print("Discussion topic currently exists but not specified: '"..tt.. "'. Delete it?")
+      self:print("Type y to do so:")
       if io.read() == "y" then
         self:delete(self.course_prefix.."discussion_topics/"..id)
       end
     end
   end
 
-  print("## DISCUSSION TOPICS")
+  self:print("## DISCUSSION TOPICS")
   pretty.dump(self.discussion_topic_ids)
 
 end

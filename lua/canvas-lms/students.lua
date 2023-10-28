@@ -68,10 +68,10 @@ function canvas:get_groups_by_cat(use_cache_bool,group_category_name)
       end
     end
     if gcat_id == 0 then error("oops") end
-    print('Group category id for "'..group_category_name..'" = '..gcat_id)
+    self:print('Group category id for "'..group_category_name..'" = '..gcat_id)
     local canvas_data = self:get_paginated(true, "group_categories/" .. gcat_id .. "/groups" )
     local groups = {}
-    print("Getting all groups one-by-one (please be patient)...")
+    self:print("Getting all groups one-by-one (please be patient)...")
     for _,j in ipairs(canvas_data) do
       local group_users = self:get( "groups/" .. j.id .. "/users" )
       groups[j.name] = {
@@ -81,7 +81,7 @@ function canvas:get_groups_by_cat(use_cache_bool,group_category_name)
                        Nstudents  = #group_users ,
                      }
     end
-    print("...done.")
+    self:print("...done.")
     binser.writeFile(cache_path,groups)
   end
 
@@ -95,7 +95,7 @@ end
 --- Creating group categories.
 function canvas:setup_group_categories(categories)
 
-  print("# Setting up student group categories")
+  self:print("# Setting up student group categories")
 
   local group_cats = self:get_paginated(true,self.course_prefix.."group_categories")
   local projgrp_hash = {}
@@ -112,7 +112,7 @@ function canvas:setup_group_categories(categories)
 
   self.student_group_category = projgrp_hash
 
-  print("## STUDENT GROUP CATEGORIES: .student_group_category =")
+  self:print("## STUDENT GROUP CATEGORIES: .student_group_category =")
   pretty.dump(self.student_group_category)
 
 end

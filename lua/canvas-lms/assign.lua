@@ -40,7 +40,7 @@ end
 -- @tparam table args list of tables with fields defined by @{assign_group_args}
 function canvas:setup_assignment_groups(args)
 
-  print("# Setting up assignment groups")
+  self:print("# Setting up assignment groups")
 
   local assign_groups = {}
   local any_weights = false
@@ -73,14 +73,14 @@ function canvas:setup_assignment_groups(args)
     end
   end
 
-  print("## ASSIGNMENT GROUPS")
+  self:print("## ASSIGNMENT GROUPS")
   dump(self.assignment_groups)
 
   local Nmarks = 0
   for _,vv in ipairs(assign_groups) do
     Nmarks = Nmarks + vv.group_weight
   end
-  print("TOTAL MARKS: "..Nmarks)
+  self:print("TOTAL MARKS: "..Nmarks)
 
 end
 
@@ -119,9 +119,9 @@ function canvas:get_assignment_generic(use_cache_bool,assign_name,assign_opts,ca
   if use_cache_bool then
 
     if self.assignments[assign_name] == nil then
-      print("Assignment names:")
+      self:print("Assignment names:")
       for _,j in pairs(self.assignments) do
-        print("  • '"..j.name.."'")
+        self:print("  • '"..j.name.."'")
       end
       error("Requested assignment name ('"..assign_name.."') not found.")
     end
@@ -134,39 +134,39 @@ function canvas:get_assignment_generic(use_cache_bool,assign_name,assign_opts,ca
     local moderator_reset = false
 
     if final_grader_id then
-      print('Moderated assignment -- checking')
+      self:print('Moderated assignment -- checking')
 
       local canvas_me = self:get("users/self")
       local my_id = canvas_me.id
 
       if final_grader_id == my_id then
-        print('You are the allocated "moderator" -- good')
+        self:print('You are the allocated "moderator" -- good')
       else
-        print('Switching "moderator"')
+        self:print('Switching "moderator"')
         self:put(self.course_prefix .. "assignments/"..assign_id,{assignment={final_grader_id=my_id}})
         moderator_reset = true
       end
 
     end
 
-    print('ASSIGNMENT NAME: '..assign_name)
-    print('ASSIGNMENT ID:   '..assign_id)
-    print('GETTING SUBMISSIONS:')
+    self:print('ASSIGNMENT NAME: '..assign_name)
+    self:print('ASSIGNMENT ID:   '..assign_id)
+    self:print('GETTING SUBMISSIONS:')
     local stub = self.course_prefix .. "assignments/" .. assign_id .. "/submissions"
     local canvas_sub = self:get_paginated(true,stub,assign_opts)
 
     if moderator_reset then
-        print('Resetting "moderator"')
+        self:print('Resetting "moderator"')
         self:put(self.course_prefix .. "assignments/"..assign_id,{assignment={final_grader_id=final_grader_id}})
     end
 
-    print("(" .. #canvas_sub .. " submissions)")
+    self:print("(" .. #canvas_sub .. " submissions)")
 
     do
       local to_remove = {}
       for i,j in ipairs(canvas_sub) do
         if ( string.lower(j.user.name) == "test student") then
-          print("Entry "..i.." to be removed ("..j.user.name..", ID: "..(j.user.sis_user_id or "unknown")..").")
+          self:print("Entry "..i.." to be removed ("..j.user.name..", ID: "..(j.user.sis_user_id or "unknown")..").")
           table.insert(to_remove,i)
         end
       end
@@ -178,7 +178,7 @@ function canvas:get_assignment_generic(use_cache_bool,assign_name,assign_opts,ca
       local to_remove = {}
       for i,j in ipairs(canvas_sub) do
         if (j.attempt==nil or j.workflow_state == "unsubmitted") and (j.score==nil) then
-          print("Entry "..i.." to be removed ("..j.user.name..", ID: "..(j.user.sis_user_id or "unknown")..").")
+          self:print("Entry "..i.." to be removed ("..j.user.name..", ID: "..(j.user.sis_user_id or "unknown")..").")
           table.insert(to_remove,i)
         end
       end
@@ -231,8 +231,8 @@ function canvas:create_assignment(args)
   self.assignment_setup[args.name] = args
 
   if ask == "" then
-    print("Create/update assignment '"..args.name.."'?")
-    print("Type y to proceed:")
+    self:print("Create/update assignment '"..args.name.."'?")
+    self:print("Type y to proceed:")
     ask = io.read()
   end
 
@@ -251,7 +251,7 @@ function canvas:create_assignment(args)
     if not(group_proj_id) then
       error("Student group category not found")
     else
-      print("Student group category: "..group_proj_id)
+      self:print("Student group category: "..group_proj_id)
     end
   end
 
@@ -282,7 +282,7 @@ function canvas:create_assignment(args)
       end
     end
     if arg_bad then
-      print("The 'assign_type' option for creating assignments can be any of:")
+      self:print("The 'assign_type' option for creating assignments can be any of:")
       dump(argtypes_allowed)
       error("Bad argument for 'assign_type'.")
     end
@@ -362,7 +362,7 @@ function canvas:create_assignment(args)
         hour = args.due.hour ,
         min  = args.due.min  ,
       }
-    print("Assignment due at: "..dateformat:tostring(duedate))
+    self:print("Assignment due at: "..dateformat:tostring(duedate))
     new_assign.assignment.due_at = dateformat:tostring(duedate)
   end
 
@@ -437,17 +437,17 @@ function canvas:create_assignment(args)
 
 
 
-  print("ASSIGNMENT DETAILS FOR CREATION/UPDATE:")
+  self:print("ASSIGNMENT DETAILS FOR CREATION/UPDATE:")
   dump(new_assign)
 
   local diffcontinue = true
   if lockdiff >= 0 then
-    print("Assignment already locked for students; skipping assignment creation/update.")
+    self:print("Assignment already locked for students; skipping assignment creation/update.")
     diffcontinue = false
   else
     if unlockdiff >= 0 then
-      print("Assignment already unlocked for students, are you sure?")
-      print("Type y to proceed:")
+      self:print("Assignment already unlocked for students, are you sure?")
+      self:print("Type y to proceed:")
       local check = io.read()
       diffcontinue = check == "y"
     end
@@ -457,7 +457,7 @@ function canvas:create_assignment(args)
     self:get_assignments()
     self.assignments[args.name] = self.assignments[args.name] or {}
     local assign_id = self.assignments[args.name].id
-    print("## "..args.name)
+    self:print("## "..args.name)
     local a
     if assign_id then
       a = self:put(self.course_prefix.."assignments/"..assign_id,new_assign)
@@ -475,7 +475,7 @@ function canvas:create_assignment(args)
     -- RUBRIC
     if args.rubric then
       self:get_rubrics()
-      print("ASSIGN RUBRIC: '"..args.rubric.."'")
+      self:print("ASSIGN RUBRIC: '"..args.rubric.."'")
       if self.rubrics[args.rubric] == nil then
         dump(self.rubrics)
         error("Assoc rubric failed; no rubric '"..args.rubric.."'")
@@ -548,7 +548,7 @@ function canvas:check_assignments()
       assign_def[kk] = nil
     end
     for kk in pairs(assign_def) do
-      print("Assignment exists in Canvas but not defined: "..kk)
+      self:print("Assignment exists in Canvas but not defined: "..kk)
     end
   end
 
@@ -561,7 +561,7 @@ function canvas:check_assignments()
       assign_def[kk] = nil
     end
     for kk in pairs(assign_def) do
-      print("Assignment defined but does not exist in Canvas: "..kk)
+      self:print("Assignment defined but does not exist in Canvas: "..kk)
     end
   end
 
