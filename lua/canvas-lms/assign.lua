@@ -90,23 +90,27 @@ end
 
 
 --- Get full details of a single assignment.
--- @tparam bool use_cache_bool Don't download if cache available?
+-- @tparam bool dl_bool Download data? Otherwise use cache, if available
 -- @tparam string assign_name Name of the assignment
 -- @tparam table assign_opts Additional REST arguments (link)
-function canvas:get_assignment(use_cache_bool,assign_name,assign_opts,args)
-  return self:get_assignment_generic(use_cache_bool,assign_name,assign_opts,"Assign "..assign_name,args)
+function canvas:get_assignment(dl_bool,assign_name,assign_opts,args)
+  return self:get_assignment_generic(dl_bool,assign_name,assign_opts,"Cohort "..self.cohort.." Assign "..assign_name,args)
 end
 
-function canvas:get_assignment_ungrouped(use_cache_bool,assign_name,assign_opts)
-  return self:get_assignment_generic(use_cache_bool,assign_name,assign_opts,"Assign "..assign_name.." Ungrouped")
+function canvas:get_assignment_ungrouped(dl_bool,assign_name,assign_opts)
+  return self:get_assignment_generic(dl_bool,assign_name,assign_opts,"Cohort "..self.cohort.." Assign "..assign_name.." Ungrouped")
 end
 
-function canvas:get_assignment_generic(use_cache_bool,assign_name,assign_opts,cache_name,args)
+function canvas:get_assignment_generic(dl_bool,assign_name,assign_opts,cache_name,args)
 
   cache_name = cache_name or assign_name
   cache_name = string.gsub(cache_name,"/"," - ")
   cache_name = string.gsub(cache_name,":"," -- ")
   local cache_file = self.cache_dir..cache_name..".lua"
+  if not(dl_bool) and not(path.exists(cache_file)) then
+    self:print("Cache file does not exist; re-creating: "..cache_file)
+    dl_bool = true
+  end
 
   args = args or {}
   local only_submitted = args.only_submitted
@@ -116,7 +120,7 @@ function canvas:get_assignment_generic(use_cache_bool,assign_name,assign_opts,ca
 
   self:get_assignments{download=false}
 
-  if use_cache_bool then
+  if dl_bool then
 
     if self.assignments[assign_name] == nil then
       self:print("Assignment names:")
@@ -191,10 +195,8 @@ function canvas:get_assignment_generic(use_cache_bool,assign_name,assign_opts,ca
 
   end
 
-  local canvas_sub = binser.readFile(cache_file)
-  canvas_sub = canvas_sub[1]
-
-  return canvas_sub
+  local canvas_subm = binser.readFile(cache_file)
+  return canvas_subm[1]
 
 end
 

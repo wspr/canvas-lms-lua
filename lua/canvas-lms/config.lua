@@ -129,7 +129,7 @@ function canvas:config(configfile)
   end
 
   self.cache_dir = self.cache_dir or "./cache/"
-  self:print("Creating cache directory: "..self.cache_dir)
+  self:info("Creating cache directory: "..self.cache_dir)
   lfs.mkdir(self.cache_dir)
 end
 
