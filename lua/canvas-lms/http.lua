@@ -249,13 +249,31 @@ function canvas:getpostput(param,req,opt_arg)
       opt_str = opt_arg or ""
     end
 
-    if use_json then
-      canvas_data = self:getpostput_json(param,req,opt_json)
-    else
-      canvas_data = self:getpostput_str(param,req,opt_str)
+    if not(opt_arg) then
+      return self:getpostput_blank(param,req)
     end
+    if use_json then
+      return self:getpostput_json(param,req,opt_json)
+    else
+      return self:getpostput_str(param,req,opt_str)
+    end
+end
 
-    return canvas_data
+function canvas:getpostput_blank(param,req)
+
+    local httpreq = self.url .. "api/v1/" .. req
+    self:print("HTTP "..param.." REQUEST: " .. httpreq )
+
+    local res = {}
+    http.request{
+        url = httpreq,
+        method = param,
+        headers = { ["authorization"] = "Bearer " .. self.token },
+        sink = ltn12.sink.table(res),
+    }
+
+    return json.decode(table.concat(res))
+
 end
 
 function canvas:getpostput_str(param,req,opt)
