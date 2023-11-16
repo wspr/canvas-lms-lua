@@ -163,6 +163,7 @@ function canvas:define_getter(var_name,field_name,index_name_arg,opt_default)
       self:print("# Getting "..var_name.." data currently in Canvas")
     end
     local all_items = self_:get_paginated(download_flag,self_.course_prefix..field_name,opt,cache_arg)
+
     local items_by_name = {}
     for _,vv in ipairs(all_items) do
       if vv.id == nil then
@@ -173,6 +174,7 @@ function canvas:define_getter(var_name,field_name,index_name_arg,opt_default)
       end
       items_by_name[vv[index_name]] = vv
     end
+
     self_[var_name] = items_by_name
 
   end
@@ -197,7 +199,7 @@ canvas:define_getter("student_group_categories","group_categories","name")
 -- @param opt table of optional parameters
 -- @treturn table REST result
 function canvas:get(req,opt)
-  return canvas.getpostput(self,"GET",req,opt)
+  return self:getpostput("GET",req,opt)
 end
 
 --- Wrapper for POST.
@@ -205,7 +207,7 @@ end
 -- @param opt table of optional parameters
 -- @treturn table REST result
 function canvas:post(req,opt)
-  return canvas.getpostput(self,"POST",req,opt)
+  return self:getpostput("POST",req,opt)
 end
 
 --- Wrapper for PUT.
@@ -213,7 +215,15 @@ end
 -- @param opt table of optional parameters
 -- @treturn table REST result
 function canvas:put(req,opt)
-  return canvas.getpostput(self,"PUT",req,opt)
+  return self:getpostput("PUT",req,opt)
+end
+
+--- Wrapper for PATCH.
+-- @tparam string req URL stub to PATCH to
+-- @param opt table of optional parameters
+-- @treturn table REST result
+function canvas:patch(req,opt)
+  return self:getpostput("PATCH",req,opt)
 end
 
 --- Wrapper for DELETE.
@@ -221,7 +231,7 @@ end
 -- @param opt table of optional parameters
 -- @treturn table REST result
 function canvas:delete(req,opt)
-  return canvas.getpostput(self,"DELETE",req,opt)
+  return self:getpostput("DELETE",req,opt)
 end
 
 
@@ -240,9 +250,9 @@ function canvas:getpostput(param,req,opt_arg)
     end
 
     if use_json then
-      canvas_data = canvas.getpostput_json(self,param,req,opt_json)
+      canvas_data = self:getpostput_json(param,req,opt_json)
     else
-      canvas_data = canvas.getpostput_str(self,param,req,opt_str)
+      canvas_data = self:getpostput_str(param,req,opt_str)
     end
 
     return canvas_data
