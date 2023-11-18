@@ -113,6 +113,7 @@ function canvas:config(configfile)
       debug            = function(x) self:set_debug(x)        end,
       verbose          = function(x) self:set_verbose(x)      end,
       cohort           = function(x) self:set_cohort(x)       end,
+      getenv = function(x) os.getenv(x) end,
     }
     loadfile(configfile, 't', shared)()
   end
