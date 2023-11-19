@@ -57,7 +57,7 @@ end
 --- Get groups in a single category.
 function canvas:get_groups_by_cat(use_cache_bool,group_category_name)
 
-  local cache_path = self.cache_dir.."Course - "..self.course_id.." - Group - "..group_category_name..".lua"
+  local cache_path = self.cache_dir.."Course - "..self.courseid.." - Group - "..group_category_name..".lua"
 
   if use_cache_bool then
     local gcats = self:get( self.course_prefix .. "group_categories" )
@@ -67,7 +67,10 @@ function canvas:get_groups_by_cat(use_cache_bool,group_category_name)
         gcat_id = j.id
       end
     end
-    if gcat_id == 0 then error("oops") end
+    if gcat_id == 0 then
+      pretty.dump(gcats)
+      error("Category '"..group_category_name.."' not found; see list above.")
+    end
     self:print('Group category id for "'..group_category_name..'" = '..gcat_id)
     local canvas_data = self:get_paginated(true, "group_categories/" .. gcat_id .. "/groups" )
     local groups = {}
@@ -77,6 +80,7 @@ function canvas:get_groups_by_cat(use_cache_bool,group_category_name)
       groups[j.name] = {
                        canvasid   = j.id ,
                        canvasname = j.name ,
+                       shortid   = string.sub(j.name,-5,-1) ,
                        users      = group_users ,
                        Nstudents  = #group_users ,
                      }
@@ -86,6 +90,8 @@ function canvas:get_groups_by_cat(use_cache_bool,group_category_name)
   end
 
   local groups = binser.readFile(cache_path)
+  self.student_groups = self.student_groups or {}
+  self.student_groups[group_category_name] = groups[1]
   return groups[1]
 
 end
