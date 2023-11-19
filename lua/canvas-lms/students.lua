@@ -57,7 +57,7 @@ end
 --- Get groups in a single category.
 function canvas:get_groups_by_cat(use_cache_bool,group_category_name)
 
-  local cache_path = self.cache_dir.."Group - "..group_category_name..".lua"
+  local cache_path = self.cache_dir.."Course - "..self.course_id.." - Group - "..group_category_name..".lua"
 
   if use_cache_bool then
     local gcats = self:get( self.course_prefix .. "group_categories" )
