@@ -148,7 +148,7 @@ function canvas:define_getter(var_name,field_name,index_name_arg,opt_default)
     cache_arg = {cache_name = var_name}
   end
 
-  self["get_"..var_name] = function(self_,opt_arg)
+  self["get_"..var_name] = function(_SELF,opt_arg)
 
     local index_name = index_name_arg
     local arg = opt_default or {}
@@ -159,23 +159,23 @@ function canvas:define_getter(var_name,field_name,index_name_arg,opt_default)
     arg.download = nil
     local opt = arg or {}
 
-    if self_.verbose > 0 then
-      self:print("# Getting "..var_name.." data currently in Canvas")
+    if _SELF.verbose > 0 then
+      _SELF:print("# Getting "..var_name.." data currently in Canvas")
     end
-    local all_items = self_:get_paginated(download_flag,self_.course_prefix..field_name,opt,cache_arg)
+    local all_items = _SELF:get_paginated(download_flag,_SELF.course_prefix..field_name,opt,cache_arg)
 
     local items_by_name = {}
     for _,vv in ipairs(all_items) do
       if vv.id == nil then
         vv.id = vv.page_id -- for "pages"
       end
-      if self_.verbose > 0 then
-        self:print(vv.id .. "  " .. vv[index_name])
+      if _SELF.verbose > 0 then
+        _SELF:print(vv.id .. "  " .. vv[index_name])
       end
       items_by_name[vv[index_name]] = vv
     end
 
-    self_[var_name] = items_by_name
+    _SELF[var_name] = items_by_name
 
   end
 end
