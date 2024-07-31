@@ -306,6 +306,11 @@ function canvas:create_assignment(args)
     new_assign.assignment.points_possible = args.points
   end
 
+  -- TODO: generalise
+  if not(args.grader_comments_visible_to_graders == nil) then
+    new_assign.assignment.grader_comments_visible_to_graders = args.grader_comments_visible_to_graders
+  end
+
   for _,v in ipairs(args.assign_type) do
     if v == "online_upload" then
       new_assign.assignment.allowed_extensions = args.ext or "pdf"
@@ -440,7 +445,7 @@ function canvas:create_assignment(args)
 
 
   self:print("ASSIGNMENT DETAILS FOR CREATION/UPDATE:")
-  dump(new_assign)
+  --dump(new_assign)
 
   local diffcontinue = true
   if lockdiff >= 0 then
@@ -456,6 +461,7 @@ function canvas:create_assignment(args)
   end
 
   if diffcontinue then
+    self:print("Attempting to update assignment "..args.name)
     self:get_assignments()
     self.assignments[args.name] = self.assignments[args.name] or {}
     local assign_id = self.assignments[args.name].id
