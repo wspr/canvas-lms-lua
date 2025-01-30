@@ -34,6 +34,13 @@ local function day_string_to_num(argday)
     if argday == "fri-2wk"   then argday = -14+4 end
     if argday == "sat-2wk"   then argday = -14+5 end
     if argday == "sun-2wk"   then argday = -14+6 end
+    if argday == "mon-3wk"   then argday = -21+0 end
+    if argday == "tue-3wk"   then argday = -21+1 end
+    if argday == "wed-3wk"   then argday = -21+2 end
+    if argday == "thu-3wk"   then argday = -21+3 end
+    if argday == "fri-3wk"   then argday = -21+4 end
+    if argday == "sat-3wk"   then argday = -21+5 end
+    if argday == "sun-3wk"   then argday = -21+6 end
     if argday == "mon-next"  then argday =   7+0 end
     if argday == "tue-next"  then argday =   7+1 end
     if argday == "tues-next" then argday =   7+1 end
