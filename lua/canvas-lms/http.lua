@@ -340,6 +340,17 @@ function canvas:file_upload(opt)
   local res2 = {}
   local res3 = {}
 
+  local mime_types = {
+    ["txt"]  = "text/plain",
+    ["pdf"]  = "application/pdf",
+    ["png"]  = "image/png",
+    ["jpg"]  = "image/jpeg",
+    ["jpeg"] = "image/jpeg",
+    ["json"] = "application/json",
+    ["csv"]  = "text/csv",
+    -- add more as needed
+  }
+
   opt.attachment = opt.attachment or false
   opt.filepath = opt.filepath or "."
   local file_full = opt.filepath.."/"..opt.filename
@@ -379,9 +390,12 @@ function canvas:file_upload(opt)
   local file_length = file:seek("end")
   file:seek("set", 0)
 
+  local ext = opt.filename:match("^.+%.(.+)$")
+  local content_type = mime_types[ext] or "application/octet-stream"
+
   -- Step 2: Upload the file data to the URL given in the previous response
   local rq = mppost.gen_request {
-    myfile = { name = opt.filename, data = file, len = file_length }
+    myfile = { name = opt.filename, data = file, len = file_length, content_type = content_type }
   }
   rq.url  = res.upload_url
   rq.sink = ltn12.sink.table(res2)
