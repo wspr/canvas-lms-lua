@@ -74,6 +74,12 @@ function canvas:set_token(str)
   self.token = str
 end
 
+--- Set environment variable to query for API token
+function canvas:set_token_env(str)
+  self.token_env = str
+end
+canvas:set_token_env("CANVAS_API_TOKEN")
+
 --- Set folder for storing cache files of this library.
 function canvas:set_cache_dir(str)
   self.cache_top = str
@@ -116,6 +122,13 @@ function canvas:config(configfile)
       getenv = function(x) os.getenv(x) end,
     }
     loadfile(configfile, 't', shared)()
+    if not self.token then
+      local api_token = os.getenv(self.token_env)
+      if not api_token then
+          error("API token not found in environment variable "..self.token_env.." nor set manually in "..configfile)
+      end
+      self:set_token(api_token)
+    end
   end
 
   if #self.sem_break_week == 0 then
