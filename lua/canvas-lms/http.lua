@@ -384,7 +384,10 @@ function canvas:file_upload(opt)
       sink   = ltn12.sink.table(res),
   }
   res = json.decode(table.concat(res))
-  dump(res)
+  if res.errors then
+    dump(res)
+    error("Error in commencing file upload (see above).")
+  end
 
   -- Step 1.5: Read file
   local file = io.open(file_full, "r")
@@ -401,9 +404,12 @@ function canvas:file_upload(opt)
   rq.url  = res.upload_url
   rq.sink = ltn12.sink.table(res2)
   
-  dump(rp)
   http.request(rq)
   res2 = json.decode(table.concat(res2))
+  if res2.errors then
+    dump(res2)
+    error("Error in file upload (see above).")
+  end
 
   -- Step 3: Confirm the upload's success
   http.request {
@@ -415,6 +421,11 @@ function canvas:file_upload(opt)
       sink   = ltn12.sink.table(res3),
   }
   res3 = json.decode(table.concat(res3))
+
+  if res3.errors then
+    dump(res3)
+    error("Error in confirming file upload (see above).")
+  end
 
   return res3
 
