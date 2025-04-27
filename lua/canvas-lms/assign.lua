@@ -3,7 +3,7 @@
 
 local binser   = require("binser")
 local dump     = require("pl.pretty").dump
-local date     = require("pl.date")
+local date     = require("pl.Date")
 local path     = require("pl.path")
 -- local markdown = require("markdown")
 local markdown = markdown or (function(x) return x end)
