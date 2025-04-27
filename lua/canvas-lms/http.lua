@@ -7,7 +7,7 @@ local json   = require("lunajson")
 local binser = require("binser")
 local mppost = require("multipart-post")
 local path   = require("pl.path")
--- local dump   = require("pl.pretty").dump
+local dump   = require("pl.pretty").dump
 
 local canvas = {}
 
@@ -384,6 +384,7 @@ function canvas:file_upload(opt)
       sink   = ltn12.sink.table(res),
   }
   res = json.decode(table.concat(res))
+  dump(res)
 
   -- Step 1.5: Read file
   local file = io.open(file_full, "r")
@@ -399,6 +400,8 @@ function canvas:file_upload(opt)
   }
   rq.url  = res.upload_url
   rq.sink = ltn12.sink.table(res2)
+  
+  dump(rp)
   http.request(rq)
   res2 = json.decode(table.concat(res2))
 
