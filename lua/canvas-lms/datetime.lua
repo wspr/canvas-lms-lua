@@ -1,7 +1,7 @@
 --- Canvas LMS in Lua: Calculating dates
 -- @submodule canvas
 
-local date   = require("pl.date")
+local date   = require("pl.Date")
 -- local dump = require("pl.pretty").dump
 
 local canvas = {}
