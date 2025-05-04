@@ -25,6 +25,22 @@ function canvas:update_module(modname,opt)
 
 end
 
+--- Get content for a single page.
+function canvas:get_page_by_title(title)
+
+  if(self.pages==nil) then
+    self:get_pages()
+  end
+
+  local id = self.pages[title].id
+  if id == nil then
+    error("Page '"..title"' not found.")
+  end
+
+  return self:put(self.course_prefix.."pages/"..id)
+
+end
+
 --- Update metadata for a single page.
 function canvas:update_page(modname,opt)
 

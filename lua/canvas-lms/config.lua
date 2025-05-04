@@ -62,6 +62,7 @@ end
 --- Set Canvas URL.
 function canvas:set_url(str)
   self.url = str
+  self.url_api = str .. "api/v1/"
 end
 
 --- Set cohort (e.g., year+semester).

@@ -261,7 +261,7 @@ end
 
 function canvas:getpostput_blank(param,req)
 
-    local httpreq = self.url .. "api/v1/" .. req
+    local httpreq = self.url_api .. req
     self:print("HTTP "..param.." REQUEST: " .. httpreq )
 
     local res = {}
@@ -284,7 +284,7 @@ function canvas:getpostput_str(param,req,opt)
       opt = opt:gsub("–","%%E2%%80%%93")
     end
 
-    local httpreq = self.url .. "api/v1/" .. req .. opt
+    local httpreq = self.url_api .. req .. opt
     self:print("HTTP "..param.." REQUEST: " .. httpreq )
 
     local res = {}
@@ -304,7 +304,7 @@ end
 
 function canvas:getpostput_json(param,req,opt)
 
-    local httpreq = self.url .. "api/v1/" .. req
+    local httpreq = self.url_api .. req
     self:print("HTTP "..param.." REQUEST: " .. httpreq )
     self:print("JSON: " .. opt )
 
@@ -364,10 +364,10 @@ function canvas:file_upload(opt)
 
   local url
   if opt.attachment then
-    url = self.url .. "api/v1/users/self/files/"
+    url = self.url_api .. "/users/self/files/"
     args.parent_folder_path = "conversation attachments/"
   else
-    url = self.url .. "api/v1/" .. self.course_prefix .. "files/"
+    url = self.url_api .. self.course_prefix .. "files/"
   end
 
   -- Step 1: Telling Canvas about the file upload and getting a token
