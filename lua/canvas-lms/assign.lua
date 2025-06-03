@@ -153,9 +153,7 @@ function canvas:get_assignment_generic(dl_bool,assign_name,assign_opts,cache_nam
 
     end
 
-    self:print('ASSIGNMENT NAME: '..assign_name)
-    self:print('ASSIGNMENT ID:   '..assign_id)
-    self:print('GETTING SUBMISSIONS:')
+    self:print('GETTING ASSIGNMENT ID: '..assign_id..'  | NAME: '..assign_name)
     local stub = self.course_prefix .. "assignments/" .. assign_id .. "/submissions"
     local canvas_sub = self:get_paginated(true,stub,assign_opts)
 

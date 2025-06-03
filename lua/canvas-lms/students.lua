@@ -71,7 +71,7 @@ function canvas:get_groups_by_cat(use_cache_bool,group_category_name)
       pretty.dump(gcats)
       error("Category '"..group_category_name.."' not found; see list above.")
     end
-    self:print('Group category id for "'..group_category_name..'" = '..gcat_id)
+    self:info('Group category id for "'..group_category_name..'" = '..gcat_id)
     local canvas_data = self:get_paginated(true, "group_categories/" .. gcat_id .. "/groups" )
     local groups = {}
     self:print("Getting all groups one-by-one (please be patient)...")

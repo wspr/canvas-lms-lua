@@ -112,12 +112,21 @@ function canvas:get_paginated(download_flag,req,opt,args)
       if #canvas_data == 0 then
         has_data = false
       else
-        if data_page > 1 then
-          self:print("Retrieved page "..data_page)
+        if data_page == 1 then
+          io.output(io.stdout)
+          io.write("    Pages: .")
+          io.flush()
+        else
+          io.output(io.stdout)
+          io.write(".")
+          io.flush()
         end
       end
 
     end
+    io.output(io.stdout)
+    io.write(" [total: "..data_page.."]\n")
+    io.flush()
 
     binser.writeFile(cache_file,canvas_pages)
   end
