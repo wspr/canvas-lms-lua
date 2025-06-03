@@ -34,9 +34,7 @@ local canvas = {}
 -- @usage canvas:get_paginated(true,self.course_prefix.."assignments")
 
 function canvas:get_paginated(download_flag,req,opt,args)
-  if self.verbose > 1 then
-    self:print("REQ: "..req)
-  end
+  self:info("REQ: "..req)
 
   opt = opt or {}
   args = args or {}
@@ -46,9 +44,7 @@ function canvas:get_paginated(download_flag,req,opt,args)
   if (type(download_flag) == "boolean") then
     download_flag = (download_flag and "true" or "false")
   end
-  if self.verbose > 1 then
-    self:print("DOWNLOAD FLAG: "..download_flag)
-  end
+  self:info("DOWNLOAD FLAG: "..download_flag)
   local download_bool = true
 
   local cache_name = req
@@ -90,9 +86,7 @@ function canvas:get_paginated(download_flag,req,opt,args)
     error("Unknown download flag: "..download_flag)
   end
 
-  if self.verbose > 1 then
-    self:print("DOWNLOAD BOOL: "..(download_bool and "true" or "false"))
-  end
+  self:info("DOWNLOAD BOOL: "..(download_bool and "true" or "false"))
 
   if not(download_bool) and not(path.exists(cache_file)) then
     self:print("Cache file for requested GET ["..req.."] does not exist; forcing Canvas download.")
@@ -262,7 +256,7 @@ end
 function canvas:getpostput_blank(param,req)
 
     local httpreq = self.url_api .. req
-    self:print("HTTP "..param.." REQUEST: " .. httpreq )
+    self:info("HTTP "..param.." REQUEST: " .. httpreq )
 
     local res = {}
     http.request{
@@ -285,7 +279,7 @@ function canvas:getpostput_str(param,req,opt)
     end
 
     local httpreq = self.url_api .. req .. opt
-    self:print("HTTP "..param.." REQUEST: " .. httpreq )
+    self:info("HTTP "..param.." REQUEST: " .. httpreq )
 
     local res = {}
     http.request{
@@ -305,8 +299,8 @@ end
 function canvas:getpostput_json(param,req,opt)
 
     local httpreq = self.url_api .. req
-    self:print("HTTP "..param.." REQUEST: " .. httpreq )
-    self:print("JSON: " .. opt )
+    self:info("HTTP "..param.." REQUEST: " .. httpreq )
+    self:info("JSON: " .. opt )
 
     local res = {}
     http.request{
