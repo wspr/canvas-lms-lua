@@ -4,6 +4,14 @@
 local lfs    = require "lfs"
 local canvas = {}
 
+--[[ OO --]]
+
+function canvas:new(cfg)
+  local newcourse = setmetatable({},{__index = self})
+  self.logfile = assert(io.open("_proj_log.md", "w"))
+  newcourse:config(cfg)
+  return newcourse
+end
 
 --[[ DEFAULTS --]]
 
@@ -34,11 +42,11 @@ function canvas:set_verbose(num)
 end
 canvas:set_verbose(0)
 
-local f = assert(io.open("_proj_log.md", "w"))
 
 function canvas:print(str)
   print(str)
-  f:write(str,"\n")
+  self.logfile:write(str,"\n")
+  self.logfile:flush()
 end
 
 function canvas:message(str)
@@ -146,14 +154,6 @@ function canvas:config(configfile)
   self.cache_dir = self.cache_dir or "./cache/"
   self:info("Creating cache directory: "..self.cache_dir)
   lfs.mkdir(self.cache_dir)
-end
-
---[[ OO --]]
-
-function canvas:new(cfg)
-  newcourse = setmetatable({},{__index = self})
-  newcourse:config(cfg)
-  return newcourse
 end
 
 return canvas

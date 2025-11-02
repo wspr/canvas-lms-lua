@@ -50,7 +50,7 @@ function canvas:get_paginated(download_flag,req,opt,args)
   local cache_name = req
   cache_name = string.gsub(cache_name,"/"," - ")
   cache_name = string.gsub(cache_name,":"," -- ")
-  if not(args.cache_name == nil) then
+  if args.cache_name ~= nil then
     cache_name = cache_name .. " - " .. args.cache_name
   end
   local cache_file = self.cache_dir.."http get - "..cache_name..".lua"
@@ -151,7 +151,7 @@ function canvas:define_getter(var_name,field_name,index_name_arg,opt_default)
     cache_arg = {cache_name = var_name}
   end
 
-  self["get_"..var_name] = function(_SELF,opt_arg)
+  self["get_"..var_name] = function(SELF_,opt_arg)
 
     local index_name = index_name_arg
     local arg = opt_default or {}
@@ -162,23 +162,23 @@ function canvas:define_getter(var_name,field_name,index_name_arg,opt_default)
     arg.download = nil
     local opt = arg or {}
 
-    if _SELF.verbose > 0 then
-      _SELF:print("# Getting "..var_name.." data currently in Canvas")
+    if SELF_.verbose > 0 then
+      SELF_:print("# Getting "..var_name.." data currently in Canvas")
     end
-    local all_items = _SELF:get_paginated(download_flag,_SELF.course_prefix..field_name,opt,cache_arg)
+    local all_items = SELF_:get_paginated(download_flag,SELF_.course_prefix..field_name,opt,cache_arg)
 
     local items_by_name = {}
     for _,vv in ipairs(all_items) do
       if vv.id == nil then
         vv.id = vv.page_id -- for "pages"
       end
-      if _SELF.verbose > 0 then
-        _SELF:print(vv.id .. "  " .. vv[index_name])
+      if SELF_.verbose > 0 then
+        SELF_:print(vv.id .. "  " .. vv[index_name])
       end
       items_by_name[vv[index_name]] = vv
     end
 
-    _SELF[var_name] = items_by_name
+    SELF_[var_name] = items_by_name
 
   end
 end
@@ -243,7 +243,6 @@ function canvas:getpostput(param,req,opt_arg)
     local use_json = false
     local opt_str
     local opt_json
-    local canvas_data
 
     if type(opt_arg) == "table" then
       use_json = true
@@ -406,7 +405,7 @@ function canvas:file_upload(opt)
   }
   rq.url  = res.upload_url
   rq.sink = ltn12.sink.table(res2)
-  
+
   http.request(rq)
   res2 = json.decode(table.concat(res2))
   if res2.errors then
