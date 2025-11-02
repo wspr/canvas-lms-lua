@@ -5,8 +5,8 @@ local binser   = require("binser")
 local dump     = require("pl.pretty").dump
 local date     = require("pl.Date")
 local path     = require("pl.path")
--- local markdown = require("markdown")
-local markdown = markdown or (function(x) return x end)
+-- local markdown = require("markdown") -- remove dependency until needed
+local markdown = (function(x) return x end)
 
 local canvas = {}
 
@@ -305,7 +305,7 @@ function canvas:create_assignment(args)
   end
 
   -- TODO: generalise
-  if not(args.grader_comments_visible_to_graders == nil) then
+  if args.grader_comments_visible_to_graders ~= nil then
     new_assign.assignment.grader_comments_visible_to_graders = args.grader_comments_visible_to_graders
   end
 

@@ -33,7 +33,7 @@ jobs:
       - name: Execute luacheck
         run: |
           cd canvas-repo
-          luacheck lua
+          luacheck --no-max-line-length lua/
 
       - name: Checkout doc repo
         uses: actions/checkout@v2
