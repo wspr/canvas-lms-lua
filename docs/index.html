@@ -27,6 +27,7 @@
 <h1>canvas-lms</h1>
 
 
+
 <h2>Contents</h2>
 <ul>
 <li><a href="#canvas_lms_config_Functions">canvas-lms.config Functions</a></li>
@@ -81,8 +82,16 @@
 	<td class="summary">Set Canvas URL.</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#set_cohort">set_cohort (str)</a></td>
+	<td class="summary">Set cohort (e.g., year+semester).</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#set_token">set_token (str)</a></td>
 	<td class="summary">Set user token for authenticated to API (keep this secret!).</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#set_token_env">set_token_env (str)</a></td>
+	<td class="summary">Set environment variable to query for API token</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#set_cache_dir">set_cache_dir (str)</a></td>
@@ -122,6 +131,10 @@
 	<tr>
 	<td class="name" nowrap><a href="#put">put (req, opt)</a></td>
 	<td class="summary">Wrapper for PUT.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#patch">patch (req, opt)</a></td>
+	<td class="summary">Wrapper for PATCH.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#delete">delete (req, opt)</a></td>
@@ -165,7 +178,7 @@
 	<td class="summary">Set up assignment groups.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#get_assignment">get_assignment (use_cache_bool, assign_name, assign_opts)</a></td>
+	<td class="name" nowrap><a href="#get_assignment">get_assignment (dl_bool, assign_name, assign_opts)</a></td>
 	<td class="summary">Get full details of a single assignment.</td>
 	</tr>
 	<tr>
@@ -239,6 +252,10 @@
 	<tr>
 	<td class="name" nowrap><a href="#update_module">update_module (modname, opt)</a></td>
 	<td class="summary">Update metadata for a single module.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#get_page_by_title">get_page_by_title (title)</a></td>
+	<td class="summary">Get content for a single page.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#update_page">update_page (modname, opt)</a></td>
@@ -409,11 +426,55 @@
 
 </dd>
     <dt>
+    <a name = "set_cohort"></a>
+    <strong>set_cohort (str)</strong>
+    </dt>
+    <dd>
+    Set cohort (e.g., year+semester).
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">str</span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
     <a name = "set_token"></a>
     <strong>set_token (str)</strong>
     </dt>
     <dd>
     Set user token for authenticated to API (keep this secret!).
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">str</span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "set_token_env"></a>
+    <strong>set_token_env (str)</strong>
+    </dt>
+    <dd>
+    Set environment variable to query for API token
 
 
     <h3>Parameters:</h3>
@@ -536,7 +597,7 @@
          true | false | "ask" | "cache"
         </li>
         <li><span class="parameter">req</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
          URL stub to GET from
         </li>
         <li><span class="parameter">opt_arg</span>
@@ -547,7 +608,7 @@
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.6">table</a></span>
          REST result</p>
 
 <p> This is the workhorse function for most commands that retrieve data from Canvas.
@@ -562,7 +623,7 @@
 
     <h3>Usage:</h3>
     <ul>
-        <pre class="example">canvas:get_paginated(<span class="keyword">true</span>,self.course_prefix..<span class="string">"assignments"</span>)</pre>
+        <pre class="example">canvas:<span class="function-name">get_paginated</span>(<span class="keyword">true</span>,self.course_prefix..<span class="string">"assignments"</span>)</pre>
     </ul>
 
 </dd>
@@ -577,22 +638,22 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">var_name</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
 
 <pre><code>Name of Lua table field to store item data
 </code></pre>
 
         </li>
         <li><span class="parameter">field_name</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
           Name of REST field to retrieve item data from (nil -> use <code>var_name</code>`)
         </li>
         <li><span class="parameter">index_name_arg</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
           Name of metadata field to reference item data (default: <code>&quot;name&quot;</code>)
         </li>
         <li><span class="parameter">opt_default</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.6">table</a></span>
          Default options to pass to REST call
  Custom argument: <code>download</code> = <code>true</code> | <code>false</code> | <code>&quot;ask&quot;</code>
         </li>
@@ -614,7 +675,7 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">req</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
          URL stub to GET from
         </li>
         <li><span class="parameter">opt</span>
@@ -625,7 +686,7 @@
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.6">table</a></span>
         REST result
     </ol>
 
@@ -644,7 +705,7 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">req</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
          URL stub to POST to
         </li>
         <li><span class="parameter">opt</span>
@@ -655,7 +716,7 @@
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.6">table</a></span>
         REST result
     </ol>
 
@@ -674,7 +735,7 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">req</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
          URL stub to PUT to
         </li>
         <li><span class="parameter">opt</span>
@@ -685,7 +746,37 @@
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.6">table</a></span>
+        REST result
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "patch"></a>
+    <strong>patch (req, opt)</strong>
+    </dt>
+    <dd>
+    Wrapper for PATCH.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">req</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
+         URL stub to PATCH to
+        </li>
+        <li><span class="parameter">opt</span>
+         table of optional parameters
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.6">table</a></span>
         REST result
     </ol>
 
@@ -704,7 +795,7 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">req</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
          URL stub to DELETE from
         </li>
         <li><span class="parameter">opt</span>
@@ -715,7 +806,7 @@
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.6">table</a></span>
         REST result
     </ol>
 
@@ -735,7 +826,7 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">opt</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.6">table</a></span>
          Required argument <code>opt.filename</code> specifies filename to upload.
  <code>opt.filepath..&quot;/&quot;..opt.filename</code> defines where the file is to be found in the local filesystem.
  File will be uploaded in the root directory for the course or as specified by <code>opt.folder</code>.
@@ -877,7 +968,7 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.6">table</a></span>
          list of tables with fields defined by <a href="index.html#assign_group_args">assign_group_args</a>
         </li>
     </ul>
@@ -889,7 +980,7 @@
 </dd>
     <dt>
     <a name = "get_assignment"></a>
-    <strong>get_assignment (use_cache_bool, assign_name, assign_opts)</strong>
+    <strong>get_assignment (dl_bool, assign_name, assign_opts)</strong>
     </dt>
     <dd>
     Get full details of a single assignment.
@@ -897,16 +988,16 @@
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">use_cache_bool</span>
+        <li><span class="parameter">dl_bool</span>
             <span class="types"><span class="type">bool</span></span>
-         Don't download if cache available?
+         Download data? Otherwise use cache, if available
         </li>
         <li><span class="parameter">assign_name</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
          Name of the assignment
         </li>
         <li><span class="parameter">assign_opts</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.6">table</a></span>
          Additional REST arguments (link)
         </li>
     </ul>
@@ -982,6 +1073,16 @@
 
 
         </li>
+        <li><span class="parameter">moderated_grading</span>
+
+
+
+        </li>
+        <li><span class="parameter">grader_count</span>
+
+
+
+        </li>
     </ul>
 
 
@@ -1000,7 +1101,7 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.6">table</a></span>
          arguments (see <a href="index.html#create_assignment_args">create_assignment_args</a>)
         </li>
     </ul>
@@ -1112,7 +1213,7 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.6">table</a></span>
 
 <p> Table of tables with REST arguments (see <a href="https://erau.instructure.com/doc/api/discussion_topics.html#method.discussion_topics.create">Canvas API documentation</a>).
  Usage:</p>
@@ -1286,7 +1387,7 @@
           Toggle whether to truly send the message or just to pretty print it to the screen
         </li>
         <li><span class="parameter">msg</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.6">table</a></span>
 
 <pre><code>    Table with entries to define message according to &lt;a href="index.html#message_user_args"&gt;message\_user\_args&lt;/a&gt;
 </code></pre>
@@ -1347,6 +1448,28 @@
 
 </dd>
     <dt>
+    <a name = "get_page_by_title"></a>
+    <strong>get_page_by_title (title)</strong>
+    </dt>
+    <dd>
+    Get content for a single page.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">title</span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
     <a name = "update_page"></a>
     <strong>update_page (modname, opt)</strong>
     </dt>
@@ -1384,7 +1507,7 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">modules</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.6">table</a></span>
            List of ordered module names to create.
  If names are different than the modules currently defined, new ones are created and/or
  current modules are re-ordered.
@@ -1408,17 +1531,17 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">module_name</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
 
 
 
         </li>
         <li><span class="parameter">ask</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
          of whether to proceed — <em>empty</em> asks, or |"y"| does, or <em>anything else</em> does not
         </li>
         <li><span class="parameter">items</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.6">table</a></span>
          (see <a href="https://canvas.instructure.com/doc/api/modules.html#method.context_module_items_api.create">Canvas API documentation</a> for raw syntax)
  Table of module items has some shorthand definitions defined in the code. TODO: document these properly.
         </li>
@@ -1613,7 +1736,7 @@
 
         </li>
         <li><span class="parameter">rubric</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.6">table</a></span>
          definition
         </li>
     </ul>
@@ -1643,7 +1766,7 @@
 
         </li>
         <li><span class="parameter">args</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.6">table</a></span>
          arguments
         </li>
     </ul>
@@ -1664,7 +1787,7 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">csvfile</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
 
 
 
@@ -1692,7 +1815,7 @@
 
         </li>
         <li><span class="parameter">args</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.6">table</a></span>
          arguments
         </li>
     </ul>
@@ -1723,8 +1846,8 @@
 </div> <!-- id="content" -->
 </div> <!-- id="main" -->
 <div id="about">
-<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2022-08-08 14:16:15 </i>
+<i>generated by <a href="http://github.com/lunarmodules/LDoc">LDoc 1.5.0</a></i>
+<i style="float:right;">Last updated 2025-11-02 00:24:16 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
